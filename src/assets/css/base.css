@@ -1,0 +1,14 @@
+@import url('./global.css');
+@import url('./normalize.css');
+@import url('../font/font.css');
+@import 'https://at.alicdn.com/t/c/font_4179759_jhwk58e6grg.css';
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Harmony Font';
+}
