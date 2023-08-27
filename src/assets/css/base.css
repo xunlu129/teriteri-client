@@ -1,12 +1,10 @@
 @import url('./global.css');
 @import url('./normalize.css');
 @import url('../font/font.css');
-@import 'https://at.alicdn.com/t/c/font_4179759_jhwk58e6grg.css';
+@import 'https://at.alicdn.com/t/c/font_4179759_9ec5oirfsq7.css';
 
-html,
-body {
-  height: 100%;
-  width: 100%;
+html {
+  overflow-x: hidden;
 }
 
 body {

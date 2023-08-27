@@ -1,7 +1,15 @@
 <template>
-    <div class="header-bar">
+    <div class="header-bar" :class="isFixHeaderBar ? 'slide-down' : ''">
+        <!-- 左边 -->
         <div class="left-entry">
-            <div class="entry-title">
+            <div class="entry-title" v-if="isFixHeaderBar">
+                <picture class="logo">
+                    <img src="~assets/img/teriteri-pink.png" alt="">
+                </picture>
+                <span>首页</span>
+                <i class="iconfont icon-xiajiantou"></i>
+            </div>
+            <div class="entry-title" v-else>
                 <i class="iconfont icon-dianshi"></i>
                 <span>首页</span>
             </div>
@@ -25,8 +33,10 @@
                 <span>下载客户端</span>
             </div>
         </div>
+        <!-- 中间 -->
         <div class="center-search-container">
-            <div class="center-search-bar">
+            <div class="center-search__bar" :class="isSearchPopShow ? 'is-focus' : ''">
+                <!-- 输入框 -->
                 <form
                     id="nav-searchform"
                     :class="isSearchPopShow ? 'nav-searchform-active' : ''"
@@ -45,8 +55,68 @@
                         <i class="iconfont icon-sousuo"></i>
                     </div>
                 </form>
+                <!-- 气泡框 -->
+                <div class="search-panel" :style="isSearchPopShow ? '' : 'display: none;'" ref="searchPop">
+                    <div class="history" v-if="searchInput == ''">
+                        <div class="header">
+                            <div class="title">搜索历史</div>
+                            <div class="clear">清空</div>
+                        </div>
+                        <div class="histories-wrap" :style="isHistoryOpen ? 'max-height: 171px;' : 'max-height: 91px;'">
+                            <div class="histories">
+                                <div class="history-item" v-for="(item, index) in histories" :key="index">
+                                    <div class="history-text">
+                                        {{ item }}
+                                    </div>
+                                    <div class="close">
+                                        <i class="iconfont icon-close"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-fold" v-if="isHistoryOpen" @click.stop="isHistoryOpen = false;">
+                            <div class="fold-text">收起</div>
+                            <i class="iconfont icon-xiajiantou" style="transform: rotate(180deg); /* 旋转 180 度 */"></i>
+                        </div>
+                        <div class="history-fold" v-else @click.stop="isHistoryOpen = true;">
+                            <div class="fold-text">展开更多</div>
+                            <i class="iconfont icon-xiajiantou"></i>
+                        </div>
+                    </div>
+                    <div class="trending" v-if="searchInput == ''">
+                        <div class="header">
+                            <div class="title">teriteri热搜</div>
+                        </div>
+                        <div class="trendings-double">
+                            <div class="trendings-col" :style="isFixHeaderBar ? 'max-width: 206px;' : 'max-width: 244px;'">
+                                <div
+                                    class="trending-item"
+                                    v-for="(item, index) in trendings1"
+                                    :key="index"
+                                >
+                                    <div class="trendings-rank" :class="index < 2 ? 'topThree' : ''">{{ index * 2 + 1 }}</div>
+                                    <div class="trendings-text">{{ item }}</div>
+                                </div>
+                            </div>
+                            <div class="trendings-col" :style="isFixHeaderBar ? 'max-width: 206px;' : 'max-width: 244px;'">
+                                <div
+                                    class="trending-item"
+                                    v-for="(item, index) in trendings2"
+                                    :key="index"
+                                >
+                                    <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
+                                    <div class="trendings-text">{{ item }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="suggestions" v-if="searchInput != ''">
+
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- 右边 -->
         <div class="right-entry">
             <div class="header-avatar-wrap">
                 <div class="header-avatar-wrap--container mini-avatar--small">
@@ -110,6 +180,22 @@
                 searchInput: "",
                 // 是否显示热搜框
                 isSearchPopShow: false,
+                // 搜索历史
+                histories: ["asd艾丝妲", "艾丝妲水电费", "sllh电饭锅", "神里绫华", "我是神里绫华的狗", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟"],
+                // 是否展开搜索历史
+                isHistoryOpen: false,
+                // 热搜列表
+                trendings1:["被救博士因业绩差被转卖过", "Uzi吼退曹军", "挂科退学10年后再上大学", "秀才参加非诚勿扰加长版", "因文化水平低被诈骗团伙转卖", ],
+                trendings2:["日本队上演真人版灌篮高手", "88万人打出9.1分的电影", "张子豪演出摔下台", "29岁如何赚到千万存款", "2023香港小姐三甲诞生"],
+            }
+        },
+        props: {
+            // 是否是固钉导航栏
+            isFixHeaderBar: {
+                type: Boolean,
+                default() {
+                    return false;
+                }
             }
         },
         methods: {
@@ -117,22 +203,22 @@
             // 显示搜索框
             searchPopShow() {
                 this.isSearchPopShow = true;
-                console.log("显示热搜框: ", this.isSearchPopShow);
+                // console.log("显示热搜框: ", this.isSearchPopShow);
             },
 
             // 隐藏搜索框
             searchPopHide() {
                 this.isSearchPopShow = false;
-                console.log("显示热搜框: ", this.isSearchPopShow);
+                // console.log("显示热搜框: ", this.isSearchPopShow);
             },
 
             // 点击搜索框和气泡框外的空白处关闭气泡
             handleOutsideClick(event) {
                 const formElement = this.$refs.searchForm; // 输入框元素
-                // const popoverElement = this.$refs.searchPop; // 气泡框元素
+                const popoverElement = this.$refs.searchPop; // 气泡框元素
                 if (
                     !formElement.contains(event.target)
-                    // &&! popoverElement.contains(event.target)
+                    &&! popoverElement.contains(event.target)
                 ) {
                     this.searchPopHide();
                 }
@@ -163,6 +249,7 @@
     max-width: 2560px;
     width: 100%;
     height: 64px;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, .4), rgba(255, 255, 255, 0));    /* 渐变阴影 */
 }
 
 .left-entry {
@@ -178,6 +265,31 @@
     line-height: 1.25;
 }
 
+.slide-down {
+    position: fixed;
+    top: 0;
+    left: unset;
+    animation: headerSlideDown .3s linear forwards;
+    background: var(--bg1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    background: var(--bg1_float);
+}
+
+.logo {
+    height: 40%;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.logo img {
+    height: 100%;
+}
+
+.icon-xiajiantou {
+    margin-left: 5px;
+}
+
 .entry-title {
     display: flex;
     align-items: center;
@@ -190,6 +302,12 @@
 
 .download-entry {
     margin-left: 10px;
+}
+
+.slide-down .entry-title,
+.slide-down .default-entry,
+.slide-down .download-entry {
+    color: var(--text1);
 }
 
 .entry-title,
@@ -208,8 +326,25 @@
 }
 
 .center-search-container {
-    flex: 0.8 auto;
+    flex: 1 auto; /* 宽度占80% 居中*/
     height: 40px;
+}
+
+.center-search-container .is-focus {
+    box-shadow: 0 0 30px rgba(0,0,0,.1);
+    border-radius: 8px;
+}
+
+.header-bar .center-search-container .center-search__bar {
+    position: relative;
+    margin: 0 auto;
+    min-width: 181px;
+    max-width: 500px;
+}
+
+.is-focus #nav-searchform {
+    background-color: #fff;
+    border-bottom: none;
 }
 
 #nav-searchform {
@@ -282,10 +417,171 @@
     font-size: 18px;
 }
 
+.header-bar .search-panel {
+    width: 99.7%;
+    max-height: 612px;
+    overflow-y: auto;
+    background: var(--bg1);
+    border: 1px solid var(--line_regular);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 13px 0 16px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.header-bar .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.header-bar .header .title {
+    height: 24px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.header-bar .header .clear {
+    font-size: 12px;
+    line-height: 15px;
+    height: 15px;
+    color: var(--text3);
+    cursor: pointer;
+}
+
+.header-bar .histories-wrap {
+    padding: 0 16px;
+    overflow: hidden;
+}
+
+.header-bar .histories {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    margin-right: -10px;
+    margin-bottom: 4px;
+}
+
+.header-bar .histories .history-item {
+    position: relative;
+    box-sizing: border-box;
+    height: 30px;
+    padding: 7px 10px 8px;
+    font-size: 12px;
+    line-height: 15px;
+    background: var(--graph_bg_thin);
+    border-radius: 4px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.header-bar .histories .history-item .history-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 96px;
+    color: var(--text2);
+}
+
+.header-bar .histories .history-item .history-text:hover {
+    color: var(--brand_pink);
+}
+
+.header-bar .histories .history-item .close {
+    display: none;
+    box-sizing: border-box;
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    top: -6px;
+    right: -3px;
+    padding: 2px;
+}
+
+.header-bar .histories .history-item:hover .close {
+    display: block;
+}
+
+.header-bar .histories .history-item .close i {
+    font-size: 10px;
+    color: #fff;
+    background-color: #ccc;
+    border-radius: 50%;
+}
+
+.header-bar .history-fold {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    margin: 0 auto 14px;
+    color: var(--text3);
+    cursor: pointer;
+}
+
+.header-bar .history-fold:hover {
+    color: var(--brand_pink);
+}
+
+.header-bar .fold-text {
+    font-size: 12px;
+    line-height: 15px;
+    height: 15px;
+}
+
+.header-bar .trendings-double {
+    display: flex;
+}
+
+.header-bar .trendings-double .trendings-col {
+    flex: 1;
+}
+
+.header-bar .trendings-double .trendings-col:first-child {
+    margin-right: 10px;
+}
+
+.header-bar .trending-item {
+    box-sizing: border-box;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-left: 16px;
+}
+
+.header-bar .trending-item:hover {
+    background-color: var(--graph_bg_thick);
+}
+
+.header-bar .trending-item .trendings-rank {
+    margin-right: 10px;
+    color: var(--text3);
+}
+
+.header-bar .trending-item .topThree {
+    color: var(--text2) !important;
+}
+
+.header-bar .trending-item .trendings-text {
+    font-size: 14px;
+    line-height: 17px;
+    height: 17px;
+    margin-right: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0;
+    color: var(--text2);
+}
+
 .right-entry {
     display: flex;
     align-items: center;
     margin-left: 20px;
+    flex-shrink: 0;     /*容器空间不足时不缩小，即固定大小*/
 }
 
 .header-avatar-wrap {
@@ -352,6 +648,14 @@
     object-fit: inherit;
     border-radius: 50%;
     image-rendering: -webkit-optimize-contrast;
+}
+
+.slide-down .right-entry--outside .iconfont {
+    color: var(--text1);
+}
+
+.slide-down .right-entry--outside {
+    color: var(--text2);
 }
 
 .right-entry--outside {

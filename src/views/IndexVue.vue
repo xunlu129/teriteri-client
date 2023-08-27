@@ -1,15 +1,23 @@
 <template>
-    <div class="large-header">
-        <HeaderBarIndex></HeaderBarIndex>
-        <div class="header__banner">
-            <picture class="v-img banner-img">
-                <img src="~assets/img/banner.png" alt="">
-            </picture>
-            <div class="header-banner__inner">
-                <div class="logo-box">
-                   <img src="~assets/img/teriteri-white.png" alt=""> 
+    <div class="index">
+        <div class="large-header">
+            <HeaderBarIndex :isFixHeaderBar="isFixHeaderBar"></HeaderBarIndex>
+            <div class="header__banner">
+                <picture class="v-img banner-img">
+                    <img src="~assets/img/banner.png" alt="">
+                </picture>
+                <div class="header-banner__inner">
+                    <div class="logo-box">
+                    <img src="~assets/img/teriteri-white.png" alt=""> 
+                    </div>
                 </div>
             </div>
+            <div class="header__channel">
+
+            </div>
+        </div>
+        <div class="main__recommend">
+
         </div>
     </div>
 </template>
@@ -21,7 +29,31 @@
         name: "IndexVue",
         components: {
             HeaderBarIndex,
-        }
+        },
+        data() {
+            return {
+                // 是否是固钉导航栏
+                isFixHeaderBar: false,
+            }
+        },
+        methods: {
+        },
+        mounted() {
+            // 窗口滚动时根据高度判断是否显示固钉导航栏
+            const obj = document;
+            this.el = obj.documentElement;
+            obj.onscroll = () => {
+                if (this.el.scrollTop >= 64 && this.isFixHeaderBar == false) {
+                    // console.log(this.el.scrollTop);
+                    this.isFixHeaderBar = true;
+                } else if (this.el.scrollTop < 64 && this.isFixHeaderBar) {
+                    // console.log(this.el.scrollTop);
+                    this.isFixHeaderBar = false;
+                }
+            }
+        },
+        beforeUnmount() {
+        },
     }
 </script>
 
@@ -31,6 +63,13 @@
         padding: 0 64px;
     }
 }
+
+/* .index {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 100%;
+    height: 100vh;
+} */
 
 .large-header {
     background-color: #fff;
@@ -73,6 +112,10 @@
     object-fit: cover;
 }
 
+.banner-img img {
+    height: 100%;
+}
+
 .header-banner__inner {
     position: relative;
     width: 100%;
@@ -82,7 +125,7 @@
 
 .logo-box {
     width: 160px;
-    height: 90%;
+    height: 85%;
     display: flex;
     align-items: flex-end;
 }
@@ -90,5 +133,19 @@
 .logo-box img {
     width: 100%;
     cursor: pointer;
+}
+
+.header__channel {
+    height: 110px;
+    background-color: rgb(152, 225, 185);
+}
+
+.main__recommend {
+    height: 5000px;
+    background-color: rgb(224, 222, 126);
+    position: relative;
+    margin: 0 auto;
+    max-width: 2560px;
+    width: 100%;
 }
 </style>
