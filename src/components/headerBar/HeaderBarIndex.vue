@@ -34,10 +34,10 @@
             </div>
         </div>
         <!-- 中间 -->
-        <div class="center-search-container">
+        <div class="center-search-container" :style="isShowSearchInput ? '' : 'display: none;'">
             <div class="center-search__bar" :class="isSearchPopShow ? 'is-focus' : ''">
                 <!-- 输入框 -->
-                <form
+                <div
                     id="nav-searchform"
                     :class="isSearchPopShow ? 'nav-searchform-active' : ''"
                     ref="searchForm"
@@ -49,26 +49,34 @@
                             v-model="searchInput"
                             placeholder="请输入搜索内容"
                             @focus="searchPopShow()"
+                            @keyup.enter="goSearch"
                         ></el-input>
                     </div>
-                    <div class="nav-search-btn">
+                    <div
+                        class="nav-search-clean"
+                        :style="searchInput == '' ? 'display: none;' : ''"
+                        @click.stop="searchInput = ''"
+                    >
+                        <i class="iconfont icon-close"></i>
+                    </div>
+                    <div class="nav-search-btn" @click="goSearch">
                         <i class="iconfont icon-sousuo"></i>
                     </div>
-                </form>
+                </div>
                 <!-- 气泡框 -->
                 <div class="search-panel" :style="isSearchPopShow ? '' : 'display: none;'" ref="searchPop">
                     <div class="history" v-if="searchInput == ''">
                         <div class="header">
                             <div class="title">搜索历史</div>
-                            <div class="clear">清空</div>
+                            <div class="clear" @click.stop="removeAllHistories">清空</div>
                         </div>
                         <div class="histories-wrap" :style="isHistoryOpen ? 'max-height: 171px;' : 'max-height: 91px;'">
                             <div class="histories">
                                 <div class="history-item" v-for="(item, index) in histories" :key="index">
-                                    <div class="history-text">
+                                    <div class="history-text" @click.stop="clickItemToSearch(item)">
                                         {{ item }}
                                     </div>
-                                    <div class="close">
+                                    <div class="close" @click.stop="removeHistory(index)">
                                         <i class="iconfont icon-close"></i>
                                     </div>
                                 </div>
@@ -94,8 +102,10 @@
                                     v-for="(item, index) in trendings1"
                                     :key="index"
                                 >
-                                    <div class="trendings-rank" :class="index < 2 ? 'topThree' : ''">{{ index * 2 + 1 }}</div>
-                                    <div class="trendings-text">{{ item }}</div>
+                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
+                                        <div class="trendings-rank" :class="index < 2 ? 'topThree' : ''">{{ index * 2 + 1 }}</div>
+                                        <div class="trendings-text">{{ item }}</div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="trendings-col" :style="isFixHeaderBar ? 'max-width: 206px;' : 'max-width: 244px;'">
@@ -104,8 +114,10 @@
                                     v-for="(item, index) in trendings2"
                                     :key="index"
                                 >
-                                    <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
-                                    <div class="trendings-text">{{ item }}</div>
+                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
+                                        <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
+                                        <div class="trendings-text">{{ item }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -118,11 +130,16 @@
         </div>
         <!-- 右边 -->
         <div class="right-entry">
-            <div class="header-avatar-wrap">
+            <div class="header-avatar-wrap" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
                 <div class="header-avatar-wrap--container mini-avatar--small">
                     <picture class="v-img">
                         <img src="https://cdn.acwing.com/media/user/profile/photo/240972_md_e16c066264.jpg" alt="" />
                     </picture>
+                </div>
+                <div class="v-popover to-bottom">
+                    <div class="avatar-panel-popover" :class="isPopoverShow ? 'popShow' : 'popHide'" :style="{ display: popoverDisplay }">
+                        
+                    </div>
                 </div>
             </div>
             <div class="vip-wrap">
@@ -132,28 +149,64 @@
                 </div>
             </div>
             <div class="v-popover-wrap">
-                <div class="right-entry--outside">
-                    <i class="iconfont icon-xinfeng"></i>
-                    <span>消息</span>
-                </div>
+                <VPopover pop-style="padding-top: 17px;">
+                    <template #reference>
+                        <div class="right-entry--outside">
+                            <i class="iconfont icon-xinfeng"></i>
+                            <span>消息</span>
+                        </div>
+                    </template>
+                    <template #content>
+                        <div style="height: 228.1px; width: 143.6px;">
+                            
+                        </div>
+                    </template>
+                </VPopover>
             </div>
             <div class="v-popover-wrap">
-                <div class="right-entry--outside">
-                    <i class="iconfont icon-fengche"></i>
-                    <span>动态</span>
-                </div>
+                <VPopover pop-style="padding-top: 17px;">
+                    <template #reference>
+                        <div class="right-entry--outside">
+                            <i class="iconfont icon-fengche"></i>
+                            <span>动态</span>
+                        </div>
+                    </template>
+                    <template #content>
+                        <div style="height: 557.3px; width: 371.6px;">
+                            
+                        </div>
+                    </template>
+                </VPopover>
             </div>
             <div class="v-popover-wrap">
-                <div class="right-entry--outside">
-                    <i class="iconfont icon-shoucang"></i>
-                    <span>收藏</span>
-                </div>
+                <VPopover pop-style="padding-top: 17px; margin-left: -100px;">
+                    <template #reference>
+                        <div class="right-entry--outside">
+                            <i class="iconfont icon-shoucang"></i>
+                            <span>收藏</span>
+                        </div>
+                    </template>
+                    <template #content>
+                        <div style="height: 556.6px; width: 521.6px;">
+                            
+                        </div>
+                    </template>
+                </VPopover>
             </div>
             <div class="v-popover-wrap">
-                <div class="right-entry--outside">
-                    <i class="iconfont icon-lishijilu"></i>
-                    <span>历史</span>
-                </div>
+                <VPopover pop-style="padding-top: 17px; margin-left: -50px;">
+                    <template #reference>
+                        <div class="right-entry--outside">
+                            <i class="iconfont icon-lishijilu"></i>
+                            <span>历史</span>
+                        </div>
+                    </template>
+                    <template #content>
+                        <div style="height: 556.6px; width: 371.6px;">
+                            
+                        </div>
+                    </template>
+                </VPopover>
             </div>
             <div class="right-entry-item">
                 <div class="right-entry--outside">
@@ -172,21 +225,31 @@
 </template>
 
 <script>
+    let inTimer;  // 节流计时器
+    let outTimer;
+    import VPopover from '../popover/VPopover.vue';
+
     export default {
         name: "HeaderBarIndex",
+        components: {
+            VPopover,
+        },
         data() {
             return {
                 // 需要搜索的内容
                 searchInput: "",
-                // 是否显示热搜框
+                // 是否显示搜索气泡框
                 isSearchPopShow: false,
                 // 搜索历史
-                histories: ["asd艾丝妲", "艾丝妲水电费", "sllh电饭锅", "神里绫华", "我是神里绫华的狗", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟", "springcloud快速项目搭建", "springboot从入门到入坟"],
+                histories: [],
                 // 是否展开搜索历史
                 isHistoryOpen: false,
                 // 热搜列表
                 trendings1:["被救博士因业绩差被转卖过", "Uzi吼退曹军", "挂科退学10年后再上大学", "秀才参加非诚勿扰加长版", "因文化水平低被诈骗团伙转卖", ],
                 trendings2:["日本队上演真人版灌篮高手", "88万人打出9.1分的电影", "张子豪演出摔下台", "29岁如何赚到千万存款", "2023香港小姐三甲诞生"],
+                // 头像气泡框的显隐
+                popoverDisplay: "none",
+                isPopoverShow: false,
             }
         },
         props: {
@@ -196,17 +259,44 @@
                 default() {
                     return false;
                 }
+            },
+            // 是否显示搜索输入框
+            isShowSearchInput: {
+                type: Boolean,
+                default() {
+                    return true;
+                }
             }
         },
         methods: {
-            // 事件
-            // 显示搜索框
+            //////// 请求 ////////
+
+            // 前往搜索的回调
+            goSearch() {
+                this.searchPopHide();
+                if (this.searchInput.trim() === "") {
+                    // 输入空白符跳转搜索页面
+                    this.searchInput = "";
+                }
+                const index = this.histories.indexOf(this.searchInput);
+                if (index != -1) {
+                    // 值已存在，移除该值
+                    this.histories.splice(index, 1);
+                }
+                this.histories.unshift(this.searchInput);  // 在列表开头插入新记录
+                this.saveToLocalStorage();
+            },
+
+
+            //////// 事件 ////////
+
+            // 显示搜索气泡框
             searchPopShow() {
                 this.isSearchPopShow = true;
                 // console.log("显示热搜框: ", this.isSearchPopShow);
             },
 
-            // 隐藏搜索框
+            // 隐藏搜索气泡框
             searchPopHide() {
                 this.isSearchPopShow = false;
                 // console.log("显示热搜框: ", this.isSearchPopShow);
@@ -223,10 +313,68 @@
                     this.searchPopHide();
                 }
             },
+
+            // 将搜索历史存到浏览器
+            saveToLocalStorage() {
+                localStorage.setItem("historiesSearch", JSON.stringify(this.histories));
+            },
+
+            // 从浏览器中加载搜索历史
+            loadFromLocalStorage() {
+                const storedList = localStorage.getItem("historiesSearch");
+                // console.log("浏览器中的搜索历史: ", storedList);
+                if (storedList) {
+                    this.histories = JSON.parse(storedList);
+                }
+            },
+
+            // 在输入框按下回车的回调
+            onSubmit(e) {
+                // console.log(e);
+                if (e.key === 'Enter') {
+                    this.goSearch();
+                }
+            },
+
+            // 删除单个搜索历史
+            removeHistory(index) {
+                this.histories.splice(index, 1);
+                this.saveToLocalStorage();
+            },
+
+            // 清空全部搜索历史
+            removeAllHistories() {
+                this.histories = [];
+                localStorage.removeItem("historiesSearch");
+            },
+
+            // 点击条目搜索
+            clickItemToSearch(value) {
+                this.searchInput = value;
+                this.goSearch();
+            },
+
+            // 悬浮头像时，气泡的显隐
+            handleMouseEnter() {
+                clearTimeout(outTimer);
+                inTimer = setTimeout(() => {
+                    this.popoverDisplay = "";
+                    this.isPopoverShow = true;
+                }, 100);
+            },
+            handleMouseLeave() {
+                clearTimeout(inTimer);
+                this.isPopoverShow = false;
+                outTimer = setTimeout(() => {
+                    this.popoverDisplay = "none";
+                }, 200);
+            }
         },
         mounted() {
             // 页面渲染后创建点击事件的监听器
             window.addEventListener("click", this.handleOutsideClick);
+            // 在页面加载时从本地存储中加载搜索历史
+            this.loadFromLocalStorage();
         },
         beforeUnmount() {
             // 页面结束渲染前销毁点击事件的监听器
@@ -380,6 +528,7 @@
     background-color: #FFFFFF00;
     border-radius: 6px;
     box-shadow: none;
+    padding: 1px 30px 1px 11px;
 }
 
 .nav-search-input-active /deep/ .el-input__wrapper {
@@ -392,6 +541,28 @@
 
 .nav-search-input /deep/ .el-input__inner:focus {
     color: var(--text1);
+}
+
+.nav-search-clean {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 55px;
+    cursor: pointer;
+    background-color: var(--graph_weak);
+    border-radius: 50%;
+    color: #fff;
+}
+
+.nav-search-clean:hover {
+    background-color: var(--graph_icon);
+}
+
+.nav-search-clean i {
+    position: relative;
+    bottom: 2px;
+    left: 0.5px;
+    font-size: 14px;
 }
 
 .nav-search-btn {
@@ -448,6 +619,10 @@
     height: 15px;
     color: var(--text3);
     cursor: pointer;
+}
+
+.header-bar .header .clear:hover {
+    color: var(--text2);
 }
 
 .header-bar .histories-wrap {
@@ -543,7 +718,7 @@
     margin-right: 10px;
 }
 
-.header-bar .trending-item {
+.header-bar .trending-wrap {
     box-sizing: border-box;
     height: 38px;
     display: flex;
@@ -648,6 +823,63 @@
     object-fit: inherit;
     border-radius: 50%;
     image-rendering: -webkit-optimize-contrast;
+}
+
+.v-popover {
+    position: absolute;
+    z-index: 1;
+    padding-top: 20px;
+    margin-left: -20px;
+}
+
+.to-bottom {
+    top: 100%;
+    left: 50%;
+    transform: translate3d(-50%,0,0);   /* 水平左移半个元素身位，使其水平与父元素居中 */
+}
+
+.avatar-panel-popover {
+    width: 300px;
+    height: 450px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 0 24px 18px;
+    box-shadow: 0 0 30px rgba(0,0,0,.1);
+    border: 1px solid var(--line_regular);
+}
+
+.popHide {
+    animation: fade-out 0.2s ease-out forwards;
+    transform-origin: top; /* 设置动画的旋转点为顶部 */
+}
+
+.popShow {
+    animation: fade-in 0.2s ease-out forwards;
+    transform-origin: top; /* 设置动画的旋转点为顶部 */
+}
+
+/* 淡入动画 */
+@keyframes fade-in {
+    0% {
+        opacity: 0; /* 初始状态透明 */
+        transform: translateY(-10px); /* 向上平移 10px，将元素隐藏在顶部 */
+    }
+    100% {
+        opacity: 1; /* 最终状态不透明 */
+        transform: translateY(0); /* 平移恢复到原始位置 */
+    }
+}
+
+/* 淡出动画 */
+@keyframes fade-out {
+    0% {
+        opacity: 1; /* 初始状态不透明 */
+        transform: translateY(0);   /* 原始位置 */
+    }
+    100% {
+        opacity: 0; /* 最终状态透明 */
+        transform: translateY(-10px); /* 向上平移 10px，将元素隐藏在顶部 */
+    }
 }
 
 .slide-down .right-entry--outside .iconfont {
