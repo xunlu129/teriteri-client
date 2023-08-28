@@ -1,0 +1,12 @@
+@import url('./global.css');
+@import url('./normalize.css');
+@import url('../font/font.css');
+@import 'https://at.alicdn.com/t/c/font_4179759_9ec5oirfsq7.css';
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Harmony Font';
+}

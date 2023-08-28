@@ -1,0 +1,30 @@
+:root {
+    --brand_pink: #FF6699;
+    --brand_pink_thin: #FFECF1;
+    --brand_blue: #00AEEC;
+    --brand_blue_thin: #DFF6FD;
+    --stress_red: #F85A54;
+    --stress_red_thin: #FEECEA;
+    --success_green: #2AC864;
+    --success_green_thin: #E4F8EA;
+    --operate_orange: #FF7F24;
+    --operate_orange_thin: #FFF0E3;
+    --pay_yellow: #FFB027;
+    --pay_yellow_thin: #FFF6E4;
+    --graph_bg_thin: #F6F7F8;
+    --graph_bg_regular: #F1F2F3;
+    --graph_bg_thick: #E3E5E7;
+    --graph_weak: #C9CCD0;
+    --graph_medium: #9499A0;
+    --graph_icon: #61666D;
+    --text1: #18191C;
+    --text2: #61666D;
+    --text3: #9499A0;
+    --text4: #C9CCD0;
+    --bg1: #FFFFFF;
+    --bg2: #F4F5F6;
+    --bg3: #F1F2F3;
+    --bg1_float: #FFFFFF;
+    --bg2_float: #F1F2F3;
+    --line_regular: #E3E5E7;
+}
