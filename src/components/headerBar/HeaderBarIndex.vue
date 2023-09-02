@@ -2,12 +2,12 @@
     <div class="header-bar" :class="isFixHeaderBar ? 'slide-down' : ''">
         <!-- 左边 -->
         <div class="left-entry">
-            <div class="entry-title" v-if="isFixHeaderBar">
+            <div class="entry-title" v-if="isFixHeaderBar" @mouseenter="isOpen = true" @mouseleave="isOpen = false">
                 <picture class="logo">
                     <img src="~assets/img/teriteri-pink.png" alt="">
                 </picture>
                 <span>首页</span>
-                <i class="iconfont icon-xiajiantou"></i>
+                <i class="iconfont icon-xiajiantou" :class="isOpen ? 'arrow-down' : ''"></i>
             </div>
             <div class="entry-title" v-else>
                 <i class="iconfont icon-dianshi"></i>
@@ -236,6 +236,8 @@
         },
         data() {
             return {
+                // 首页是否展开频道
+                isOpen: false,
                 // 需要搜索的内容
                 searchInput: "",
                 // 是否显示搜索气泡框
@@ -356,14 +358,14 @@
 
             // 悬浮头像时，气泡的显隐
             handleMouseEnter() {
-                clearTimeout(outTimer);
+                clearTimeout(outTimer);     // 这里要清除隐藏的计时器，否则在0.2秒内出入头像，会导致头像变大但气泡突然消失
                 inTimer = setTimeout(() => {
                     this.popoverDisplay = "";
                     this.isPopoverShow = true;
                 }, 100);
             },
             handleMouseLeave() {
-                clearTimeout(inTimer);
+                clearTimeout(inTimer);    // 清除显示计时器防止快速经过头像时的气泡闪烁
                 this.isPopoverShow = false;
                 outTimer = setTimeout(() => {
                     this.popoverDisplay = "none";
@@ -441,6 +443,15 @@
 .entry-title {
     display: flex;
     align-items: center;
+}
+
+.entry-title .icon-xiajiantou {
+    transition: transform .3s;
+    transform: rotate(0);
+}
+
+.arrow-down {
+    transform: rotate(180deg) !important;
 }
 
 .default-entry span {
@@ -589,7 +600,7 @@
 }
 
 .header-bar .search-panel {
-    width: 99.7%;
+    width: 100%;
     max-height: 612px;
     overflow-y: auto;
     background: var(--bg1);

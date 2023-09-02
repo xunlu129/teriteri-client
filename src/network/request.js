@@ -46,7 +46,7 @@ export function get(url, params) {
         store.state.isLogin = false;
       } else {
         // console.log(err.response.data.msg);
-        ElMessage.error(err.response.data.message || '未知错误, 请打开控制台查看');
+        ElMessage.error(err.response.statusText || '未知错误, 请打开控制台查看');
       }
     },
   );
@@ -105,7 +105,7 @@ export function post(url, data) {
         store.state.isLogin = false;
       } else {
         // console.log(err.response.data.msg);
-        ElMessage.error(err.response.data.message || '未知错误, 请打开控制台查看');
+        ElMessage.error(err.response.statusText || '未知错误, 请打开控制台查看');
       }
     },
   );

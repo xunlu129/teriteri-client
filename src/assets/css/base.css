@@ -1,12 +1,14 @@
 @import url('./global.css');
 @import url('./normalize.css');
 @import url('../font/font.css');
-@import 'https://at.alicdn.com/t/c/font_4179759_9ec5oirfsq7.css';
+@import 'https://at.alicdn.com/t/c/font_4179759_q4jukx0igk.css';
 
 html {
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 body {
   font-family: 'Harmony Font';
+  background-color: var(--graph_bg_regular);
+  min-width: 1060px;
 }

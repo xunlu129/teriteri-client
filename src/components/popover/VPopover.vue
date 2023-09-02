@@ -17,7 +17,7 @@
 
 <script>
 let inTimer;  // 节流计时器
-let outTimer;
+// let outTimer;
 
     export default {
         name: "VPopover",
@@ -54,7 +54,7 @@ let outTimer;
             // 目前基本用到的情况都是hover，点击就暂时不写了
             handleMouseEnter() {
                 if (this.trigger === "hover") {
-                    clearTimeout(outTimer);
+                    // clearTimeout(outTimer);
                     inTimer = setTimeout(() => {
                         this.popoverDisplay = "";
                         this.isPopoverShow = true;
@@ -66,7 +66,7 @@ let outTimer;
                 if (this.trigger === "hover") {
                     clearTimeout(inTimer);
                     this.isPopoverShow = false;
-                    outTimer = setTimeout(() => {
+                    setTimeout(() => {
                         this.popoverDisplay = "none";
                     }, 200);
                 }
