@@ -8,13 +8,11 @@
                 </picture>
                 <div class="header-banner__inner">
                     <div class="logo-box">
-                    <img src="~assets/img/teriteri-white.png" alt=""> 
+                        <img src="~assets/img/teriteri-white.png" alt="">
                     </div>
                 </div>
             </div>
-            <div class="header__channel">
-
-            </div>
+            <HeaderChannel></HeaderChannel>
         </div>
         <div class="main__recommend">
 
@@ -24,11 +22,13 @@
 
 <script>
     import HeaderBarIndex from '@/components/headerBar/HeaderBarIndex.vue';
+    import HeaderChannel from '@/components/headerChannel/HeaderChannel.vue';
 
     export default {
         name: "IndexVue",
         components: {
             HeaderBarIndex,
+            HeaderChannel,
         },
         data() {
             return {
@@ -63,13 +63,6 @@
         padding: 0 64px;
     }
 }
-
-/* .index {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    width: 100%;
-    height: 100vh;
-} */
 
 .large-header {
     background-color: #fff;
@@ -113,7 +106,10 @@
 }
 
 .banner-img img {
+    display: block;
+    width: 100%;
     height: 100%;
+    object-fit: inherit;
 }
 
 .header-banner__inner {
@@ -121,23 +117,51 @@
     width: 100%;
     max-width: 2078px;
     margin: 0 auto;
-}
-
-.logo-box {
-    width: 160px;
-    height: 85%;
     display: flex;
     align-items: flex-end;
 }
 
-.logo-box img {
-    width: 100%;
-    cursor: pointer;
+@media (max-width: 1366.9px) {
+    .header-banner__inner {
+        padding: 0 56px;
+    }
 }
 
-.header__channel {
-    height: 110px;
-    background-color: rgb(152, 225, 185);
+@media (min-width: 1367px) and (max-width: 1700.9px) {
+    .header-banner__inner {
+        padding: 0 64px;
+    }
+}
+
+@media (min-width: 1701px) and (max-width: 2199.9px) {
+    .header-banner__inner {
+        padding: 0 96px;
+        max-width: 2270px;
+    }
+}
+
+@media (min-width: 2200px) {
+    .header-banner__inner {
+        max-width: 2078px;
+    }
+}
+
+.logo-box {
+    z-index: 1;
+    display: inline-block;
+    width: 150px;
+    height: 50%;
+}
+
+.header-banner__inner img {
+    cursor: pointer;
+    position: relative;
+    top: 5;
+    right: 0;
+    margin-bottom: 20px;
+    margin-left: 15px;
+    width: 150px;
+    height: 50px;
 }
 
 .main__recommend {
