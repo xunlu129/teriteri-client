@@ -11,4 +11,5 @@ body {
   font-family: 'Harmony Font';
   background-color: var(--graph_bg_regular);
   min-width: 1060px;
+  line-height: 1.15;
 }

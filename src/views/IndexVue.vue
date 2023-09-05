@@ -14,8 +14,44 @@
             </div>
             <HeaderChannel></HeaderChannel>
         </div>
-        <div class="main__recommend">
+        <!-- 固钉频道栏 -->
+        <div class="header-channel-fix">
 
+        </div>
+        <!-- 主体布局 -->
+        <div class="main__layout">
+            <div class="recommended-container">
+                <div class="container">
+                    <!-- 轮播图 -->
+                    <div class="recommended-swipe">
+                        <div class="recommended-swipe-core">
+                            <!-- 垫片 -->
+                            <div class="recommended-swipe-shim">
+                                <div class="video-card" v-for="index in 2" :key="index">
+                                    <div class="video-card__skeleton">
+                                        <div class="video-card__skeleton--cover"></div>
+                                        <div class="video-card__skeleton--info">
+                                            <div class="video-card__skeleton--right">
+                                                <p class="video-card__skeleton--text"></p>
+                                                <p class="video-card__skeleton--text short"></p>
+                                                <p class="video-card__skeleton--light"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shim-card"></div>
+                                <div class="shim-card"></div>
+                            </div>
+                            <!-- 主体 -->
+                            <div class="recommended-swipe-body">
+                                <div class="carousel-area">
+                                    <CarouselIndex></CarouselIndex>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -23,12 +59,14 @@
 <script>
     import HeaderBarIndex from '@/components/headerBar/HeaderBarIndex.vue';
     import HeaderChannel from '@/components/headerChannel/HeaderChannel.vue';
+    import CarouselIndex from '@/components/carousel/CarouselIndex.vue';
 
     export default {
         name: "IndexVue",
         components: {
             HeaderBarIndex,
             HeaderChannel,
+            CarouselIndex,
         },
         data() {
             return {
@@ -62,6 +100,12 @@
     .header-banner__inner {
         padding: 0 64px;
     }
+}
+
+.index {
+    margin: 0 auto;
+    max-width: 2560px;
+    background-color: var(--bg1);
 }
 
 .large-header {
@@ -98,6 +142,13 @@
     height: 100%;
     vertical-align: middle;
     background-color: var(--graph_bg_regular);
+}
+
+.v-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: inherit;
 }
 
 .banner-img {
@@ -164,12 +215,106 @@
     height: 50px;
 }
 
-.main__recommend {
+.main__layout {
     height: 5000px;
-    background-color: rgb(224, 222, 126);
+    background-color: #fff;
     position: relative;
     margin: 0 auto;
-    max-width: 2560px;
+    padding: 0 var(--layout-padding);
+    max-width: calc(1980px + 2 * var(--layout-padding));
     width: 100%;
+}
+
+@media (max-width: 1139.9px) {
+    .main__layout {
+        width: 1020px;
+    }
+}
+
+@media (min-width: 1300px) and (max-width: 1399.9px) {
+    .main__layout {
+        width: 1180px;
+    }
+}
+
+.recommended-container {
+    position: relative;
+}
+
+.recommended-container {
+    padding-bottom: 60px;
+}
+
+.container {
+    grid-gap: 20px;
+    display: grid;
+    position: relative;
+    width: 100%;
+}
+
+@media (max-width: 1399.9px) {
+    .container {
+        grid-column: span 4;
+        grid-template-columns: repeat(4,1fr);
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        grid-column: span 5;
+        grid-template-columns: repeat(5,1fr);
+    }
+}
+
+.recommended-swipe {
+    position: relative;
+    grid-column: 1/3;   /* 跨越从第1列到第3列，占据两个网格列的宽度，等价于 grid-column: span 2; */
+    grid-row: 1/3;   /* 跨越从第1行到第3行，占据两个网格行的高度 */
+}
+
+.recommended-swipe-core {
+    position: relative;
+    width: 100%;
+}
+
+.recommended-swipe-shim {
+    opacity: 0;
+    visibility: hidden;
+    user-select: none;
+    pointer-events: none;
+    grid-column: span 2;
+    grid-row: span 2;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 20px;
+    width: 100%;
+    display: grid;
+}
+
+.shim-card {
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%;
+}
+
+.recommended-swipe-body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    transform: translateZ(0);   /* 没有视觉效果的平移，它可以触发 GPU 加速，以提高性能和动画平滑度 */
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: var(--graph_bg_regular);
+}
+
+.carousel-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    z-index: 0;
 }
 </style>

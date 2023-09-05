@@ -505,6 +505,114 @@
     }
 }
 
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, code, del, dfn, em, img, q, s, samp, small, strike, strong, sub, sup, tt, var, dd, dl, dt, li, ol, ul, fieldset, form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.25;
+}
+
 .index *, .index *:before, .index *:after {
     box-sizing: border-box;     /* 宽度包括内边距 */
+}
+
+.index * {
+    margin: 0;
+    padding: 0;
+}
+
+.video-card {
+    position: relative;
+    --title-font-size: 15px;
+    --title-line-height: 22px;
+    --subtitle-font-size: 13px;
+    --subtitle-line-height: 17px;
+    --info-margin-top: 8px;
+    --avatar-size: 36px;
+    --avatar-margin-right: 8px;
+    --icon-size: 18px;
+    --title-padding-right: 16px;
+    --follow-icon-font-size: 12px;
+    --follow-icon-line-height: 17px;
+}
+
+.video-card__skeleton {
+    pointer-events: none;
+    user-select: none;
+}
+
+.video-card__skeleton--cover {
+    padding-top: 56.25%;
+    border-radius: 6px;
+    background-color: var(--graph_bg_regular);
+}
+
+.video-card__skeleton--info {
+    margin-top: var(--info-margin-top);
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.video-card__skeleton--right {
+    min-width: 0;
+    flex: 1;
+}
+
+.video-card__skeleton--text {
+    margin-bottom: 4px;
+    width: 94%;
+    height: calc(var(--title-line-height) - 4px);
+    border-radius: 4px;
+    background-color: var(--graph_bg_regular);
+}
+
+.video-card__skeleton--text.short {
+    width: 72%;
+}
+
+.video-card__skeleton--light {
+    margin-top: 8px;
+    width: 50%;
+    height: var(--subtitle-line-height);
+    border-radius: 4px;
+    background-color: var(--graph_bg_regular);
+}
+
+@media (min-width: 1367px) and (max-width: 1700.9px) {
+    .video-card {
+        --info-margin-top: 10px;
+    }
+}
+
+@media (min-width: 1701px) and (max-width: 2199.9px) {
+    .video-card {
+        --info-margin-top: 10px;
+        --subtitle-font-size: 13px;
+        --title-padding-right: 24px;
+    }
+}
+
+@media (min-width: 2200px) {
+    .video-card {
+        --title-font-size: 16px;
+        --title-line-height: 24px;
+        --subtitle-font-size: 14px;
+        --subtitle-line-height: 19px;
+        --info-margin-top: 12px;
+        --avatar-size: 40px;
+        --avatar-margin-right: 12px;
+        --icon-size: 20px;
+        --title-padding-right: 24px;
+    }
 }
