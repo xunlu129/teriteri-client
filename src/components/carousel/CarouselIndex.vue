@@ -73,7 +73,7 @@
                 this.startTimer();
             },
             startTimer() {
-                timer = setTimeout(this.nextSlide, 3200);
+                timer = setTimeout(this.nextSlide, 3200);   // 加上主函数的延时时长总共3.5秒换一张图
             },
 
             nextSlide() {
@@ -95,7 +95,7 @@
                     // 换回位置2的底色
                     this.color = this.carousels[1].color;
                     this.title = this.carousels[1].title;
-                }, 300);
+                }, 300);    // 这里的延时时长要大于等于动画的过渡时长
                 this.startTimer();
             },
 
@@ -117,7 +117,7 @@
                     // 换回位置2的底色
                     this.color = this.carousels[1].color;
                     this.title = this.carousels[1].title;
-                }, 300);
+                }, 300);    // 这里的延时时长要大于等于动画的过渡时长
                 this.startTimer();
             },
 
@@ -151,8 +151,10 @@
                 this.startTimer();
             },
         },
-        mounted() {
+        created() {
             this.getCarousels();
+        },
+        mounted() {
             this.startTimer();
             this.color = this.carousels[1].color;
             this.title = this.carousels[1].title;

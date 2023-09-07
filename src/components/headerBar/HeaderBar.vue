@@ -448,6 +448,7 @@
 .entry-title .icon-xiajiantou {
     transition: transform .3s;
     transform: rotate(0);
+    font-weight: 600;
 }
 
 .arrow-down {
