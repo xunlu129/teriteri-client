@@ -65,14 +65,14 @@
                 <div class="channel-link">
                     <span>公开课</span>
                 </div>
-                <VPopover placement="bottom" popStyle="z-index: 2000;">
+                <VPopover
+                    placement="bottom"
+                    popStyle="z-index: 2000;"
+                    @mouseenter="isOpen = true;"
+                    @mouseleave="isOpen = false;"
+                >
                     <template #reference>
-                        <div
-                            id="channel-entry-more"
-                            class="channel-entry-more__link"
-                            @mouseenter="isOpen = true;"
-                            @mouseleave="isOpen = false;"
-                        >
+                        <div id="channel-entry-more" class="channel-entry-more__link">
                             <span style="margin-left: -8px;">更多</span>
                             <i class="iconfont icon-xiajiantou" :class="isOpen ? 'arrow-down' : ''"></i>
                         </div>
@@ -144,29 +144,16 @@
             return {
                 // 是否有新动态以显示其头像，后面可改成获取动态详情
                 dynamicPic: true,
-                // 频道列表
-                channels: [],
                 // 是否展开显示更多频道
                 isOpen: false,
             }
         },
-        methods: {
-            // 请求
-
-            // 获取频道列表
-            async getChannels() {
-                let res = await this.$get("/mc/getall");
-                console.log("频道列表: ", res);
-                this.channels = res.data.data;
+        computed: {
+            // 频道列表
+            channels() {
+                return this.$store.state.channels;
             }
-
-            
-            // 事件
-
         },
-        mounted() {
-            this.getChannels();
-        }
     }
 </script>
 
@@ -414,7 +401,7 @@
     }
 }
 
-.channel-link {
+.channel-link:not(:nth-of-type(23)):not(:nth-of-type(24)):not(:nth-of-type(26)) {
     letter-spacing: 2px;
     cursor: pointer;
 }

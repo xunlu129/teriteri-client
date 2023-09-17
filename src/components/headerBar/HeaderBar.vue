@@ -133,7 +133,7 @@
             <div class="header-avatar-wrap" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
                 <div class="header-avatar-wrap--container mini-avatar--small">
                     <picture class="v-img">
-                        <img src="https://cdn.acwing.com/media/user/profile/photo/240972_md_e16c066264.jpg" alt="" />
+                        <img src="https://tinypic.host/images/2023/09/17/KGKAJ0KS84K713FHW.png" alt="" />
                     </picture>
                 </div>
                 <div class="v-popover to-bottom">
@@ -208,13 +208,13 @@
                     </template>
                 </VPopover>
             </div>
-            <div class="right-entry-item">
+            <div class="right-entry-item" @click="this.$router.push('/platform')">
                 <div class="right-entry--outside">
                     <i class="iconfont icon-dengpao"></i>
                     <span>创作中心</span>
                 </div>
             </div>
-            <div class="right-entry-item right-entry-item--upload">
+            <div class="right-entry-item right-entry-item--upload"  @click="this.$router.push('/platform/upload')">
                 <div class="upload-buttom">
                     <i class="iconfont icon-shangchuan"></i>
                     <span>投稿</span>
@@ -448,6 +448,7 @@
 .entry-title .icon-xiajiantou {
     transition: transform .3s;
     transform: rotate(0);
+    font-weight: 600;
 }
 
 .arrow-down {
