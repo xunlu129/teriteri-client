@@ -26,7 +26,7 @@
 <style scoped>
 .notfound__body {
     width: 100%;
-    background-color: var(--graph_bg_regular);
+    background-color: #fafafa;
 }
 
 .notfound-container {

@@ -3,8 +3,8 @@
         <div class="carousel-container" :style="`background-color: ${color};`">
             <div
                 class="carousel-transform"
-                :style="isRoll == 2 ? `transform: translateX(-${((100 / carousels.length) * 2).toFixed(4)}%); transition: transform 300ms ease 0s;width: ${carousels.length}00%;`
-                        : isRoll == 1 ? `transform: translateX(0); transition: transform 300ms ease 0s;width: ${carousels.length}00%;`
+                :style="isRoll == 2 ? `transform: translateX(-${((100 / carousels.length) * 2).toFixed(4)}%); transition: transform 400ms ease 0s;width: ${carousels.length}00%;`
+                        : isRoll == 1 ? `transform: translateX(0); transition: transform 400ms ease 0s;width: ${carousels.length}00%;`
                         : `transform: translateX(-${(100 / carousels.length).toFixed(4)}%); transition: transform 0ms ease 0s;width: ${carousels.length}00%;`"
                 >
                 <div class="carousel-slide" :style="`width: ${(100 / carousels.length).toFixed(4)}%`" v-for="(item, index) in carousels" :key="index">
@@ -73,7 +73,7 @@
                 this.startTimer();
             },
             startTimer() {
-                timer = setTimeout(this.nextSlide, 3200);   // 加上主函数的延时时长总共3.5秒换一张图
+                timer = setTimeout(this.nextSlide, 3100);   // 加上主函数的延时时长总共3.5秒换一张图
             },
 
             nextSlide() {
@@ -95,7 +95,7 @@
                     // 换回位置2的底色
                     this.color = this.carousels[1].color;
                     this.title = this.carousels[1].title;
-                }, 300);    // 这里的延时时长要大于等于动画的过渡时长
+                }, 500);    // 这里的延时时长要大于等于动画的过渡时长
                 this.startTimer();
             },
 
@@ -117,7 +117,7 @@
                     // 换回位置2的底色
                     this.color = this.carousels[1].color;
                     this.title = this.carousels[1].title;
-                }, 300);    // 这里的延时时长要大于等于动画的过渡时长
+                }, 400);    // 这里的延时时长要大于等于动画的过渡时长
                 this.startTimer();
             },
 
@@ -159,6 +159,9 @@
             this.color = this.carousels[1].color;
             this.title = this.carousels[1].title;
         },
+        beforeMount() {
+            clearTimeout(timer);
+        }
     }
 </script>
 
