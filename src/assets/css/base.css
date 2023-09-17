@@ -1,7 +1,7 @@
 @import url('./global.css');
 @import url('./normalize.css');
 @import url('../font/font.css');
-@import 'https://at.alicdn.com/t/c/font_4179759_q4jukx0igk.css';
+@import 'https://at.alicdn.com/t/c/font_4179759_lfu3aw8ax2b.css';
 
 html {
   /* overflow-x: hidden; */
@@ -9,6 +9,8 @@ html {
 
 body {
   font-family: 'Harmony Font';
-  background-color: var(--graph_bg_regular);
+  font-size: 14px;
+  background-color: #fafafa;
   min-width: 1060px;
+  line-height: 1.15;
 }
