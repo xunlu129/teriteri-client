@@ -2,8 +2,10 @@ import axios from 'axios';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 
+/** 这两个封装方法适合有返回值的请求 **/
+
 // get请求
-export function get(url, params) {
+export function get(url, config) {
   
   const store = useStore();
 
@@ -18,7 +20,6 @@ export function get(url, params) {
   // 请求拦截
   instance.interceptors.request.use(
     (config) => {
-      // console.log('请求拦截器');
       return config;
     },
     (err) => {
@@ -30,39 +31,51 @@ export function get(url, params) {
   instance.interceptors.response.use(
     (config) => {
       const code = config.data.code;
-      if (code !== 200 && !(code >= 800 && code <= 803))
+      if (code !== 200)
         ElMessage.error(config.data.message || '未知错误, 请打开控制台查看');
       return config;
     },
     (err) => {
       console.log([err]);
-      if (err.response.data.msg === '需要登录') {
-        // cookie过期 退出登录
-        // console.log(window.localStorage.getItem("userInfo"));
-        // window.localStorage.setItem("userInfo", "");
-        // 刷新页面
-        // history.go(0)
+      if (err.response.headers.message === 'not login') {
         // 修改当前的登录状态
         store.state.isLogin = false;
+        // 清除本地token缓存
+        localStorage.removeItem("teri_token");
+        ElMessage.error("请登录后查看");
       } else {
-        // console.log(err.response.data.msg);
-        ElMessage.error(err.response.statusText || '未知错误, 请打开控制台查看');
+        ElMessage.error("teriteri被玩坏了");
       }
     },
   );
 
   instance.defaults.withCredentials = true;
 
-  if (params) {
-    const query = { params };
-    return instance.get(url, query);
+  // axios.get("http://xxx/xxx",{
+  //   //参数列表
+  //   params:{ id: id},
+  //   //请求头配置  
+  //   headers:{ token: token }
+  // })
+
+  if (config) {
+    if (config.params) {
+      if (config.headers) {
+        return instance.get(url, {params: config.params, headers: config.headers}); // 有参数和请求头
+      }
+      return instance.get(url, {params: config.params}); // 有参数没请求头
+    }
+    if (config.headers) {
+      return instance.get(url, {headers: config.headers}); // 没参数有请求头
+    }
   } else {
-    return instance.get(url);
+    return instance.get(url); // 没参数和请求头
   }
+
 }
 
 // post请求
-export function post(url, data) {
+export function post(url, data, headers) {
   
   const store = useStore();
 
@@ -77,7 +90,6 @@ export function post(url, data) {
   // 请求拦截
   instance.interceptors.request.use(
     (config) => {
-      // console.log('请求拦截器');
       return config;
     },
     (err) => {
@@ -89,29 +101,36 @@ export function post(url, data) {
   instance.interceptors.response.use(
     (config) => {
       const code = config.data.code;
-      if (code !== 200 && !(code >= 800 && code <= 803))
+      if (code !== 200)
         ElMessage.error(config.data.message || '未知错误, 请打开控制台查看');
       return config;
     },
     (err) => {
       console.log([err]);
-      if (err.response.data.msg === '需要登录') {
-        // cookie过期 退出登录
-        // console.log(window.localStorage.getItem("userInfo"));
-        // window.localStorage.setItem("userInfo", "");
-        // 刷新页面
-        // history.go(0)
+      if (err.response.headers.message === 'not login') {
         // 修改当前的登录状态
         store.state.isLogin = false;
+        // 清除本地token缓存
+        localStorage.removeItem("teri_token");
+        ElMessage.error("请登录后查看");
       } else {
-        // console.log(err.response.data.msg);
-        ElMessage.error(err.response.statusText || '未知错误, 请打开控制台查看');
+        ElMessage.error("teriteri被玩坏了");
       }
     },
   );
 
   instance.defaults.withCredentials = true;
 
-  const query = { data };
-  return instance.post(url, query);
+  // axios.post("http://xxx/xxx",
+  //   //参数列表
+  //   { 'id': id },
+  //   //请求头配置   
+  //   { headers: {'token':token }}
+  // )
+
+  // 如果 data 是 Content-Type: application/json ，后端要用 @RequestBody 接收
+  if (headers) {
+    return instance.post(url, data, headers); // 有请求头
+  }
+  return instance.post(url, data);  // 没请求头
 }

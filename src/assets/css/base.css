@@ -1,6 +1,7 @@
 @import url('./global.css');
 @import url('./normalize.css');
 @import url('../font/font.css');
+@import url('./element.css');
 @import 'https://at.alicdn.com/t/c/font_4179759_lfu3aw8ax2b.css';
 
 html {
@@ -12,5 +13,5 @@ body {
   font-size: 14px;
   background-color: #fafafa;
   min-width: 1060px;
-  line-height: 1.15;
+  line-height: 1.25;
 }

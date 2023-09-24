@@ -17,6 +17,10 @@ export default {
     }
   },
   created() {
+    // 如果缓存中有token，尝试获取用户数据
+    if (localStorage.getItem("teri_token")) {
+      this.$store.dispatch("getPersonalInfo");
+    }
     this.getChannels();
   }
 };
