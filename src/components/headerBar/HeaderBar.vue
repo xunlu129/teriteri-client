@@ -130,7 +130,14 @@
         </div>
         <!-- 右边 -->
         <div class="right-entry">
-            <div class="header-avatar-wrap" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+            <!-- 未登录状态 -->
+            <div class="header-avatar-wrap" v-if="!this.$store.state.isLogin">
+                <div class="default-login" @click="dialogVisible = true;">
+                    登录
+                </div>
+            </div>
+            <!-- 登录后显示头像 -->
+            <div v-else class="header-avatar-wrap" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
                 <div class="header-avatar-wrap--container mini-avatar--small">
                     <picture class="v-img">
                         <img src="https://tinypic.host/images/2023/09/17/KGKAJ0KS84K713FHW.png" alt="" />
@@ -138,7 +145,9 @@
                 </div>
                 <div class="v-popover to-bottom">
                     <div class="avatar-panel-popover" :class="isPopoverShow ? 'popShow' : 'popHide'" :style="{ display: popoverDisplay }">
-                        
+                        <div class="logout" @click="logout">
+                            <span>退出登录</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -222,17 +231,23 @@
             </div>
         </div>
     </div>
+    <!-- 登录框 -->
+    <el-dialog v-model="dialogVisible" :close-on-click-modal="false" destroy-on-close align-center>
+        <LoginRegister @loginSuccess="dialogVisible = false;"></LoginRegister>
+    </el-dialog>
 </template>
 
 <script>
     let inTimer;  // 节流计时器
     let outTimer;
     import VPopover from '../popover/VPopover.vue';
+    import LoginRegister from '../loginRegister/LoginRegister.vue';
 
     export default {
         name: "HeaderBarIndex",
         components: {
             VPopover,
+            LoginRegister,
         },
         data() {
             return {
@@ -252,6 +267,8 @@
                 // 头像气泡框的显隐
                 popoverDisplay: "none",
                 isPopoverShow: false,
+                // 登录框组件的显隐
+                dialogVisible: false,
             }
         },
         props: {
@@ -370,6 +387,11 @@
                 outTimer = setTimeout(() => {
                     this.popoverDisplay = "none";
                 }, 200);
+            },
+
+            // 退出登录
+            logout() {
+                this.$store.dispatch("logout");
             }
         },
         mounted() {
@@ -771,6 +793,21 @@
     flex-shrink: 0;     /*容器空间不足时不缩小，即固定大小*/
 }
 
+.default-login {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    z-index: 2;
+    display: block;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--Pi4);
+    text-align: center;
+    line-height: 38px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 .header-avatar-wrap {
     position: relative;
     box-sizing: content-box;
@@ -892,6 +929,22 @@
         opacity: 0; /* 最终状态透明 */
         transform: translateY(-10px); /* 向上平移 10px，将元素隐藏在顶部 */
     }
+}
+
+.logout {
+    margin-top: 98px;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: var(--text2);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+.logout:hover {
+    background-color: var(--graph_bg_regular);
 }
 
 .slide-down .right-entry--outside .iconfont {
