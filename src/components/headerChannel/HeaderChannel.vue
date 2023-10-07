@@ -22,8 +22,69 @@
         <div class="right-channel-container">
             <!-- 中间频道 -->
             <div class="channel-items__left">
+                <!-- 番剧 -->
+                <VPopover class="channel-link" placement="top" popStyle="z-index: 2000; cursor: default;">
+                    <template #reference>
+                        <div>
+                            <span>{{ channels[0].mcName }}</span>
+                        </div>
+                    </template>
+                    <template #content>
+                        <div class="channel-children-container">
+                            <div
+                                class="sub-item"
+                                v-for="subIndex in Math.ceil(channels[0].scList.length / 4)" :key="subIndex"
+                            >
+                                <div
+                                    class="channel-children"
+                                    v-for="(child, chIndex) in channels[0].scList.slice((subIndex - 1) * 4, subIndex * 4)"
+                                    :key="chIndex"
+                                >
+                                    {{ child.scName }}
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </VPopover>
+                <div class="channel-link">
+                    <span>电影</span>
+                </div>
+                <!-- 国创 -->
+                <VPopover class="channel-link" placement="top" popStyle="z-index: 2000; cursor: default;">
+                    <template #reference>
+                        <div>
+                            <span>{{ channels[1].mcName }}</span>
+                        </div>
+                    </template>
+                    <template #content>
+                        <div class="channel-children-container">
+                            <div
+                                class="sub-item"
+                                v-for="subIndex in Math.ceil(channels[1].scList.length / 4)" :key="subIndex"
+                            >
+                                <div
+                                    class="channel-children"
+                                    v-for="(child, chIndex) in channels[1].scList.slice((subIndex - 1) * 4, subIndex * 4)"
+                                    :key="chIndex"
+                                >
+                                    {{ child.scName }}
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </VPopover>
+                <div class="channel-link">
+                    <span>电视剧</span>
+                </div>
+                <div class="channel-link">
+                    <span>综艺</span>
+                </div>
+                <div class="channel-link">
+                    <span>记录片</span>
+                </div>
+                <!-- 将剩下的遍历出来 -->
                 <VPopover class="channel-link"
-                    v-for="(item, index) in channels"
+                    v-for="(item, index) in channels.slice(2)"
                     :key="index"
                     :placement="index % 2 == 0 ? 'top' : 'bottom'"
                     popStyle="z-index: 2000; cursor: default;"
@@ -34,7 +95,7 @@
                         </div>
                     </template>
                     <template #content>
-                        <div class="channel-children-container" v-if="item.scList.length != 0">
+                        <div class="channel-children-container">
                             <div
                                 class="sub-item"
                                 v-for="subIndex in Math.ceil(item.scList.length / 4)" :key="subIndex"
@@ -403,6 +464,9 @@
 
 .channel-link:not(:nth-of-type(23)):not(:nth-of-type(24)):not(:nth-of-type(26)) {
     letter-spacing: 2px;
+}
+
+.channel-link {
     cursor: pointer;
 }
 
