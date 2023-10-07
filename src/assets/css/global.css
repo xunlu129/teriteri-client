@@ -548,6 +548,9 @@ h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, cod
 .video-card__skeleton {
     pointer-events: none;
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .video-card__skeleton--cover {

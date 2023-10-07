@@ -9,6 +9,8 @@ const PlatformAppeal = () => import('@/views/platform/children/PlatformAppeal.vu
 const PlatformData = () => import('@/views/platform/children/PlatformData.vue')
 const PlatformComment = () => import('@/views/platform/children/PlatformComment.vue')
 const PlatformDanmu = () => import('@/views/platform/children/PlatformDanmu.vue')
+const VideoUpload = () => import('@/views/platform/children/uploadChildren/VideoUpload.vue')
+const TextUpload = () => import('@/views/platform/children/uploadChildren/TextUpload.vue')
 
 
 
@@ -24,7 +26,15 @@ const routes = [
         component: Platform,
         children: [
             { path: '/platform/home', component: PlatformHome },
-            { path: '/platform/upload', component: PlatformUpload },
+            {
+                path: '/platform/upload',
+                component: PlatformUpload,
+                redirect: '/platform/upload/video',
+                children: [
+                    { path: '/platform/upload/video', component: VideoUpload },
+                    { path: '/platform/upload/text', component: TextUpload },
+                ]
+            },
             { path: '/platform/upload-manager', redirect: '/platform/upload-manager/manuscript' },
             { path: '/platform/upload-manager/manuscript', component: PlatformManuscript },
             { path: '/platform/upload-manager/appeal', component: PlatformAppeal },
