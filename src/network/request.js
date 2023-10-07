@@ -1,13 +1,11 @@
 import axios from 'axios';
-import { useStore } from 'vuex';
+import store from '../store'
 import { ElMessage } from 'element-plus';
 
 /** 这两个封装方法适合有返回值的请求 **/
 
 // get请求
 export function get(url, config) {
-  
-  const store = useStore();
 
   // 请求超过30秒则判定为超时
   const instance = axios.create({
@@ -36,15 +34,17 @@ export function get(url, config) {
       return config;
     },
     (err) => {
-      console.log([err]);
+      console.log(err);
       if (err.response.headers.message === 'not login') {
         // 修改当前的登录状态
         store.state.isLogin = false;
         // 清除本地token缓存
         localStorage.removeItem("teri_token");
         ElMessage.error("请登录后查看");
+        this.$store.state.isLoading = false;
       } else {
-        ElMessage.error("teriteri被玩坏了");
+        ElMessage.error("特丽丽被玩坏了");
+        this.$store.state.isLoading = false;
       }
     },
   );
@@ -76,8 +76,6 @@ export function get(url, config) {
 
 // post请求
 export function post(url, data, headers) {
-  
-  const store = useStore();
 
   // 请求超过30秒则判定为超时
   const instance = axios.create({
@@ -106,15 +104,17 @@ export function post(url, data, headers) {
       return config;
     },
     (err) => {
-      console.log([err]);
-      if (err.response.headers.message === 'not login') {
+      console.log(err);
+      if (err.response.headers.message == 'not login') {
         // 修改当前的登录状态
         store.state.isLogin = false;
         // 清除本地token缓存
         localStorage.removeItem("teri_token");
         ElMessage.error("请登录后查看");
+        this.$store.state.isLoading = false;
       } else {
-        ElMessage.error("teriteri被玩坏了");
+        ElMessage.error("特丽丽被玩坏了");
+        this.$store.state.isLoading = false;
       }
     },
   );

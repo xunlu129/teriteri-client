@@ -631,6 +631,9 @@
     opacity: 0;
     visibility: hidden;
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     pointer-events: none;
     grid-column: span 2;
     grid-row: span 2;

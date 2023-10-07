@@ -101,7 +101,6 @@ export default {
                 ElMessage.error("用户名或密码错误");
             });
             if (!result) return;
-            console.log(result);
             if (result.data.code === 200) {
                 localStorage.setItem("teri_token", result.data.data.token); // 浏览器缓存token
                 this.$store.commit("updateUser", result.data.data.user);    // 更新vuex中当前用户信息
@@ -115,17 +114,14 @@ export default {
         async submitRegister() {
             // 前端先做判断，减轻服务器负担
             if (this.usernameRegister.trim() == "") {
-                console.log("账号不能为空");
                 ElMessage.error("账号不能为空");
                 return;
             }
             if (this.passwordRegister == "" || this.confirmedPassword == "") {
-                console.log("密码不能为空");
                 ElMessage.error("密码不能为空");
                 return;
             }
             if (this.passwordRegister != this.confirmedPassword) {
-                console.log("两次输入的密码不一致");
                 ElMessage.error("两次输入的密码不一致");
                 return;
             }
