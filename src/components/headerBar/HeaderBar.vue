@@ -979,12 +979,19 @@
 }
 
 .upload-buttom {
-    background-color: #fb7299;
-    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 16px;
+    width: 90px;
+    height: 34px;
     border-radius: 8px;
-    padding: 8px 20px;
-    cursor: pointer;
+    background: #fb7299;
+    color: #fff;
+    text-align: center;
     font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
     transition: background-color .3s;
 }
 
@@ -994,6 +1001,28 @@
 
 .icon-shangchuan {
     margin-right: 5px;
+    line-height: 34px;
+}
+
+@media (max-width: 1279.9px) {
+    .right-entry--outside {
+        margin: 0 5px;
+        min-width: 25px;
+    }
+
+    .upload-buttom {
+        width: 34px;
+        height: 34px;
+        margin-left: 0;
+    }
+
+    .icon-shangchuan {
+        margin-right: 0;
+    } 
+
+    .right-entry--outside span, .upload-buttom span {
+        display: none;
+    }
 }
 
 /* 跳动效果 */

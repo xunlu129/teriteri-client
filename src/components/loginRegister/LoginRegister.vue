@@ -93,12 +93,14 @@ export default {
 
         // 登录的回调
         async submitLogin() {
+            this.$store.state.isLoading = true;
             // 这里为了更方便捕捉到错误后给出提示，就不使用封装的函数了
             const result = await axios.post("/api/user/account/login", {
                 username: this.usernameLogin.toString(),
                 password: this.passwordLogin.toString(),
             }).catch(() => {
                 ElMessage.error("用户名或密码错误");
+                this.$store.state.isLoading = false;
             });
             if (!result) return;
             if (result.data.code === 200) {
@@ -107,6 +109,7 @@ export default {
                 ElMessage.success(result.data.message);
                 this.$store.commit("updateIsLogin", true);  // 修改在线状态
                 this.$emit("loginSuccess"); // 触发父组件关闭登录框的回调
+                this.$store.state.isLoading = false;
             }
             
         },
