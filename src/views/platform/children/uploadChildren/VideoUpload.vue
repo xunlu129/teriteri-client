@@ -818,6 +818,7 @@ export default {
                 formData.append('title', this.form.title);
                 formData.append('type', this.form.type);
                 formData.append('auth', this.form.auth);
+                formData.append('duration', this.duration);
                 formData.append('mcid', this.form.category[0].id);
                 formData.append('scid', this.form.category[1].id);
                 let tags = "";
