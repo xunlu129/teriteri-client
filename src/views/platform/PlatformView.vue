@@ -14,15 +14,25 @@
                     </div>
                 </div>
                 <div class="right-block">
-                    <VPopover pop-style="padding-top: 10px;">
+                    <!-- 未登录状态 -->
+                    <div class="not-login" v-if="!this.$store.state.isLogin">
+                        <div class="not-login-text">
+                            未登录
+                        </div>
+                    </div>
+                    <VPopover pop-style="padding-top: 10px;" v-else>
                         <template #reference>
                             <div class="avatar">
-                                <img src="https://tinypic.host/images/2023/09/17/KGKAJ0KS84K713FHW.png" alt="">
+                                <img :src="user.avatar_url" :alt="`${user.nickname}的头像`">
                             </div>
                         </template>
                         <template #content>
-                            <div style="height: 228.1px; width: 143.6px;">
-                                
+                            <div style="width: 144px;">
+                                <div class="placeholder"></div>
+                                <div class="logout" @click="logout">
+                                    <i class="iconfont icon-dengchu"></i>
+                                    <span>退出登录</span>
+                                </div>
                             </div>
                         </template>
                     </VPopover>
@@ -33,12 +43,12 @@
                     <div class="line-divid"></div>
                     <VPopover pop-style="padding-top: 10px;">
                         <template #reference>
-                            <div class="message">
+                            <div class="message" @click="this.$store.state.isLogin ? noPage() : noLogin()">
                                 <i class="iconfont icon-xinfeng"></i>
                             </div>
                         </template>
                         <template #content>
-                            <div style="height: 228.1px; width: 143.6px;">
+                            <div style="height: 228.1px; width: 144px;" v-if="this.$store.state.isLogin">
                                 
                             </div>
                         </template>
@@ -80,7 +90,7 @@
             </el-menu>
         </div>
         <!-- 主体 -->
-        <div class="platform-main">
+        <div class="platform-main" v-if="this.$store.state.isLogin">
             <div class="content-body">
                 <router-view></router-view>
             </div>            
@@ -90,6 +100,7 @@
 
 <script>
 import VPopover from '@/components/popover/VPopover.vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 export default {
     name: "PlatformView",
@@ -102,6 +113,11 @@ export default {
             path: ["/platform/home", "/platform/upload-manager/manuscript", "/platform/upload-manager/appeal", "/platform/data-up", "/platform/comment", "/platform/danmu"],
         }
     },
+    computed: {
+        user() {
+            return this.$store.state.user;
+        }
+    },
     created() {
         for (let i = 0; i < this.path.length; i++) {
             if (this.$route.path.startsWith(this.path[i])) {
@@ -109,6 +125,32 @@ export default {
                 // console.log(this.active);
                 break;
             }            
+        }
+    },
+    methods: {
+        // 退出登录
+        logout() {
+            ElMessageBox.confirm(
+                '请确保你的创作内容已经保存或发布，退出登录将会丢失你正在进行的创作，确定退出吗？',
+                {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                this.$store.dispatch("logout");
+                this.$router.push("/");
+            })
+            .catch(() => {})
+        },
+
+        noLogin() {
+            ElMessage.error("请登录后查看");
+        },
+
+        noPage() {
+            ElMessage.warning("该功能暂未开放");
         }
     }
 }
@@ -198,7 +240,6 @@ export default {
 
 .avatar {
     position: relative;
-    display: inline-block;
     line-height: 1;
     height: 30px;
     width: 30px;
@@ -210,6 +251,33 @@ export default {
     height: 100%;
     width: 100%;
     border-radius: 50%;
+}
+
+.placeholder {
+    margin: auto;
+    height: 10px;
+    border-bottom: 1px solid #eee;
+    width: 100px;
+}
+
+.logout {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    color: var(--text2);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+.logout:hover {
+    background-color: var(--graph_bg_regular);
+}
+
+.logout span {
+    margin-left: 10px;
+    line-height: 20px;
 }
 
 .tips {

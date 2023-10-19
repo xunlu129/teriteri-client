@@ -15,43 +15,46 @@ const TextUpload = () => import('@/views/platform/children/uploadChildren/TextUp
 
 
 const routes = [
-    {path: '/', redirect: ''},
-    {
-        path: '',
-        component: Index,
-    },
+    { path: '/', redirect: '' },
+    { path: '', name: "index", component: Index, meta: { requestAuth: false } },
     {
         path: '/platform',
         redirect: '/platform/home',
         component: Platform,
         children: [
-            { path: '/platform/home', component: PlatformHome },
+            { path: '/platform/home', component: PlatformHome, meta: { requestAuth: true } },
             {
                 path: '/platform/upload',
                 component: PlatformUpload,
                 redirect: '/platform/upload/video',
                 children: [
-                    { path: '/platform/upload/video', component: VideoUpload },
-                    { path: '/platform/upload/text', component: TextUpload },
+                    { path: '/platform/upload/video', component: VideoUpload, meta: { requestAuth: true } },
+                    { path: '/platform/upload/text', component: TextUpload, meta: { requestAuth: true } },
                 ]
             },
             { path: '/platform/upload-manager', redirect: '/platform/upload-manager/manuscript' },
-            { path: '/platform/upload-manager/manuscript', component: PlatformManuscript },
-            { path: '/platform/upload-manager/appeal', component: PlatformAppeal },
-            { path: '/platform/data-up', component: PlatformData },
-            { path: '/platform/comment', component: PlatformComment },
-            { path: '/platform/danmu', component: PlatformDanmu },
+            { path: '/platform/upload-manager/manuscript', component: PlatformManuscript, meta: { requestAuth: true } },
+            { path: '/platform/upload-manager/appeal', component: PlatformAppeal, meta: { requestAuth: true } },
+            { path: '/platform/data-up', component: PlatformData, meta: { requestAuth: true } },
+            { path: '/platform/comment', component: PlatformComment, meta: { requestAuth: true } },
+            { path: '/platform/danmu', component: PlatformDanmu, meta: { requestAuth: true } },
         ]
     },
-    {
-        path: '/:catchAll(.*)', // 在Vue Router 4中，需要使用自定义正则表达式来定义通配符路由
-        component: NotFound
-    },
+    { path: '/:catchAll(.*)', component: NotFound, meta: { requestAuth: false } },
 ]
 
 const router = createRouter({
     history: createWebHistory(),
     routes
-  })
+});
+
+// 本地没有token就跳到登录界面
+router.beforeEach((to, from, next) => {
+    if (to.meta.requestAuth && !localStorage.getItem("teri_token")) {
+        next({ name: "index" });
+    } else {
+        next();
+    }
+});
 
 export default router

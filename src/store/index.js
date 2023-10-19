@@ -23,7 +23,7 @@ export default createStore({
         // 更新当前用户
         updateUser(state, user) {
             state.user = user;
-            // console.log("更新vuex中用户信息: ", state.user);
+            console.log("更新vuex中用户信息: ", state.user);
         },
         // 更新分区列表
         updateChannels(state, channels) {
