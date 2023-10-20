@@ -103,6 +103,10 @@ export default {
                 this.$store.state.isLoading = false;
             });
             if (!result) return;
+            if (result.data.code !== 200) {
+                ElMessage.error(result.data.message);
+                this.$store.state.isLoading = false;
+            }
             if (result.data.code === 200) {
                 localStorage.setItem("teri_token", result.data.data.token); // 浏览器缓存token
                 this.$store.commit("updateUser", result.data.data.user);    // 更新vuex中当前用户信息
@@ -111,7 +115,6 @@ export default {
                 this.$emit("loginSuccess"); // 触发父组件关闭登录框的回调
                 this.$store.state.isLoading = false;
             }
-            
         },
 
         async submitRegister() {

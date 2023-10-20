@@ -43,13 +43,25 @@
                                 class="crop-box-marking-bottom"
                             ></div>
                             <!-- 左上控块 -->
-                            <div class="cropper-point point-lt" @mousedown="(e)=>startResize('lt', e)"></div>
+                            <div class="cropper-point point-lt"
+                                @mousedown="(e)=>startResize('lt', e)"
+                                @touchstart="(e)=>startResize('lt', e.touches[0])"
+                            ></div>
                             <!-- 右上控块 -->
-                            <div class="cropper-point point-rt" @mousedown="(e)=>startResize('rt', e)"></div>
+                            <div class="cropper-point point-rt"
+                                @mousedown="(e)=>startResize('rt', e)"
+                                @touchstart="(e)=>startResize('rt', e.touches[0])"
+                            ></div>
                             <!-- 左下控块 -->
-                            <div class="cropper-point point-lb" @mousedown="(e)=>startResize('lb', e)"></div>
+                            <div class="cropper-point point-lb"
+                                @mousedown="(e)=>startResize('lb', e)"
+                                @touchstart="(e)=>startResize('lb', e.touches[0])"
+                            ></div>
                             <!-- 右下控块 -->
-                            <div class="cropper-point point-rb" @mousedown="(e)=>startResize('rb', e)"></div>
+                            <div class="cropper-point point-rb"
+                                @mousedown="(e)=>startResize('rb', e)"
+                                @touchstart="(e)=>startResize('rb', e.touches[0])"
+                            ></div>
                         </div>
                         <!-- 上蒙版 -->
                         <div
@@ -308,6 +320,13 @@ export default {
                 offsetY = e.clientY - cropBox.getBoundingClientRect().top; // 鼠标相对crop-box的Y偏移
             });
 
+            // 在移动端 触摸事件处理程序
+            cropBoxMove.addEventListener("touchstart", (e) => {
+                isDragging = true;
+                offsetX = e.touches[0].clientX - cropBox.getBoundingClientRect().left;
+                offsetY = e.touches[0].clientY - cropBox.getBoundingClientRect().top;
+            });
+
             // 鼠标移动事件处理程序
             document.addEventListener("mousemove", (e) => {
                 if (!isDragging) return;
@@ -327,8 +346,32 @@ export default {
                 this.boxTop = top;
             });
 
+            // 在移动端 移动事件处理程序
+            document.addEventListener("touchmove", (e) => {
+                if (!isDragging) return;
+
+                // 计算新的crop-box位置
+                let left = e.touches[0].clientX - offsetX - showPosition.getBoundingClientRect().left;
+                let top = e.touches[0].clientY - offsetY - showPosition.getBoundingClientRect().top;
+
+                // 限制crop-box在showPosition内部
+                left = Math.max(0, left);
+                left = Math.min(showPosition.offsetWidth - cropBox.offsetWidth, left);
+                top = Math.max(0, top);
+                top = Math.min(showPosition.offsetHeight - cropBox.offsetHeight, top);
+
+                // 设置新位置
+                this.boxLeft = left;
+                this.boxTop = top;
+            });
+
             // 鼠标释放事件处理程序
             document.addEventListener("mouseup", () => {
+                isDragging = false;
+            });
+
+            // 在移动端 释放事件处理程序
+            document.addEventListener("touchend", () => {
                 isDragging = false;
             });
         },
@@ -359,13 +402,17 @@ export default {
             this.startBoxTop = this.boxTop;
             // 添加全局事件监听器
             window.addEventListener('mousemove', this.resize);
+            window.addEventListener('touchmove', this.resize);
             window.addEventListener('mouseup', this.stopResize);
+            window.addEventListener('touchend', this.stopResize);
         },
 
         // 缩放中
         resize(event) {
             if (!this.isResizing) return;
-            const deltaX = event.clientX - this.startX;
+            // 根据event值来判断是移动端还是电脑端
+            const clientX = (event.touches && event.touches.length > 0) ? event.touches[0].clientX : event.clientX;
+            const deltaX = clientX - this.startX;
             // 根据不同的缩放方向，计算新的尺寸和位置
             if (this.resizeDirection == 'lt') {
                 // 左上缩放
@@ -421,14 +468,18 @@ export default {
                 }
             }
             // 阻止默认事件
-            event.preventDefault();
+            if (!(event.touches && event.touches.length > 0)) {
+                event.preventDefault();
+            }            
         },
 
         // 停止缩放
         stopResize() {
             // 清除事件监听器
             window.removeEventListener('mousemove', this.resize);
+            window.removeEventListener('touchmove', this.resize);
             window.removeEventListener('mouseup', this.stopResize);
+            window.removeEventListener('touchend', this.stopResize);
             // 重置缩放状态
             this.isResizing = false;
             this.resizeDirection = '';

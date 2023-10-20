@@ -2,33 +2,39 @@
     <div class="header-bar" :class="isFixHeaderBar ? 'slide-down' : ''">
         <!-- 左边 -->
         <div class="left-entry">
-            <div class="entry-title" v-if="isFixHeaderBar" @mouseenter="isOpen = true" @mouseleave="isOpen = false">
+            <div
+                class="entry-title"
+                v-if="isFixHeaderBar"
+                @mouseenter="isOpen = true"
+                @mouseleave="isOpen = false"
+                @click="this.$router.push('/')"
+            >
                 <picture class="logo">
                     <img src="~assets/img/teriteri-pink.png" alt="">
                 </picture>
                 <span>首页</span>
                 <i class="iconfont icon-xiajiantou" :class="isOpen ? 'arrow-down' : ''"></i>
             </div>
-            <div class="entry-title" v-else>
+            <div class="entry-title" v-else @click="this.$router.push('/')">
                 <i class="iconfont icon-dianshi"></i>
                 <span>首页</span>
             </div>
-            <div class="default-entry">
+            <div class="default-entry" @click="noPage">
                 <span>番剧</span>
             </div>
-            <div class="default-entry">
+            <div class="default-entry" @click="noPage">
                 <span>漫画</span>
             </div>
-            <div class="default-entry">
+            <div class="default-entry" @click="noPage">
                 <span>直播</span>
             </div>
-            <div class="default-entry">
+            <div class="default-entry" @click="noPage">
                 <span>游戏中心</span>
             </div>
-            <div class="default-entry">
+            <div class="default-entry" @click="noPage">
                 <span>会员购</span>
             </div>
-            <div class="download-entry">
+            <div class="download-entry" @click="noPage">
                 <i class="iconfont icon-xiazai"></i>
                 <span>下载客户端</span>
             </div>
@@ -140,19 +146,69 @@
             <div v-else class="header-avatar-wrap" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
                 <div class="header-avatar-wrap--container mini-avatar--small">
                     <picture class="v-img">
-                        <img src="https://tinypic.host/images/2023/09/17/KGKAJ0KS84K713FHW.png" alt="" />
+                        <img :src="user.avatar_url" :alt="`${user.nickname}的头像`" />
                     </picture>
                 </div>
                 <div class="v-popover to-bottom">
                     <div class="avatar-panel-popover" :class="isPopoverShow ? 'popShow' : 'popHide'" :style="{ display: popoverDisplay }">
-                        <div class="logout" @click="logout">
+                        <div class="nickname">
+                            <span>{{ user.nickname }}</span>
+                        </div>
+                        <div class="vip-level-tag">
+                            <div class="vip-tag">年度大会员</div>
+                            <i class="iconfont icon-lv6"></i>
+                            <div class="gender female" v-if="user.gender == 0"><el-icon size="12"><Female /></el-icon></div>
+                            <div class="gender male" v-if="user.gender == 1"><el-icon size="12"><Male /></el-icon></div>
+                        </div>
+                        <div class="coins">
+                            <span class="coins-text">硬币: </span>
+                            <span class="coins-num">0</span>
+                        </div>
+                        <div class="counts">
+                            <div class="counts-item">
+                                <div class="count-num">114</div>
+                                <div class="count-text">关注</div>
+                            </div>
+                            <div class="counts-item">
+                                <div class="count-num">514</div>
+                                <div class="count-text">粉丝</div>
+                            </div>
+                            <div class="counts-item">
+                                <div class="count-num">1919</div>
+                                <div class="count-text">动态</div>
+                            </div>
+                        </div>
+                        <div class="single-item middle" @click="noPage">
+                            <div class="single-item-left">
+                                <el-icon size="16"><User /></el-icon>
+                                <span>个人中心</span>
+                            </div>                            
+                            <el-icon><ArrowRightBold /></el-icon>
+                        </div>
+                        <div class="single-item middle" @click="this.$router.push('/platform/upload-manager')">
+                            <div class="single-item-left">
+                                <el-icon size="16"><Document /></el-icon>
+                                <span>投稿管理</span>
+                            </div>                            
+                            <el-icon><ArrowRightBold /></el-icon>
+                        </div>
+                        <div class="single-item middle" @click="noPage">
+                            <div class="single-item-left">
+                                <el-icon size="16"><Star /></el-icon>
+                                <span>推荐服务</span>
+                            </div>                            
+                            <el-icon><ArrowRightBold /></el-icon>
+                        </div>
+                        <div class="placeholder"></div>
+                        <div class="single-item logout" @click="logout">
+                            <i class="iconfont icon-dengchu"></i>
                             <span>退出登录</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="vip-wrap">
-                <div class="right-entry--outside">
+                <div class="right-entry--outside" @click="noPage">
                     <i class="iconfont icon-huiyuan1"></i>
                     <span>大会员</span>
                 </div>
@@ -160,14 +216,20 @@
             <div class="v-popover-wrap">
                 <VPopover pop-style="padding-top: 17px;">
                     <template #reference>
-                        <div class="right-entry--outside">
+                        <div class="right-entry--outside" @click="this.$store.state.isLogin ? noPage() : dialogVisible = true;">
                             <i class="iconfont icon-xinfeng"></i>
                             <span>消息</span>
                         </div>
                     </template>
                     <template #content>
-                        <div style="height: 228.1px; width: 143.6px;">
+                        <div style="height: 228.1px; width: 143.6px;" v-if="this.$store.state.isLogin">
                             
+                        </div>
+                        <div class="not-login" v-else>
+                            <p class="not-login-tips">登录即可查看消息记录</p>
+                            <div class="not-login-btn" @click="dialogVisible = true;">
+                                立即登录
+                            </div>
                         </div>
                     </template>
                 </VPopover>
@@ -175,55 +237,79 @@
             <div class="v-popover-wrap">
                 <VPopover pop-style="padding-top: 17px;">
                     <template #reference>
-                        <div class="right-entry--outside">
+                        <div class="right-entry--outside" @click="this.$store.state.isLogin ? noPage() : dialogVisible = true;">
                             <i class="iconfont icon-fengche"></i>
                             <span>动态</span>
                         </div>
                     </template>
                     <template #content>
-                        <div style="height: 557.3px; width: 371.6px;">
+                        <div style="height: 557.3px; width: 371.6px;" v-if="this.$store.state.isLogin">
                             
+                        </div>
+                        <div class="not-login" v-else>
+                            <p class="not-login-tips">登录即可查看关注动态</p>
+                            <div class="not-login-btn" @click="dialogVisible = true;">
+                                立即登录
+                            </div>
                         </div>
                     </template>
                 </VPopover>
             </div>
             <div class="v-popover-wrap">
-                <VPopover pop-style="padding-top: 17px; margin-left: -100px;">
+                <VPopover :pop-style="this.$store.state.isLogin ? 'padding-top: 17px; margin-left: -100px;' : 'padding-top: 17px;'">
                     <template #reference>
-                        <div class="right-entry--outside">
+                        <div class="right-entry--outside" @click="this.$store.state.isLogin ? noPage() : dialogVisible = true;">
                             <i class="iconfont icon-shoucang"></i>
                             <span>收藏</span>
                         </div>
                     </template>
                     <template #content>
-                        <div style="height: 556.6px; width: 521.6px;">
+                        <div style="height: 556.6px; width: 521.6px;" v-if="this.$store.state.isLogin">
                             
+                        </div>
+                        <div class="not-login" v-else>
+                            <p class="not-login-tips">登录即可查看我的收藏</p>
+                            <div class="not-login-btn" @click="dialogVisible = true;">
+                                立即登录
+                            </div>
                         </div>
                     </template>
                 </VPopover>
             </div>
             <div class="v-popover-wrap">
-                <VPopover pop-style="padding-top: 17px; margin-left: -50px;">
+                <VPopover :pop-style="this.$store.state.isLogin ? 'padding-top: 17px; margin-left: -50px;' : 'padding-top: 17px;'">
                     <template #reference>
-                        <div class="right-entry--outside">
+                        <div class="right-entry--outside" @click="this.$store.state.isLogin ? noPage() : dialogVisible = true;">
                             <i class="iconfont icon-lishijilu"></i>
                             <span>历史</span>
                         </div>
                     </template>
                     <template #content>
-                        <div style="height: 556.6px; width: 371.6px;">
+                        <div style="height: 556.6px; width: 371.6px;" v-if="this.$store.state.isLogin">
                             
+                        </div>
+                        <div class="not-login" v-else>
+                            <p class="not-login-tips">登录即可查看历史记录</p>
+                            <div class="not-login-btn" @click="dialogVisible = true;">
+                                立即登录
+                            </div>
                         </div>
                     </template>
                 </VPopover>
             </div>
-            <div class="right-entry-item" @click="this.$router.push('/platform')">
+            <div 
+                class="right-entry-item"
+                @click="this.$store.state.isLogin ? this.$router.push('/platform') : dialogVisible = true;"
+            >
                 <div class="right-entry--outside">
                     <i class="iconfont icon-dengpao"></i>
                     <span>创作中心</span>
                 </div>
             </div>
-            <div class="right-entry-item right-entry-item--upload"  @click="this.$router.push('/platform/upload')">
+            <div
+                class="right-entry-item right-entry-item--upload"
+                @click="this.$store.state.isLogin ? this.$router.push('/platform/upload') : dialogVisible = true;"
+            >
                 <div class="upload-buttom">
                     <i class="iconfont icon-shangchuan"></i>
                     <span>投稿</span>
@@ -242,6 +328,7 @@
     let outTimer;
     import VPopover from '../popover/VPopover.vue';
     import LoginRegister from '../loginRegister/LoginRegister.vue';
+    import { ElMessage } from 'element-plus';
 
     export default {
         name: "HeaderBarIndex",
@@ -285,6 +372,11 @@
                 default() {
                     return true;
                 }
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user;
             }
         },
         methods: {
@@ -392,6 +484,10 @@
             // 退出登录
             logout() {
                 this.$store.dispatch("logout");
+            },
+
+            noPage() {
+                ElMessage.warning("该功能暂未开放");
             }
         },
         mounted() {
@@ -889,7 +985,6 @@
 
 .avatar-panel-popover {
     width: 300px;
-    height: 450px;
     background-color: #fff;
     border-radius: 8px;
     padding: 0 24px 18px;
@@ -931,20 +1026,141 @@
     }
 }
 
-.logout {
-    margin-top: 98px;
+.nickname {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 6px;
+    font-size: 18px;
+    color: var(--text1);
+}
+
+.vip-level-tag {
     display: flex;
     align-items: center;
-    padding: 10px 14px;
+    justify-content: center;
+}
+
+.vip-tag {
+    font-size: 11px;
+    line-height: 13px;
+    border-radius: 6px;
+    padding: 0 6px;
+    background-color: var(--brand_pink);
+    color: #fff;
+    margin-right: 10px;
+}
+
+.gender {
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.female {
+    background-color: var(--Pi2);
+    color: var(--Pi5);
+}
+
+.male {
+    background-color: var(--Lb2);
+    color: var(--Lb5_u);
+}
+
+.vip-level-tag .iconfont {
+    font-size: 12px;
+    margin-right: 10px;
+    line-height: 14px;
+}
+
+.coins {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin: 6px 0;
+}
+
+.coins-text {
+    margin-right: 5px;
+    color: var(--text3);
+}
+
+.coins-num {
+    color: var(--text1);
+}
+
+.counts {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin: 6px 0 12px 0;
+}
+
+.counts-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50px;
+}
+
+.count-num {
+    font-size: 18px;
+    color: #222222;
+    transition: 0.3s;
+}
+
+.count-text {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 2px;
+    transition: 0.3s;
+}
+
+.counts-item:hover .count-num, .counts-item:hover .count-text {
+    color: var(--brand_pink);
+}
+
+.single-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 38px;
     border-radius: 8px;
     color: var(--text2);
     font-size: 14px;
     cursor: pointer;
     transition: background-color .3s;
+    margin-bottom: 2px;
 }
 
-.logout:hover {
+.single-item:hover {
     background-color: var(--graph_bg_regular);
+}
+
+.single-item-left {
+    display: flex;
+    align-items: center;
+}
+
+.single-item span {
+    line-height: 14px;
+    margin-left: 10px;
+}
+
+.placeholder {
+    margin: 6px 0 12px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.logout {
+    display: flex;
+    justify-content: initial !important; 
 }
 
 .slide-down .right-entry--outside .iconfont {
@@ -976,6 +1192,39 @@
 
 .right-entry-item--upload {
     margin-left: 15px;
+}
+
+.not-login {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    padding: 22px 20px;
+    width: 340px;
+}
+
+.not-login-tips {
+    margin-bottom: 24px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: var(--text3);
+}
+
+.not-login-btn {
+    border-radius: 8px;
+    color: #fff;
+    background-color: var(--brand_pink);
+    height: 40px;
+    width: 100%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.not-login-btn:hover {
+    background-color: var(--Pi4);
 }
 
 .upload-buttom {

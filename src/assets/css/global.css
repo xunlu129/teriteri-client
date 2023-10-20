@@ -525,9 +525,33 @@ h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, cod
     box-sizing: border-box;     /* 宽度包括内边距 */
 }
 
-.index * {
+.index *, .notfound * {
     margin: 0;
     padding: 0;
+}
+
+.icon-lv0, .icon-lv1 {
+    color: var(--Ga3);
+}
+
+.icon-lv2 {
+    color: var(--Gr3);
+}
+
+.icon-lv3 {
+    color: var(--Lb3);
+}
+
+.icon-lv4 {
+    color: var(--Or3);
+}
+
+.icon-lv5 {
+    color: var(--Re5);
+}
+
+.icon-lv6 {
+    color: #ff0000;
 }
 
 .video-card {

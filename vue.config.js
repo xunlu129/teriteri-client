@@ -16,7 +16,7 @@ module.exports = defineConfig({
   },
   // 用于在开发过程中快速启动一个本地开发服务器并提供静态文件服务、热更新、代理等功能
   devServer: {
-    port: 8848, // 自定义端口
+    port: 8787, // 自定义端口
     open: true, // 项目建成自动打开窗口
     proxy: {
       "/api": {
