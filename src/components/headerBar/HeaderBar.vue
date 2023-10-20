@@ -1086,7 +1086,7 @@
 
 .coins-text {
     margin-right: 5px;
-    color: var(--text2);
+    color: var(--text3);
 }
 
 .coins-num {
@@ -1116,7 +1116,7 @@
 
 .count-text {
     font-size: 12px;
-    color: var(--text2);
+    color: var(--text3);
     margin-top: 2px;
     transition: 0.3s;
 }

@@ -13,7 +13,8 @@
                         @drop="handleDrop"
                         @click="selectVideo"
                     >
-                        <i class="iconfont icon-shangchuan"></i>
+                        <!-- <i class="iconfont icon-shangchuan"></i> -->
+                        <el-icon size="40"><UploadFilled /></el-icon>
                         <div class="upload-tips-text">拖拽到此处也可上传</div>
                         <div class="upload-btn">上传视频</div>
                         <input
@@ -254,7 +255,8 @@
                                     @drop="handlePicDrop"
                                     @click="selectPic"
                                 >
-                                    <i class="iconfont icon-shangchuan"></i>
+                                    <!-- <i class="iconfont icon-shangchuan"></i> -->
+                                    <el-icon size="40"><UploadFilled /></el-icon>
                                     <div class="upload-tips-text">拖拽图片到此处或者点击上传</div>
                                     <div class="upload-btn">选择图片</div>
                                     <input
@@ -335,7 +337,7 @@ export default {
                 category: [{id: "anime", name: "番剧"}, {id: "finish", name: "完结动画"}],  // 投稿分区
                 tags: [],   // 投稿标签
                 descr: "",  // 投稿简介
-            }
+            },
         }
     },
     computed: {
@@ -403,7 +405,7 @@ export default {
         // 处理文件选择事件
         async handleVideoChange(event) {
             const file = event.target.files[0];
-            const maxSizeInBytes = 500 * 1024 * 1024; // 500MB
+            const maxSizeInBytes = 300 * 1024 * 1024; // 300MB
             if (!file) {
                 return;
             }
@@ -453,7 +455,7 @@ export default {
         async handleDrop(event) {
             event.preventDefault();
             const file = event.dataTransfer.files[0];
-            const maxSizeInBytes = 500 * 1024 * 1024; // 500MB
+            const maxSizeInBytes = 300 * 1024 * 1024; // 300MB
             if (!file) {
                 return;
             }
@@ -715,6 +717,11 @@ export default {
                 isDragging = true;
             });
 
+            // 移动端 按下
+            sliderHandle.addEventListener("touchstart", () => {
+                isDragging = true;
+            });
+
             // 鼠标移动事件处理程序
             document.addEventListener("mousemove", (e) => {
                 if (!isDragging) return;
@@ -728,8 +735,27 @@ export default {
                 this.selectCoverSlice(currentTime);
             });
 
+            // 移动端 移动
+            document.addEventListener("touchmove", (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                offsetX = e.touches[0].clientX - coverSlider.getBoundingClientRect().left;
+                currPer = offsetX / coverSlider.getBoundingClientRect().width; // 计算进度比例
+                // 边界值判定
+                currPer = Math.max(0.00001, currPer);
+                currPer = Math.min(0.99999, currPer);
+                this.currentPre = currPer;    // 更新
+                const currentTime = currPer * this.duration;
+                this.selectCoverSlice(currentTime);
+            }, { passive: false });
+
             // 鼠标释放事件处理程序
             document.addEventListener("mouseup", () => {
+                isDragging = false;
+            });
+
+            // 移动端 松开
+            document.addEventListener("touchend", () => {
                 isDragging = false;
             });
         },
@@ -788,7 +814,7 @@ export default {
 
         // 存草稿
         draft() {
-            ElMessage.error("该功能暂未开放呜~");
+            ElMessage.warning("该功能暂未开放呜~");
         },
 
         async submit() {
@@ -939,6 +965,7 @@ export default {
     max-width: 830px;
     margin: 0 auto;
     position: relative;
+    width: 80%;
 }
 
 .upload-wrp {
@@ -1388,7 +1415,6 @@ export default {
 
 .desc-text {
     width: 80%;
-    min-width: 700px;
     margin-top: 12px;
 }
 

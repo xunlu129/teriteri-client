@@ -183,6 +183,8 @@ export default {
     background: #fff;
     box-shadow: 0 2px 10px 0 rgba(0,0,0,.05);
     margin-right: calc(-100vw + 100%);
+    min-width: 800px;
+    width: 100%;
 }
 
 .left-block {
