@@ -140,7 +140,14 @@
                     </template>
                     <template #content>
                         <div class="more-channel-popover__wrap">
-                            <div class="more-channel" v-for="(item, index) in channels" :key="index">
+                            <div class="more-channel"></div>
+                            <div class="more-channel"></div>
+                            <div class="more-channel"></div>
+                            <div class="more-channel"></div>
+                            <div class="more-channel"></div>
+                            <div class="more-channel"></div>
+                            <!-- 前面的是占位符，反正也展示不出来的 -->
+                            <div class="more-channel" v-for="(item, index) in channels.slice(2)" :key="index">
                                 {{ item.mcName }}
                             </div>
                             <div class="more-channel">
@@ -204,7 +211,7 @@
         data() {
             return {
                 // 是否有新动态以显示其头像，后面可改成获取动态详情
-                dynamicPic: true,
+                dynamicPic: false,
                 // 是否展开显示更多频道
                 isOpen: false,
             }
@@ -233,12 +240,6 @@
 @media (max-width: 1139.9px) {
     .header-channel {
         width: 1020px;
-    }
-}
-
-@media (min-width: 1300px) and (max-width: 1399.9px) {
-    .header-channel {
-        width: 1180px;
     }
 }
 
@@ -413,7 +414,7 @@
     width: 25px;
     height: 25px;
     font-size: 24px;
-    margin-bottom: 2px;
+    line-height: 25px;
     margin-left: 2px;
 }
 
@@ -632,7 +633,7 @@
     }
 }
 
-@media (min-width: 1100px) and (max-width: 1366.9px) {
+@media (max-width: 1366.9px) {
     .more-channel-popover__wrap>*:nth-of-type(-1n + 17) {
         display: none !important;   /* 前17个隐藏 */
     }

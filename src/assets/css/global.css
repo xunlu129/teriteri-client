@@ -487,13 +487,7 @@
     --shadow: var(--Ba0);
 }
 
-@media (min-width: 1140px) and (max-width: 1299.9px) {
-    :root {
-        --layout-padding: 60px;
-    }
-}
-
-@media (min-width: 1400px) and (max-width: 1559.9px) {
+@media (min-width: 1140px) and (max-width: 1559.9px) {
     :root {
         --layout-padding: 60px;
     }
