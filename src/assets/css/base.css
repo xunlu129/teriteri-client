@@ -4,14 +4,10 @@
 @import url('./element.css');
 @import 'https://at.alicdn.com/t/c/font_4179759_r86uur6tgoq.css';
 
-html {
-  /* overflow-x: hidden; */
-}
-
 body {
   font-family: 'Harmony Font';
   font-size: 14px;
   background-color: #fafafa;
-  min-width: 1060px;
+  min-width: 1090px;
   line-height: 1.25;
 }

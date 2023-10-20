@@ -34,7 +34,7 @@
             <div class="default-entry" @click="noPage">
                 <span>会员购</span>
             </div>
-            <div class="download-entry" @click="noPage">
+            <div class="download-entry" @click="noPage" v-if="!isFixHeaderBar">
                 <i class="iconfont icon-xiazai"></i>
                 <span>下载客户端</span>
             </div>
@@ -63,7 +63,8 @@
                         :style="searchInput == '' ? 'display: none;' : ''"
                         @click.stop="searchInput = ''"
                     >
-                        <i class="iconfont icon-close"></i>
+                        <!-- <i class="iconfont icon-close"></i> -->
+                        <el-icon size="16"><CircleCloseFilled /></el-icon>
                     </div>
                     <div class="nav-search-btn" @click="goSearch">
                         <i class="iconfont icon-sousuo"></i>
@@ -101,8 +102,8 @@
                         <div class="header">
                             <div class="title">teriteri热搜</div>
                         </div>
-                        <div class="trendings-double">
-                            <div class="trendings-col" :style="isFixHeaderBar ? 'max-width: 206px;' : 'max-width: 244px;'">
+                        <div class="trendings-double" v-if="screenWidth >= 1450">
+                            <div class="trendings-col" style="max-width: calc(50% - 5px);">
                                 <div
                                     class="trending-item"
                                     v-for="(item, index) in trendings1"
@@ -114,7 +115,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="trendings-col" :style="isFixHeaderBar ? 'max-width: 206px;' : 'max-width: 244px;'">
+                            <div class="trendings-col" style="max-width: calc(50% - 5px);">
                                 <div
                                     class="trending-item"
                                     v-for="(item, index) in trendings2"
@@ -122,6 +123,20 @@
                                 >
                                     <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
                                         <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
+                                        <div class="trendings-text">{{ item }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trendings-double" v-else>
+                            <div class="trendings-col" style="margin-right: unset;">
+                                <div
+                                    class="trending-item"
+                                    v-for="(item, index) in trendings"
+                                    :key="index"
+                                >
+                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
+                                        <div class="trendings-rank" :class="index < 3 ? 'topThree' : ''">{{ index + 1 }}</div>
                                         <div class="trendings-text">{{ item }}</div>
                                     </div>
                                 </div>
@@ -349,6 +364,7 @@
                 // 是否展开搜索历史
                 isHistoryOpen: false,
                 // 热搜列表
+                trendings:["被救博士因业绩差被转卖过", "日本队上演真人版灌篮高手", "Uzi吼退曹军", "88万人打出9.1分的电影", "挂科退学10年后再上大学", "张子豪演出摔下台", "秀才参加非诚勿扰加长版", "29岁如何赚到千万存款", "因文化水平低被诈骗团伙转卖", "2023香港小姐三甲诞生"],
                 trendings1:["被救博士因业绩差被转卖过", "Uzi吼退曹军", "挂科退学10年后再上大学", "秀才参加非诚勿扰加长版", "因文化水平低被诈骗团伙转卖", ],
                 trendings2:["日本队上演真人版灌篮高手", "88万人打出9.1分的电影", "张子豪演出摔下台", "29岁如何赚到千万存款", "2023香港小姐三甲诞生"],
                 // 头像气泡框的显隐
@@ -356,6 +372,8 @@
                 isPopoverShow: false,
                 // 登录框组件的显隐
                 dialogVisible: false,
+                // 屏幕宽度
+                screenWidth: window.innerWidth,
             }
         },
         props: {
@@ -377,7 +395,7 @@
         computed: {
             user() {
                 return this.$store.state.user;
-            }
+            },
         },
         methods: {
             //////// 请求 ////////
@@ -481,6 +499,10 @@
                 }, 200);
             },
 
+            updateScreenWidth() {
+                this.screenWidth = window.innerWidth;
+            },
+
             // 退出登录
             logout() {
                 this.$store.dispatch("logout");
@@ -495,10 +517,13 @@
             window.addEventListener("click", this.handleOutsideClick);
             // 在页面加载时从本地存储中加载搜索历史
             this.loadFromLocalStorage();
+            // 监听窗口大小变化，更新屏幕宽度
+            window.addEventListener('resize', this.updateScreenWidth);
         },
         beforeUnmount() {
-            // 页面结束渲染前销毁点击事件的监听器
+            // 页面结束渲染前销毁事件的监听器
             window.removeEventListener("click", this.handleOutsideClick);
+            window.removeEventListener('resize', this.updateScreenWidth);
         },
     }
 </script>
@@ -679,20 +704,11 @@
     height: 16px;
     right: 55px;
     cursor: pointer;
-    background-color: var(--graph_weak);
-    border-radius: 50%;
-    color: #fff;
+    color: var(--graph_weak);
 }
 
 .nav-search-clean:hover {
-    background-color: var(--graph_icon);
-}
-
-.nav-search-clean i {
-    position: relative;
-    bottom: 2px;
-    left: 0.5px;
-    font-size: 14px;
+    color: var(--graph_icon);
 }
 
 .nav-search-btn {
@@ -838,6 +854,7 @@
 
 .header-bar .trendings-double {
     display: flex;
+    
 }
 
 .header-bar .trendings-double .trendings-col {
@@ -1239,7 +1256,7 @@
     color: #fff;
     text-align: center;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 34px;
     cursor: pointer;
     transition: background-color .3s;
 }
@@ -1251,6 +1268,7 @@
 .icon-shangchuan {
     margin-right: 5px;
     line-height: 34px;
+    margin-top: -2px;
 }
 
 @media (max-width: 1279.9px) {

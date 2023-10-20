@@ -36,7 +36,13 @@
                 <div class="header-channel-fixed-right">
                     <div class="header-channel-fixed-right-left">
                         <div class="left-top">
-                            <div class="header-channel-fixed-right-item" v-for="(item, index) in channels" :key="index">
+                            <div class="header-channel-fixed-right-item">番剧</div>
+                            <div class="header-channel-fixed-right-item">电影</div>
+                            <div class="header-channel-fixed-right-item">国创</div>
+                            <div class="header-channel-fixed-right-item">电视剧</div>
+                            <div class="header-channel-fixed-right-item">综艺</div>
+                            <div class="header-channel-fixed-right-item">纪录片</div>
+                            <div class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
                                 {{ item.mcName }}
                             </div>
                             <div class="header-channel-fixed-right-item">VLOG</div>
@@ -55,7 +61,13 @@
                         <div class="header-channel-fixed-right-item" style="letter-spacing: 0px;">新歌热榜</div>
                     </div>
                     <div class="left-bottom">
-                        <div class="header-channel-fixed-right-item" v-for="(item, index) in channels" :key="index">
+                        <div class="header-channel-fixed-right-item">番剧</div>
+                        <div class="header-channel-fixed-right-item">电影</div>
+                        <div class="header-channel-fixed-right-item">国创</div>
+                        <div class="header-channel-fixed-right-item">电视剧</div>
+                        <div class="header-channel-fixed-right-item">综艺</div>
+                        <div class="header-channel-fixed-right-item">纪录片</div>
+                        <div class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
                             {{ item.mcName }}
                         </div>
                         <div class="header-channel-fixed-right-item">VLOG</div>
@@ -323,7 +335,7 @@
     align-items: center;
     position: relative;
     width: 100%;
-    padding: 14px var(--layout-padding, 60px);
+    padding: 14px var(--layout-padding, 60px) 14px var(--layout-padding, 30px);
 }
 
 .header-channel-fixed-down {
@@ -578,12 +590,6 @@
 @media (max-width: 1139.9px) {
     .main__layout {
         width: 1020px;
-    }
-}
-
-@media (min-width: 1300px) and (max-width: 1399.9px) {
-    .main__layout {
-        width: 1180px;
     }
 }
 
