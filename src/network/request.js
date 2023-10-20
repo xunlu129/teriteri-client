@@ -38,13 +38,15 @@ export function get(url, config) {
       if (err.response.headers.message === 'not login') {
         // 修改当前的登录状态
         store.state.isLogin = false;
+        // 清空user信息
+        store.state.user = {};
         // 清除本地token缓存
         localStorage.removeItem("teri_token");
         ElMessage.error("请登录后查看");
-        this.$store.state.isLoading = false;
+        store.state.isLoading = false;
       } else {
         ElMessage.error("特丽丽被玩坏了");
-        this.$store.state.isLoading = false;
+        store.state.isLoading = false;
       }
     },
   );
@@ -108,13 +110,15 @@ export function post(url, data, headers) {
       if (err.response.headers.message == 'not login') {
         // 修改当前的登录状态
         store.state.isLogin = false;
+        // 清空user信息
+        store.state.user = {};
         // 清除本地token缓存
         localStorage.removeItem("teri_token");
         ElMessage.error("请登录后查看");
-        this.$store.state.isLoading = false;
+        store.state.isLoading = false;
       } else {
         ElMessage.error("特丽丽被玩坏了");
-        this.$store.state.isLoading = false;
+        store.state.isLoading = false;
       }
     },
   );
