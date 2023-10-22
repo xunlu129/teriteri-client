@@ -362,7 +362,7 @@ export default {
     position: relative;
     padding: 60px 0 50px 200px;
     background: #fafafa;
-    min-width: 1124px;
+    /* min-width: 1124px; */
     display: flow-root;
     min-height: 100%;
 }
