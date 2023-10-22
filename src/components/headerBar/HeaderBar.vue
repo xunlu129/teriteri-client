@@ -542,7 +542,6 @@
     max-width: 2560px;
     width: 100%;
     height: 64px;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, .4), rgba(255, 255, 255, 0));    /* 渐变阴影 */
 }
 
 .left-entry {

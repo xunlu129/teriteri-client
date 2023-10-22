@@ -2,16 +2,38 @@
     <div class="index">
         <div class="large-header">
             <HeaderBar :isFixHeaderBar="isFixHeaderBar"></HeaderBar>
-            <div class="header__banner">
+            <!-- <div class="header__banner">
                 <picture class="v-img banner-img">
-                    <img src="~assets/img/banner.png" alt="">
+                    <img src="~assets/img/bilibili/banner.png" alt="">
                 </picture>
                 <div class="header-banner__inner">
                     <div class="logo-box">
                         <img src="~assets/img/teriteri-white.png" alt="">
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <header>
+                <!-- 动画效果头图，文件资源版权归bilibili官方所有，本项目仅用作学习，无商业用途！ -->
+                <div class="view">
+                    <img src="~assets/img/bilibili/bilibili-winter-view-1.jpg" class="morning" alt="">
+                    <img src="~assets/img/bilibili/bilibili-winter-view-2.jpg" class="afternoon" alt="">
+                    <video autoplay loop muted class="evening">
+                    <source src="~assets/img/bilibili/bilibili-winter-view-3.webm" type="video/webm" />
+                    </video>
+                    <img src="~assets/img/bilibili/bilibili-winter-view-3-snow.png" class="window-cover" alt="">
+                </div>
+                <div class="tree">
+                    <img src="~assets/img/bilibili/bilibili-winter-tree-1.png" class="morning" alt="">
+                    <img src="~assets/img/bilibili/bilibili-winter-tree-2.png" class="afternoon" alt="">
+                    <img src="~assets/img/bilibili/bilibili-winter-tree-3.png" class="evening" alt="">
+                </div>
+                <div class="header-banner__inner">
+                    <div class="logo-box">
+                        <img src="~assets/img/teriteri-white.png" alt="">
+                    </div>
+                </div>
+                <div class="taper-line"></div>
+            </header>
             <HeaderChannel></HeaderChannel>
         </div>
         <!-- 固钉频道栏 -->
@@ -152,8 +174,48 @@
             }
         },
         methods: {
+            initHeader() {
+                let startingPoint;
+                const header = document.querySelector('header');
+                let isMoving = false;
+                // 监听窗口鼠标移动事件，触发头图转变效果
+                document.addEventListener('mousemove', (e) => {
+                    const headerRect = header.getBoundingClientRect(); // 动态获取header的位置
+                    if (
+                        e.clientX >= headerRect.left && e.clientX <= headerRect.right &&
+                        e.clientY >= headerRect.top && e.clientY <= headerRect.bottom
+                    ) {
+                        // 当鼠标进入头图范围就开始动态效果
+                        if (!isMoving) {
+                            startingPoint = e.clientX;
+                            header.classList.add('moving');
+                            isMoving = true;
+                        }
+                        let percentage = (e.clientX - startingPoint) / window.outerWidth + 0.5;
+                        header.style.setProperty('--percentage', percentage);
+                    } else {
+                        // 鼠标移出头图范围，效果复原
+                        if (isMoving) {
+                            header.classList.remove('moving');
+                            header.style.setProperty('--percentage', 0.5);
+                            isMoving = false;
+                        }
+                    }
+                });
+                // 检测鼠标是否离开窗口
+                document.addEventListener('mouseout', (e) => {
+                    if (e.relatedTarget === null) {
+                        // 鼠标离开窗口时，头图回到原位
+                        header.classList.remove('moving');
+                        header.style.setProperty('--percentage', 0.5);
+                        isMoving = false;
+                    }
+                });
+            }
         },
         mounted() {
+            // 初始化头图的监听器
+            this.initHeader();
             // 窗口滚动时根据高度判断是否显示固钉导航栏和固钉频道栏
             const obj = document;
             this.el = obj.documentElement;
@@ -174,6 +236,10 @@
                 }
             }
         },
+        unmounted() {
+            document.removeEventListener('mousemove');
+            document.removeEventListener('mouseout');
+        }
     }
 </script>
 
@@ -295,6 +361,93 @@
     margin-left: 15px;
     width: 150px;
     height: 50px;
+    filter: drop-shadow(3px 5px 3px rgba(0,0,0,0.5));
+}
+
+header {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 0 auto;
+    min-width: 1000px;
+    min-height: 155px;
+    height: 9.375vw;
+    max-height: 240px;
+    background-color: #e3e5e7;
+    background-position: center 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    --percentage: 0.5;
+}
+
+header .view, header .tree {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header .view img, header .view video, header .tree img {
+    position: absolute;
+    display: block;
+    width: 120%;
+    height: 100%;
+    object-fit: cover;
+}
+
+header .morning {
+    z-index: 20;
+    opacity: calc(1 - (var(--percentage) - 0.25) / 0.25);
+}
+
+header .afternoon {
+    z-index: 10;
+    opacity: calc(1 - (var(--percentage) - 0.5) / 0.5);
+}
+
+header .view {
+    transform: translatex(calc(var(--percentage) * 100px));
+}
+
+header .tree {
+    transform: translatex(calc(var(--percentage) * 50px));
+    filter: blur(3px);
+}
+
+header .view,
+header .tree,
+header .morning,
+header .afternoon {
+    transition: .2s all ease-in;
+}
+
+header.moving .view,
+header.moving .tree,
+header.moving .morning,
+header.moving .afternoon {
+    transition: none;
+}
+
+header .window-cover {
+    opacity: calc((var(--percentage) - 0.9) / 0.1);
+}
+
+.taper-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(rgba(0,0,0,.4),transparent);
+    pointer-events: none;
 }
 
 .header-channel-fixed {
