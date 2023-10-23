@@ -1,11 +1,12 @@
 <template>
     <div @mouseleave="handleMouseLeave" style="position: relative;">
-        <div @mouseenter="handleMouseEnter" style="position: relative;">
+        <div @mouseenter="handleMouseEnter" @click="handleClick" style="position: relative;" ref="vPopRef">
             <slot name="reference"></slot>
         </div>
         <div class="v-popover" :class="'to-' + placement" :style="popStyle">
             <div
                 class="v-popover-content"
+                ref="vPopCon"
                 :class="isPopoverShow ? 'popShow-' + placement : 'popHide-' + placement"
                 :style="{ display: popoverDisplay }"
             >
@@ -29,7 +30,7 @@ let inTimer;  // 节流计时器
                     return "bottom";
                 }
             },
-            // 触发方式
+            // 触发方式 目前支持悬停hover、点击click
             trigger: {
                 type: String,
                 default() {
@@ -51,25 +52,56 @@ let inTimer;  // 节流计时器
             }
         },
         methods: {
-            // 目前基本用到的情况都是hover，点击就暂时不写了
+            show() {
+                this.popoverDisplay = "";
+                this.isPopoverShow = true;
+            },
+            hide() {
+                this.isPopoverShow = false;
+                setTimeout(() => {
+                    this.popoverDisplay = "none";
+                }, 300);
+            },
+
             handleMouseEnter() {
                 if (this.trigger === "hover") {
-                    // clearTimeout(outTimer);
                     inTimer = setTimeout(() => {
-                        this.popoverDisplay = "";
-                        this.isPopoverShow = true;
+                        this.show();
                     }, 100);
                 }
             },
             handleMouseLeave() {
-                // console.log("out");
                 if (this.trigger === "hover") {
                     clearTimeout(inTimer);
-                    this.isPopoverShow = false;
-                    setTimeout(() => {
-                        this.popoverDisplay = "none";
-                    }, 200);
+                    this.hide();
                 }
+            },
+            handleClick() {
+                if (this.trigger === "click") {
+                    if (this.isPopoverShow) {
+                        this.hide();
+                    } else {
+                        this.show();
+                    }
+                }
+            },
+            // 点击空白处关闭气泡
+            handleOutsideClick(event) {
+                const vPopRef = this.$refs.vPopRef;
+                const vPopCon = this.$refs.vPopCon;
+                if (!vPopRef.contains(event.target) &&! vPopCon.contains(event.target)) {
+                    this.hide();
+                }
+            },
+        },
+        mounted() {
+            if (this.trigger === 'click') {
+                window.addEventListener("click", this.handleOutsideClick);
+            }
+        },
+        unmounted() {
+            if (this.trigger === 'click') {
+                window.removeEventListener("click", this.handleOutsideClick);
             }
         }
     }
