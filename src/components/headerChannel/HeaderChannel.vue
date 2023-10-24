@@ -21,7 +21,7 @@
         <!-- 右边 -->
         <div class="right-channel-container">
             <!-- 中间频道 -->
-            <div class="channel-items__left">
+            <div class="channel-items__left" v-if="channels.length != 0">
                 <!-- 番剧 -->
                 <VPopover class="channel-link" placement="top" popStyle="z-index: 2000; cursor: default;">
                     <template #reference>
