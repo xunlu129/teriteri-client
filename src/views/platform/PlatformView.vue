@@ -124,7 +124,7 @@ export default {
                 this.active = this.path[i].slice();
                 // console.log(this.active);
                 break;
-            }            
+            }
         }
     },
     methods: {
@@ -326,8 +326,18 @@ export default {
     z-index: 10;
     height: 100%;
     width: 200px;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-family: PingFangSC-Regular,Microsoft YaHei,Arial,Helvetica,sans-serif;
+}
+
+.platform-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.platform-nav::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ddd;
 }
 
 .platform-nav .iconfont {
