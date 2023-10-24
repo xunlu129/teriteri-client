@@ -22,9 +22,8 @@
                 </div>
                 
             </div>
-            <div class="drop-sub">
+            <div class="drop-sub" v-if="categoryList.length != 0">
                 <div
-                    v-if="categoryList.length != 0"
                     class="drop-sub-item"
                     v-for="(item, index) in categoryList[main].scList"
                     :key="index"

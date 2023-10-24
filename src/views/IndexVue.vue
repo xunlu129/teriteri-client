@@ -178,8 +178,8 @@
                 let startingPoint;
                 const header = document.querySelector('header');
                 let isMoving = false;
-                // 监听窗口鼠标移动事件，触发头图转变效果
-                document.addEventListener('mousemove', (e) => {
+
+                this.handleMouseMove = (e) => {
                     const headerRect = header.getBoundingClientRect(); // 动态获取header的位置
                     if (
                         e.clientX >= headerRect.left && e.clientX <= headerRect.right &&
@@ -201,16 +201,21 @@
                             isMoving = false;
                         }
                     }
-                });
-                // 检测鼠标是否离开窗口
-                document.addEventListener('mouseout', (e) => {
+                }
+
+                this.handleMouseOut = (e) => {
                     if (e.relatedTarget === null) {
                         // 鼠标离开窗口时，头图回到原位
                         header.classList.remove('moving');
                         header.style.setProperty('--percentage', 0.5);
                         isMoving = false;
                     }
-                });
+                }
+
+                // 监听窗口鼠标移动事件，触发头图转变效果
+                document.addEventListener('mousemove', this.handleMouseMove);
+                // 检测鼠标是否离开窗口
+                document.addEventListener('mouseout', this.handleMouseOut);
             }
         },
         mounted() {
@@ -237,8 +242,8 @@
             }
         },
         unmounted() {
-            document.removeEventListener('mousemove');
-            document.removeEventListener('mouseout');
+            document.removeEventListener('mousemove', this.handleMouseMove);
+            document.removeEventListener('mouseout', this.handleMouseOut);
         }
     }
 </script>
