@@ -45,7 +45,7 @@ export function get(url, config) {
         ElMessage.error("请登录后查看");
         store.state.isLoading = false;
       } else {
-        ElMessage.error("特丽丽被玩坏了");
+        ElMessage.error("特丽丽被玩坏了(¯﹃¯)");
         store.state.isLoading = false;
       }
     },
@@ -117,7 +117,7 @@ export function post(url, data, headers) {
         ElMessage.error("请登录后查看");
         store.state.isLoading = false;
       } else {
-        ElMessage.error("特丽丽被玩坏了");
+        ElMessage.error("特丽丽被玩坏了(¯﹃¯)");
         store.state.isLoading = false;
       }
     },
