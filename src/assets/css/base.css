@@ -2,7 +2,8 @@
 @import url('./normalize.css');
 @import url('../font/font.css');
 @import url('./element.css');
-@import 'https://at.alicdn.com/t/c/font_4179759_w4z5kjzo4in.css';
+@import url('./videoCard.css');
+@import 'https://at.alicdn.com/t/c/font_4179759_ijp96feebsa.css';
 
 body {
   font-family: 'Harmony Font';
