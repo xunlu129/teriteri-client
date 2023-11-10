@@ -114,7 +114,7 @@
                     <!-- 轮播图 -->
                     <div class="recommended-swipe">
                         <div class="recommended-swipe-core">
-                            <!-- 垫片 -->
+                            <!-- 骨架屏 -->
                             <div class="recommended-swipe-shim">
                                 <div class="video-card" v-for="index in 2" :key="index">
                                     <div class="video-card__skeleton">
@@ -139,6 +139,159 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 随机推荐 -->
+                    <div class="feed-card" v-for="index in 11" :key="index">
+                        <div class="video-card">
+                            <!-- 骨架屏 -->
+                            <div class="video-card__skeleton" :class="loadingRandom ? 'loading_animation' : 'hide'">
+                                <div class="video-card__skeleton--cover"></div>
+                                <div class="video-card__skeleton--info">
+                                    <div class="video-card__skeleton--right">
+                                        <p class="video-card__skeleton--text"></p>
+                                        <p class="video-card__skeleton--text short"></p>
+                                        <p class="video-card__skeleton--light"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 实体内容 -->
+                            <div class="video-card__wrap" v-if="randomVideos[index - 1]">
+                                <a :href="`${baseUrl}/video/${randomVideos[index - 1].video.vid}`" target="_blank">
+                                    <div class="video-card__image">
+                                        <div class="video-card__image--wrap">
+                                            <picture class="video-card__cover">
+                                                <img :src="randomVideos[index - 1].video.coverUrl" :alt="randomVideos[index - 1].video.title">
+                                            </picture>
+                                        </div>
+                                        <div class="video-card__mask">
+                                            <div class="video-card__stats">
+                                                <div class="video-card__stats--left">
+                                                    <span class="video-card__stats--item">
+                                                        <i class="iconfont icon-bofangshu"></i>
+                                                        <span class="video-card__stats--text">
+                                                            {{ handleNum(randomVideos[index - 1].stats.play) }}
+                                                        </span>
+                                                    </span>
+                                                    <span class="video-card__stats--item">
+                                                        <i class="iconfont icon-danmushu"></i>
+                                                        <span class="video-card__stats--text">
+                                                            {{ handleNum(randomVideos[index - 1].stats.danmu) }}
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <div class="video-card__stats__duration">
+                                                    {{ handleDuration(randomVideos[index - 1].video.duration) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="video-card__info">
+                                    <div class="video-card__info--right">
+                                        <h3 class="video-card__info--tit">
+                                            <a :href="`${baseUrl}/video/${randomVideos[index - 1].video.vid}`" target="_blank">
+                                                {{ randomVideos[index - 1].video.title }}
+                                            </a>
+                                        </h3>
+                                        <div class="video-card__info--bottom">
+                                            <div class="video-card__info--icon-text" :style="'display: none;'">已关注</div>
+                                            <a class="video-card__info--owner" :href="`${baseUrl}/space/${randomVideos[index - 1].user.uid}`" target="_blank">
+                                                <i class="iconfont icon-uper" :style="''"></i>
+                                                <span class="video-card__info--author">{{ randomVideos[index - 1].user.nickname }}</span>
+                                                <span class="video-card__info--date">
+                                                    · {{ handleDate(randomVideos[index - 1].video.uploadDate) }}
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 累加推荐 -->
+                    <div class="video-card" v-for="(item, index) in cumulativeVideos" :key="index">
+                        <!-- 骨架屏 -->
+                        <div class="video-card__skeleton" :class="loadingRandom ? 'loading_animation' : 'hide'">
+                            <div class="video-card__skeleton--cover"></div>
+                            <div class="video-card__skeleton--info">
+                                <div class="video-card__skeleton--right">
+                                    <p class="video-card__skeleton--text"></p>
+                                    <p class="video-card__skeleton--text short"></p>
+                                    <p class="video-card__skeleton--light"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 实体内容 -->
+                        <div class="video-card__wrap">
+                            <a :href="`${baseUrl}/video/${item.video.vid}`" target="_blank">
+                                <div class="video-card__image">
+                                    <div class="video-card__image--wrap">
+                                        <picture class="video-card__cover">
+                                            <img :src="item.video.coverUrl" :alt="item.video.title">
+                                        </picture>
+                                    </div>
+                                    <div class="video-card__mask">
+                                        <div class="video-card__stats">
+                                            <div class="video-card__stats--left">
+                                                <span class="video-card__stats--item">
+                                                    <i class="iconfont icon-bofangshu"></i>
+                                                    <span class="video-card__stats--text">
+                                                        {{ handleNum(item.stats.play) }}
+                                                    </span>
+                                                </span>
+                                                <span class="video-card__stats--item">
+                                                    <i class="iconfont icon-danmushu"></i>
+                                                    <span class="video-card__stats--text">
+                                                        {{ handleNum(item.stats.danmu) }}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <div class="video-card__stats__duration">
+                                                {{ handleDuration(item.video.duration) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="video-card__info">
+                                <div class="video-card__info--right">
+                                    <h3 class="video-card__info--tit">
+                                        <a :href="`${baseUrl}/video/${item.video.vid}`" target="_blank">
+                                            {{ item.video.title }}
+                                        </a>
+                                    </h3>
+                                    <div class="video-card__info--bottom">
+                                        <div class="video-card__info--icon-text" :style="'display: none;'">已关注</div>
+                                        <a class="video-card__info--owner" :href="`${baseUrl}/space/${item.user.uid}`" target="_blank">
+                                            <i class="iconfont icon-uper" :style="''"></i>
+                                            <span class="video-card__info--author">{{ item.user.nickname }}</span>
+                                            <span class="video-card__info--date">
+                                                · {{ handleDate(item.video.uploadDate) }}
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 骨架屏 -->
+                    <div class="video-card" v-for="index in 10" :key="index" :style="hasMore ? '' : 'display: none;'">
+                        <div class="video-card__skeleton loading_animation">
+                            <div class="video-card__skeleton--cover"></div>
+                            <div class="video-card__skeleton--info">
+                                <div class="video-card__skeleton--right">
+                                    <p class="video-card__skeleton--text"></p>
+                                    <p class="video-card__skeleton--text short"></p>
+                                    <p class="video-card__skeleton--light"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feed-roll-btn">
+                    <div class="roll-btn" @click="getRandomVideos(); refreshTime ++;">
+                        <i class="iconfont icon-shuaxin" :style="`transform: rotate(${refreshTime * 360}deg);`"></i>
+                        <span>换一换</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,6 +302,9 @@
     import HeaderBar from '@/components/headerBar/HeaderBar.vue';
     import HeaderChannel from '@/components/headerChannel/HeaderChannel.vue';
     import CarouselIndex from '@/components/carousel/CarouselIndex.vue';
+    import { handleTime, handleNum, handleDate } from '@/utils/utils.js';
+
+    let headerHight, bottomDistance;
 
     export default {
         name: "IndexVue",
@@ -165,6 +321,22 @@
                 isFixChannel: false,
                 // 是否显示更多频道
                 isChannelDown: false,
+                // 随机推荐视频列表
+                randomVideos: [],
+                // 累加视频列表
+                cumulativeVideos: [],
+                // 累加视频id列表
+                vids: [],
+                // 基础URL
+                baseUrl: window.location.protocol,
+                // 是否正在加载随机推荐
+                loadingRandom: true,
+                // 是否还有更多累加视频
+                hasMore: true,
+                // 是否正在加载更多视频中
+                loadingMore: false,
+                // 刷新次数
+                refreshTime: 0,
             }
         },
         computed: {
@@ -174,6 +346,36 @@
             }
         },
         methods: {
+            // 请求
+            // 获取游客随机推荐
+            async getRandomVideos() {
+                const res = await this.$get("/video/random/visitor");
+                if (res.data.data) {
+                    this.loadingRandom = false;
+                    this.randomVideos = res.data.data;
+                }
+                // console.log(this.randomVideos);
+            },
+
+            // 获取游客累加推荐
+            async getCumulativeVideos() {
+                this.loadingMore = true;
+                let ids = this.vids.join(",");  // 用逗号连接成一个字符串
+                const res = await this.$get("/video/cumulative/visitor", {
+                    params: { vids: ids }
+                });
+                if (res.data.data) {
+                    this.cumulativeVideos.push(...res.data.data.videos);
+                    this.vids.push(...res.data.data.vids);
+                    this.hasMore = res.data.data.more;
+                }
+                console.log(this.cumulativeVideos);
+                this.loadingMore = false;
+            },
+
+
+            // 事件
+            // 初始化头图效果
             initHeader() {
                 let startingPoint;
                 const header = document.querySelector('header');
@@ -216,34 +418,71 @@
                 document.addEventListener('mousemove', this.handleMouseMove);
                 // 检测鼠标是否离开窗口
                 document.addEventListener('mouseout', this.handleMouseOut);
-            }
-        },
-        mounted() {
-            // 初始化头图的监听器
-            this.initHeader();
-            // 窗口滚动时根据高度判断是否显示固钉导航栏和固钉频道栏
-            const obj = document;
-            this.el = obj.documentElement;
-            // 根据主体顶部的偏移量计算 hearder 的高度
-            let headerHight = document.querySelector(".main__layout").offsetTop;
-            obj.onscroll = () => {
+            },
+
+
+            async handleScroll() {
+                // 计算页面底部距离
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                bottomDistance = documentHeight - (window.scrollY + windowHeight);
+
                 // 导航栏
-                if (this.el.scrollTop >= 64 && this.isFixHeaderBar == false) {
+                if (this.el.scrollTop >= 64 && !this.isFixHeaderBar) {
                     this.isFixHeaderBar = true;
                 } else if (this.el.scrollTop < 64 && this.isFixHeaderBar) {
                     this.isFixHeaderBar = false;
                 }
+
                 // 频道栏
-                if (this.el.scrollTop >= headerHight && this.isFixChannel == false) {
+                if (this.el.scrollTop >= headerHight && !this.isFixChannel) {
                     this.isFixChannel = true;
                 } else if (this.el.scrollTop < headerHight && this.isFixChannel) {
                     this.isFixChannel = false;
                 }
+
+                // 当距离底部小于800且有更多数据时触发加载数据的函数
+                if (bottomDistance < 800 && this.hasMore && !this.loadingMore) {
+                    await this.getCumulativeVideos();
+                }
+            },
+
+            // 处理播放时长
+            handleDuration(time) {
+                return handleTime(time);
+            },
+
+            // 处理大于一万的数字
+            handleNum(number) {
+                return handleNum(number);
+            },
+
+            // 处理投稿时间
+            handleDate(date) {
+                return handleDate(date);
+            },
+        },
+        created() {
+            this.getRandomVideos();
+        },
+        async mounted() {
+            // 初始化头图的监听器
+            this.initHeader();
+            // 窗口滚动时根据高度判断是否显示固钉导航栏和固钉频道栏
+            this.el = document.documentElement;
+            // 根据主体顶部的偏移量计算 header 的高度
+            headerHight = document.querySelector(".main__layout").offsetTop;
+            window.addEventListener('scroll', this.handleScroll);
+            // 初次挂载时执行一次，防止大屏情况下，视频数量不足以撑出滚动条
+            await this.handleScroll();
+            while (bottomDistance < 800 && this.hasMore) {
+                await this.handleScroll();
             }
         },
         unmounted() {
             document.removeEventListener('mousemove', this.handleMouseMove);
             document.removeEventListener('mouseout', this.handleMouseOut);
+            window.removeEventListener('scroll', this.handleScroll);
         }
     }
 </script>
@@ -256,6 +495,7 @@
 }
 
 .index {
+    position: relative;
     margin: 0 auto;
     max-width: 2560px;
     background-color: var(--bg1);
@@ -736,9 +976,7 @@ header .window-cover {
 }
 
 .main__layout {
-    height: 5000px;
     background-color: #fff;
-    position: relative;
     margin: 0 auto;
     padding: 0 var(--layout-padding);
     max-width: calc(1980px + 2 * var(--layout-padding));
@@ -749,10 +987,23 @@ header .window-cover {
     .main__layout {
         width: 1020px;
     }
+
+    .feed-roll-btn {
+        left: initial !important;
+        right: 10px;
+        top: 255px !important;
+        transform: initial !important;
+    }
 }
 
-.recommended-container {
-    position: relative;
+@media (min-width: 1140px) {
+    .main__layout {
+        position: relative;
+    }
+
+    .recommended-container {
+        position: relative;
+    }
 }
 
 .recommended-container {
@@ -771,12 +1022,24 @@ header .window-cover {
         grid-column: span 4;
         grid-template-columns: repeat(4,1fr);
     }
+
+    .container>*:nth-of-type(n + 6) {
+        margin-top: 40px;
+    }
+
+    .container .feed-card:nth-of-type(n + 10) {
+        display: none;
+    }
 }
 
 @media (min-width: 1400px) {
     .container {
         grid-column: span 5;
         grid-template-columns: repeat(5,1fr);
+    }
+
+    .container>*:nth-of-type(n + 8) {
+        margin-top: 40px;
     }
 }
 
@@ -833,5 +1096,50 @@ header .window-cover {
     height: 100%;
     flex-shrink: 0;
     z-index: 0;
+}
+
+.feed-roll-btn {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    z-index: 2;
+    transform: translate(10px);
+}
+
+.feed-roll-btn .roll-btn {
+    flex-direction: column;
+    margin-left: 0;
+    height: auto;
+    width: 40px;
+    padding: 9px;
+    background-color: #fff;
+    color: var(--text1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 12px;
+    border: 1px solid var(--line_regular);
+    transform-origin: center;
+    transition: .2s;
+    cursor: pointer;
+    line-height: 1.15;
+}
+
+.feed-roll-btn .roll-btn:hover {
+    background-color: var(--graph_bg_thick);
+}
+
+.feed-roll-btn .roll-btn .iconfont {
+    line-height: 16px;
+    margin-bottom: 6px;
+    transition: transform .5s ease;
+}
+
+@media (max-width: 1120px) {
+    .feed-roll-btn {
+        opacity: 0.8;
+    }
 }
 </style>

@@ -102,7 +102,10 @@ export default {
                 ElMessage.error("用户名或密码错误");
                 this.$store.state.isLoading = false;
             });
-            if (!result) return;
+            if (!result) {
+                this.$store.state.isLoading = false;
+                return;
+            }
             if (result.data.code !== 200) {
                 ElMessage.error(result.data.message);
                 this.$store.state.isLoading = false;

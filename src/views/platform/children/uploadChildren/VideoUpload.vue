@@ -873,7 +873,7 @@ export default {
                 })
             })
             .catch(() => {
-                ElMessage.error('特丽丽被玩坏了');
+                ElMessage.error('特丽丽被玩坏了(¯﹃¯)');
                 this.$store.state.isLoading = false;
             })
         },
