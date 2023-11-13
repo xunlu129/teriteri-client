@@ -58,45 +58,46 @@
                 <div class="header-channel-fixed-right">
                     <div class="header-channel-fixed-right-left">
                         <div class="left-top">
-                            <div class="header-channel-fixed-right-item">番剧</div>
-                            <div class="header-channel-fixed-right-item">电影</div>
-                            <div class="header-channel-fixed-right-item">国创</div>
-                            <div class="header-channel-fixed-right-item">电视剧</div>
-                            <div class="header-channel-fixed-right-item">综艺</div>
-                            <div class="header-channel-fixed-right-item">纪录片</div>
-                            <div class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
+                            <a :href="`${baseUrl}/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
+                            <a :href="`${baseUrl}/movie`" target="_blank" class="header-channel-fixed-right-item">电影</a>
+                            <a :href="`${baseUrl}/v/guochuang`" target="_blank" class="header-channel-fixed-right-item">国创</a>
+                            <a :href="`${baseUrl}/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
+                            <a :href="`${baseUrl}/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
+                            <a :href="`${baseUrl}/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
+                            <a :href="`${baseUrl}/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
                                 {{ item.mcName }}
-                            </div>
-                            <div class="header-channel-fixed-right-item">VLOG</div>
-                            <div class="header-channel-fixed-right-item">搞笑</div>
-                            <div class="header-channel-fixed-right-item">单机游戏</div>
-                            <div class="header-channel-fixed-right-item">公益</div>
-                            <div class="header-channel-fixed-right-item">公开课</div>
+                            </a>
+                            <!-- 这里的url要在VLOG标签做出来后重新修改，目前先暂定到生活日常区 -->
+                            <a :href="`${baseUrl}/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
+                            <a :href="`${baseUrl}/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
+                            <a :href="`${baseUrl}/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
+                            <a :href="`${baseUrl}/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
+                            <a :href="`${baseUrl}/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
                         </div>
                     </div>
                     <div class="header-channel-fixed-right-right">
-                        <div class="header-channel-fixed-right-item">专栏</div>
-                        <div class="header-channel-fixed-right-item">直播</div>
-                        <div class="header-channel-fixed-right-item">活动</div>
-                        <div class="header-channel-fixed-right-item">课堂</div>
-                        <div class="header-channel-fixed-right-item" style="letter-spacing: 0px;">社区中心</div>
-                        <div class="header-channel-fixed-right-item" style="letter-spacing: 0px;">新歌热榜</div>
+                        <a :href="`${baseUrl}/read/home`" target="_blank" class="header-channel-fixed-right-item">专栏</a>
+                        <a :href="`${baseUrl}/live`" target="_blank" class="header-channel-fixed-right-item">直播</a>
+                        <a :href="`${baseUrl}/activity`" target="_blank" class="header-channel-fixed-right-item">活动</a>
+                        <a :href="`${baseUrl}/cheese`" target="_blank" class="header-channel-fixed-right-item">课堂</a>
+                        <a :href="`${baseUrl}/community`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">社区中心</a>
+                        <a :href="`${baseUrl}/song`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">新歌热榜</a>
                     </div>
                     <div class="left-bottom">
-                        <div class="header-channel-fixed-right-item">番剧</div>
-                        <div class="header-channel-fixed-right-item">电影</div>
-                        <div class="header-channel-fixed-right-item">国创</div>
-                        <div class="header-channel-fixed-right-item">电视剧</div>
-                        <div class="header-channel-fixed-right-item">综艺</div>
-                        <div class="header-channel-fixed-right-item">纪录片</div>
-                        <div class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
+                        <a :href="`${baseUrl}/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
+                        <a :href="`${baseUrl}/movie`" target="_blank" class="header-channel-fixed-right-item">电影</a>
+                        <a :href="`${baseUrl}/v/guochuang`" target="_blank" class="header-channel-fixed-right-item">国创</a>
+                        <a :href="`${baseUrl}/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
+                        <a :href="`${baseUrl}/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
+                        <a :href="`${baseUrl}/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
+                        <a :href="`${baseUrl}/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
                             {{ item.mcName }}
-                        </div>
-                        <div class="header-channel-fixed-right-item">VLOG</div>
-                        <div class="header-channel-fixed-right-item">搞笑</div>
-                        <div class="header-channel-fixed-right-item">单机游戏</div>
-                        <div class="header-channel-fixed-right-item">公益</div>
-                        <div class="header-channel-fixed-right-item">公开课</div>
+                        </a>
+                        <a :href="`${baseUrl}/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
+                        <a :href="`${baseUrl}/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
+                        <a :href="`${baseUrl}/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
+                        <a :href="`${baseUrl}/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
+                        <a :href="`${baseUrl}/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
                     </div>
                 </div>
                 <div class="header-channel-fixed-arrow">

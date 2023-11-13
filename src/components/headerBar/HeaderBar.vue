@@ -314,7 +314,7 @@
             </div>
             <div 
                 class="right-entry-item"
-                @click="this.$store.state.isLogin ? this.$router.push('/platform') : dialogVisible = true;"
+                @click="this.$store.state.isLogin ? openNewPage('/platform') : dialogVisible = true;"
             >
                 <div class="right-entry--outside">
                     <i class="iconfont icon-dengpao"></i>
@@ -323,7 +323,7 @@
             </div>
             <div
                 class="right-entry-item right-entry-item--upload"
-                @click="this.$store.state.isLogin ? this.$router.push('/platform/upload') : dialogVisible = true;"
+                @click="this.$store.state.isLogin ? openNewPage('/platform/upload') : dialogVisible = true;"
             >
                 <div class="upload-buttom">
                     <i class="iconfont icon-shangchuan"></i>
@@ -506,6 +506,11 @@
             // 退出登录
             logout() {
                 this.$store.dispatch("logout");
+            },
+
+            // 打开新标签页
+            openNewPage(route) {
+                window.open(this.$router.resolve(route).href, '_blank');
             },
 
             noPage() {
