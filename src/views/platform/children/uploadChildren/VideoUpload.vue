@@ -404,6 +404,12 @@ export default {
         
         // 处理文件选择事件
         async handleVideoChange(event) {
+            if (!this.$store.state.isLogin) {
+                ElMessage.error('请登录后查看');
+                this.$store.dispatch("logout");
+                this.$router.push("/");
+                return;
+            }
             const file = event.target.files[0];
             const maxSizeInBytes = 300 * 1024 * 1024; // 300MB
             if (!file) {
@@ -454,6 +460,12 @@ export default {
         // 处理拖拽事件
         async handleDrop(event) {
             event.preventDefault();
+            if (!this.$store.state.isLogin) {
+                ElMessage.error('请登录后查看');
+                this.$store.dispatch("logout");
+                this.$router.push("/");
+                return;
+            }
             const file = event.dataTransfer.files[0];
             const maxSizeInBytes = 300 * 1024 * 1024; // 300MB
             if (!file) {
@@ -788,7 +800,7 @@ export default {
 
         // 更改作者声明
         changeAuth() {
-            if (this.form.auth == 1) {
+            if (this.form.auth === 1) {
                 this.form.auth = 0;
             } else {
                 this.form.auth = 1;
@@ -805,7 +817,7 @@ export default {
 
         // 发送裁剪指令
         sendOrder() {
-            if (this.coverType == 1) {
+            if (this.coverType === 1) {
                 this.cutOrder1 = true;
             } else {
                 this.cutOrder2 = true;
@@ -823,11 +835,11 @@ export default {
                 ElMessage.error('先等视频上传完啦');
                 return;
             }
-            if (this.form.title.trim().length == 0) {
+            if (this.form.title.trim().length === 0) {
                 ElMessage.error('写个标题再上传吧');
                 return;
             }
-            if (this.form.tags.length == 0) {
+            if (this.form.tags.length === 0) {
                 ElMessage.error('至少选一个标签哦');
                 return;
             }
