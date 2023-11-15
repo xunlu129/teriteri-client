@@ -2,7 +2,7 @@
     <div class="videoDetail">
         <HeaderBar isFixHeaderBar="true"></HeaderBar>
         <div class="video-container">
-            <div class="left-container">
+            <div class="left-container" :style="`width: ${leftWidth}px;`">
                 <!-- 标题 -->
                 <div class="video-info-container">
                     <h1 :title="video.title" class="video-title">{{ video.title }}</h1>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <!-- 播放器组件 -->
-                <PlayerWrap></PlayerWrap>
+                <PlayerWrap @resize="(width) => leftWidth = width"></PlayerWrap>
                 <!-- 点赞 -->
                 <div class="video-toolbar-container">
                     <div class="video-toolbar-left">
@@ -89,12 +89,105 @@
                     </div>
                 </div>
                 <!-- 简介评论区 -->
-                <div class="left-container-under-player" style="background-color: rgb(177, 241, 241); height: 1000px;">
-                    
+                <div class="left-container-under-player">
+                    <!-- 简介 -->
+                    <div class="video-desc-container" :style="(!video.descr || video.descr === '') ? 'display: none;' : ''">
+                        <div class="basic-desc-info" :style="showAllDesc ? 'height: auto;' : 'height: 84px;'">
+                            <span class="desc-info-text" v-html="handleLinkify(video.descr)"></span>
+                        </div>
+                        <div class="toggle-btn" v-if="descTooLong">
+                            <span class="toggle-btn-text" @click="showAllDesc = !showAllDesc">{{ showAllDesc ? '收起' : '展开更多' }}</span>
+                        </div>
+                    </div>
+                    <!-- 标签 -->
+                    <div class="video-tag-container">
+                        <div class="tag-container">
+                            <a :href="`/v/${category.mcId}`" target="_blank" class="tag-link">{{ category.mcName }}</a>
+                        </div>
+                        <div class="tag-container">
+                            <a :href="`/v/${category.mcId}/${category.scId}`" target="_blank" class="tag-link">{{ category.scName }}</a>
+                        </div>
+                        <div class="tag-container" v-for="(item, index) in tags" :key="index">
+                            <a :href="`/search/all?keyword=${item}`" target="_blank" class="tag-link">{{ item }}</a>
+                        </div>
+                    </div>
+                    <!-- 评论 -->
+
                 </div>
             </div>
-            <div class="right-container" style="background-color: rgb(179, 241, 177);">
-                
+            <div class="right-container">
+                <div class="right-container-inner">
+                    <!-- UP主信息 -->
+                    <div class="up-panel-container">
+                        <div class="up-info-container">
+                            <div class="up-info--left">
+                                <div class="up-avatar-wrap">
+                                    <a :href="`/space/${user.uid}`" target="_blank" class="up-avatar">
+                                        
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="up-info--right">
+                                <div class="up-info__detail">
+                                    <div class="up-detail-top">
+                                        <a :href="`/space/${user.uid}`" target="_blank" class="up-name">{{ user.nickname }}</a>
+                                        <a :href="`/message/whisper/${user.uid}`" target="_blank" class="send-msg">
+                                            <i class="iconfont icon-xinfeng1"></i>
+                                            发消息
+                                        </a>
+                                    </div>
+                                    <div class="up-description" :title="user.description">{{ user.description }}</div>
+                                </div>
+                                <div class="up-info__btn-panel">
+                                    <div class="default-btn follow-btn not-follow" v-if="true">
+                                        <i class="iconfont icon-jia"></i>
+                                        关注 {{ handleNum(0) }}
+                                    </div>
+                                    <VPopover popStyle="padding-top: 10px;">
+                                        <template #reference>
+                                            <div class="default-btn follow-btn following" v-if="false">
+                                                <i class="iconfont icon-caidan"></i>
+                                                已关注 {{ handleNum(0) }}
+                                            </div>
+                                        </template>
+                                        <template #content>
+                                            <div class="following-dropdown">
+                                                <div class="dropdown-item">
+                                                    <span>设置分组</span>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <span>取消关注</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </VPopover>
+                                    <VPopover popStyle="padding-top: 10px;">
+                                        <template #reference>
+                                            <div class="default-btn follow-btn following" v-if="false">
+                                                <i class="iconfont icon-caidan"></i>
+                                                已互粉 {{ handleNum(0) }}
+                                            </div>
+                                        </template>
+                                        <template #content>
+                                            <div class="following-dropdown">
+                                                <div class="dropdown-item">
+                                                    <span>设置分组</span>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <span>取消关注</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </VPopover>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 弹幕组件 -->
+
+                    <!-- 相关视频列表 -->
+
+                </div>
             </div>
         </div>
     </div>
@@ -104,7 +197,7 @@
 import HeaderBar from '@/components/headerBar/HeaderBar.vue';
 import PlayerWrap from '@/components/player/PlayerWrapper.vue';
 import VPopover from '@/components/popover/VPopover.vue';
-import { handleTime, handleNum, handleDate } from '@/utils/utils.js';
+import { handleTime, handleNum, handleDate, linkify } from '@/utils/utils.js';
 
 export default {
     name: "VideoDetail",
@@ -115,6 +208,7 @@ export default {
     },
     data() {
         return {
+            leftWidth: 704, // 左边区域的宽度
             video: {},  // 视频信息
             view: 0,    // 播放数
             danmu: 0,   // 弹幕数
@@ -125,6 +219,8 @@ export default {
             user: {},   // 投稿用户信息
             category: {},   // 视频分区信息
             tags: [],   // 投稿标签
+            showAllDesc: true, // 是否展开简介
+            descTooLong: false,   // 简介太长需要展开
         }
     },
     methods: {
@@ -152,6 +248,7 @@ export default {
                 this.collect = res.data.data.stats.collect;
                 this.share = res.data.data.stats.share;
             }
+            this.isDescTooLong();
         },
 
 
@@ -170,17 +267,57 @@ export default {
         handleDate(date) {
             return handleDate(date);
         },
+
+        // 处理超链接文本
+        handleLinkify(text) {
+            return linkify(text);
+        },
+
+        // 判断简介长度是否过长需要收起
+        isDescTooLong() {
+            this.$nextTick(() => {
+                const desc = document.querySelector('.basic-desc-info');
+                if (desc.clientHeight > 84) {
+                    this.descTooLong = true;
+                    this.showAllDesc = false;
+                }
+            });
+        },
+
+        // 处理窗口滚动触发的事件
+        handleScroll() {
+            const windowHeight = window.innerHeight;
+            const leftPart = document.querySelector('.left-container');
+            const rightPart = document.querySelector('.right-container-inner');
+            if (leftPart.clientHeight <= windowHeight - 64) {
+                leftPart.style.top = '64px';
+            } else {
+                leftPart.style.top = `-${leftPart.clientHeight - windowHeight}px`;
+            }
+            if (rightPart.clientHeight <= windowHeight - 64) {
+                rightPart.style.top = '64px';
+            } else {
+                rightPart.style.top = `-${rightPart.clientHeight - windowHeight}px`;
+            }
+        },
     },
     async created() {
         await this.getVideoDetail();
     },
+    mounted() {
+        window.addEventListener('scroll', this.handleScroll);
+        this.handleScroll();
+    },
+    unmounted() {
+        window.removeEventListener('scroll', this.handleScroll);
+    }
 }
 </script>
 
 <style scoped>
 .video-container {
     width: auto;
-    padding: 64px 10px 0;
+    padding: 64px 10px 0px;
     max-width: 2540px;
     min-width: 1080px;
     margin: 0 auto;
@@ -384,6 +521,7 @@ export default {
 
 .video-tool-more-dropdown {
     padding: 12px 0px;
+    cursor: auto;
 }
 
 .dropdown-item {
@@ -394,6 +532,7 @@ export default {
     width: 120px;
     padding: 0 20px;
     color: var(--text1);
+    cursor: pointer;
 }
 
 .dropdown-item:hover {
@@ -404,6 +543,63 @@ export default {
     margin-right: 10px;
 }
 
+.video-desc-container {
+    margin: 16px 0;
+}
+
+.basic-desc-info {
+    white-space: pre-line;
+    letter-spacing: 0;
+    color: var(--text1);
+    font-size: 15px;
+    line-height: 24px;
+    overflow: hidden;
+}
+
+.toggle-btn {
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.toggle-btn-text {
+    cursor: pointer;
+    color: var(--text2);
+}
+
+.toggle-btn-text:hover {
+    color: var(--brand_pink);
+}
+
+.video-tag-container {
+    padding-bottom: 6px;
+    margin: 16px 0 20px 0;
+    border-bottom: 1px solid var(--line_regular);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tag-container {
+    margin: 0px 12px 8px 0;
+}
+
+.tag-link {
+    color: var(--text2);
+    background: var(--graph_bg_regular);
+    height: 28px;
+    line-height: 28px;
+    border-radius: 14px;
+    font-size: 13px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    transition: all .3s;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: pointer;
+}
+
 .right-container {
     width: 350px;
     flex: none;
@@ -412,8 +608,151 @@ export default {
     pointer-events: none;
 }
 
+.right-container-inner {
+    padding-bottom: 250px;
+    position: sticky;
+}
+
+.right-container-inner * {
+    pointer-events: all;
+}
+
+.up-info-container {
+    box-sizing: border-box;
+    height: 104px;
+    display: flex;
+    align-items: center;
+}
+
+.up-avatar-wrap {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.up-avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--graph_weak);
+}
+
+.up-info--right {
+    margin-left: 12px;
+    flex: 1;
+}
+
+.up-info__detail {
+    margin-bottom: 5px;
+}
+
+.up-detail-top {
+    display: flex;
+    align-items: center;
+}
+
+.up-name {
+    font-size: 15px;
+    color: var(--text1);
+    font-weight: 500;
+    position: relative;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: 12px;
+    max-width: calc(100% - 12px - 56px);
+}
+
+.send-msg {
+    color: var(--text2);
+    font-size: 13px;
+    transition: color 0.3s;
+    flex-shrink: 0;
+}
+
+.send-msg:hover {
+    color: var(--brand_pink);
+}
+
+.up-description {
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 16px;
+    height: 16px;
+    color: var(--text3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.up-info__btn-panel {
+    clear: both;
+    display: flex;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+.up-info__btn-panel .default-btn {
+    box-sizing: border-box;
+    padding: 0;
+    line-height: 30px;
+    height: 30px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--graph_weak);
+    position: relative;
+    transition: 0.3s all;
+}
+
+.follow-btn {
+    width: 200px;
+}
+
+.follow-btn.following {
+    color: var(--text3);
+    background-color: var(--graph_bg_thick);
+}
+
+.follow-btn.following:hover {
+    background-color: var(--graph_bg_regular);
+}
+
+.follow-btn.not-follow {
+    background: var(--brand_pink);
+    color: var(--text_white);
+}
+
+.follow-btn.not-follow:hover {
+    background: var(--Pi4);
+}
+
+.follow-btn .iconfont {
+    font-size: 14px;
+    margin-right: 2px;
+}
+
+.following-dropdown {
+    padding: 8px 0px;
+}
+
+.following-dropdown .dropdown-item:hover {
+    color: var(--brand_pink);
+}
+
 @media (min-width: 1681px) {
     .video-info-container {
+        height: 108px;
+    }
+
+    .up-info-container {
         height: 108px;
     }
 
@@ -424,6 +763,23 @@ export default {
 
     .right-container {
         width: 411px;
+    }
+
+    .up-name {
+        font-size: 16px;
+        max-width: calc(100% - 12px - 60px);
+    }
+
+    .send-msg {
+        font-size: 14px;
+    }
+
+    .up-description {
+        font-size: 14px;
+    }
+
+    .follow-btn {
+        width: 230px;
     }
 }
 </style>
