@@ -59,6 +59,7 @@ export default {
             this.wrapHeight = heigth;
             this.videoWidth = width;
             this.videoHeight = heigth - bottomHeight;
+            this.$emit('resize', width);
         }
     },
     mounted() {

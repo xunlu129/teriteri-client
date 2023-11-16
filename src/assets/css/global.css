@@ -553,3 +553,16 @@ a:hover {
     color: #ff0000;
 }
 
+.vip-name {
+    color: var(--Pi4) !important;
+}
+
+.v-url {
+    cursor: pointer;
+    color: var(--brand_blue);
+    text-decoration: none;
+}
+
+.v-url:hover {
+    color: var(--Lb6);
+}
