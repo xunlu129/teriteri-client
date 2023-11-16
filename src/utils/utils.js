@@ -89,3 +89,27 @@ export function getNicknameLength(nickname) {
     }
     return length;
 }
+
+
+/**
+ * 根据经验值计算用户等级
+ * @param {Number} exp 
+ * @returns 
+ */
+export function handleLevel(exp) {
+    if (exp < 50) {
+        return 0;
+    } else if (exp < 200) {
+        return 1;
+    } else if (exp < 1500) {
+        return 2;
+    } else if (exp < 4500) {
+        return 3;
+    } else if (exp < 10800) {
+        return 4;
+    } else if (exp < 28800) {
+        return 5;
+    } else {
+        return 6;
+    }
+}

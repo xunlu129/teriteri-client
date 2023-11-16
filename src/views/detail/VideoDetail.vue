@@ -122,15 +122,24 @@
                         <div class="up-info-container">
                             <div class="up-info--left">
                                 <div class="up-avatar-wrap">
-                                    <a :href="`/space/${user.uid}`" target="_blank" class="up-avatar">
-                                        
-                                    </a>
+                                    <VPopover popStyle="z-index: 2000; cursor: default; padding-top: 30px;">
+                                        <template #reference>
+                                            <a :href="`/space/${user.uid}`" target="_blank" class="up-avatar">
+                                                <VAvatar :img="user.avatar_url" :size="48" :auth="user.auth"></VAvatar>
+                                            </a>
+                                        </template>
+                                        <template #content>
+                                            <UserCard :user="user"></UserCard>
+                                        </template>
+                                    </VPopover>                                    
                                 </div>
                             </div>
                             <div class="up-info--right">
                                 <div class="up-info__detail">
                                     <div class="up-detail-top">
-                                        <a :href="`/space/${user.uid}`" target="_blank" class="up-name">{{ user.nickname }}</a>
+                                        <a :href="`/space/${user.uid}`" target="_blank"
+                                            class="up-name" :class="user.vip !== 0 ? 'vip-name' : ''"
+                                        >{{ user.nickname }}</a>
                                         <a :href="`/message/whisper/${user.uid}`" target="_blank" class="send-msg">
                                             <i class="iconfont icon-xinfeng1"></i>
                                             发消息
@@ -141,13 +150,13 @@
                                 <div class="up-info__btn-panel">
                                     <div class="default-btn follow-btn not-follow" v-if="true">
                                         <i class="iconfont icon-jia"></i>
-                                        关注 {{ handleNum(0) }}
+                                        关注 {{ handleNum(514000) }}
                                     </div>
                                     <VPopover popStyle="padding-top: 10px;">
                                         <template #reference>
                                             <div class="default-btn follow-btn following" v-if="false">
                                                 <i class="iconfont icon-caidan"></i>
-                                                已关注 {{ handleNum(0) }}
+                                                已关注 {{ handleNum(514000) }}
                                             </div>
                                         </template>
                                         <template #content>
@@ -197,6 +206,8 @@
 import HeaderBar from '@/components/headerBar/HeaderBar.vue';
 import PlayerWrap from '@/components/player/PlayerWrapper.vue';
 import VPopover from '@/components/popover/VPopover.vue';
+import VAvatar from '@/components/avatar/VAvatar.vue';
+import UserCard from '@/components/UserCard/UserCard.vue';
 import { handleTime, handleNum, handleDate, linkify } from '@/utils/utils.js';
 
 export default {
@@ -205,6 +216,8 @@ export default {
         HeaderBar,
         PlayerWrap,
         VPopover,
+        VAvatar,
+        UserCard,
     },
     data() {
         return {
@@ -330,7 +343,6 @@ export default {
 .left-container {
     position: sticky;
     height: fit-content;
-    z-index: 1;
 }
 
 .video-info-container {
