@@ -499,6 +499,11 @@
     }
 }
 
+.index *, .notfound *, .videoDetail * {
+    margin: 0;
+    padding: 0;
+}
+
 *, *:before, *:after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -522,15 +527,6 @@ a {
 
 a:hover {
     color: var(--Pi6);
-}
-
-.index *, .index *:before, .index *:after {
-    box-sizing: border-box;     /* 宽度包括内边距 */
-}
-
-.index *, .notfound * {
-    margin: 0;
-    padding: 0;
 }
 
 .icon-lv0, .icon-lv1 {
@@ -557,3 +553,16 @@ a:hover {
     color: #ff0000;
 }
 
+.vip-name {
+    color: var(--Pi4) !important;
+}
+
+.v-url {
+    cursor: pointer;
+    color: var(--brand_blue);
+    text-decoration: none;
+}
+
+.v-url:hover {
+    color: var(--Lb6);
+}

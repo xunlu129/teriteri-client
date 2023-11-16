@@ -25,7 +25,7 @@
                 <!-- 番剧 -->
                 <VPopover class="channel-link" placement="top" popStyle="z-index: 2000; cursor: default;">
                     <template #reference>
-                        <div>
+                        <div @click="openNewPage(`/v/${channels[0].mcId}`)">
                             <span>{{ channels[0].mcName }}</span>
                         </div>
                     </template>
@@ -35,7 +35,7 @@
                                 class="sub-item"
                                 v-for="subIndex in Math.ceil(channels[0].scList.length / 4)" :key="subIndex"
                             >
-                                <div
+                                <div @click="openNewPage(`/v/${child.mcId}/${child.scId}`)"
                                     class="channel-children"
                                     v-for="(child, chIndex) in channels[0].scList.slice((subIndex - 1) * 4, subIndex * 4)"
                                     :key="chIndex"
@@ -46,13 +46,13 @@
                         </div>
                     </template>
                 </VPopover>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/movie`)">
                     <span>电影</span>
                 </div>
                 <!-- 国创 -->
                 <VPopover class="channel-link" placement="top" popStyle="z-index: 2000; cursor: default;">
                     <template #reference>
-                        <div>
+                        <div @click="openNewPage(`/v/${channels[1].mcId}`)">
                             <span>{{ channels[1].mcName }}</span>
                         </div>
                     </template>
@@ -62,7 +62,7 @@
                                 class="sub-item"
                                 v-for="subIndex in Math.ceil(channels[1].scList.length / 4)" :key="subIndex"
                             >
-                                <div
+                                <div @click="openNewPage(`/v/${child.mcId}/${child.scId}`)"
                                     class="channel-children"
                                     v-for="(child, chIndex) in channels[1].scList.slice((subIndex - 1) * 4, subIndex * 4)"
                                     :key="chIndex"
@@ -73,13 +73,13 @@
                         </div>
                     </template>
                 </VPopover>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/tv`)">
                     <span>电视剧</span>
                 </div>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/variety`)">
                     <span>综艺</span>
                 </div>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/documentary`)">
                     <span>记录片</span>
                 </div>
                 <!-- 将剩下的遍历出来 -->
@@ -90,7 +90,7 @@
                     popStyle="z-index: 2000; cursor: default;"
                 >
                     <template #reference>
-                        <div>
+                        <div @click="openNewPage(`/v/${item.mcId}`)">
                             <span>{{ item.mcName }}</span>
                         </div>
                     </template>
@@ -100,7 +100,7 @@
                                 class="sub-item"
                                 v-for="subIndex in Math.ceil(item.scList.length / 4)" :key="subIndex"
                             >
-                                <div
+                                <div @click="openNewPage(`/v/${child.mcId}/${child.scId}`)"
                                     class="channel-children"
                                     v-for="(child, chIndex) in item.scList.slice((subIndex - 1) * 4, subIndex * 4)"
                                     :key="chIndex"
@@ -111,19 +111,19 @@
                         </div>
                     </template>
                 </VPopover>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/v/life/daily`)">
                     <span>VLOG</span>
                 </div>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/v/life/funny`)">
                     <span>搞笑</span>
                 </div>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/v/game/stand_alone`)">
                     <span>单机游戏</span>
                 </div>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/love`)">
                     <span>公益</span>
                 </div>
-                <div class="channel-link">
+                <div class="channel-link" @click="openNewPage(`/mooc`)">
                     <span>公开课</span>
                 </div>
                 <VPopover
@@ -147,22 +147,22 @@
                             <div class="more-channel"></div>
                             <div class="more-channel"></div>
                             <!-- 前面的是占位符，反正也展示不出来的 -->
-                            <div class="more-channel" v-for="(item, index) in channels.slice(2)" :key="index">
+                            <div class="more-channel" v-for="(item, index) in channels.slice(2)" :key="index" @click="openNewPage(`/v/${item.mcId}`)">
                                 {{ item.mcName }}
                             </div>
-                            <div class="more-channel">
+                            <div class="more-channel" @click="openNewPage(`/v/life/daily`)">
                                 <span>VLOG</span>
                             </div>
-                            <div class="more-channel">
+                            <div class="more-channel" @click="openNewPage(`/v/life/funny`)">
                                 <span>搞笑</span>
                             </div>
-                            <div class="more-channel">
+                            <div class="more-channel" @click="openNewPage(`/v/game/stand_alone`)">
                                 <span>单机游戏</span>
                             </div>
-                            <div class="more-channel">
+                            <div class="more-channel" @click="openNewPage(`/love`)">
                                 <span>公益</span>
                             </div>
-                            <div class="more-channel">
+                            <div class="more-channel" @click="openNewPage(`/mooc`)">
                                 <span>公开课</span>
                             </div>
                         </div>
@@ -171,27 +171,27 @@
             </div>
             <!-- 右边 -->
             <div class="channel-items__right">
-                <div class="channel-link__right">
+                <div class="channel-link__right" @click="openNewPage(`/read/home`)">
                     <i class="iconfont icon-zhuanlan"></i>
                     <span>专栏</span>
                 </div>
-                <div class="channel-link__right">
+                <div class="channel-link__right" @click="openNewPage(`/live`)">
                     <i class="iconfont icon-zhibo"></i>
                     <span>直播</span>
                 </div>
-                <div class="channel-link__right">
+                <div class="channel-link__right" @click="openNewPage(`/activity`)">
                     <i class="iconfont icon-huodong"></i>
                     <span>活动</span>
                 </div>
-                <div class="channel-link__right">
+                <div class="channel-link__right" @click="openNewPage(`/cheese`)">
                     <i class="iconfont icon-ketang"></i>
                     <span>课堂</span>
                 </div>
-                <div class="channel-link__right">
+                <div class="channel-link__right" @click="openNewPage(`/community`)">
                     <i class="iconfont icon-gonggao"></i>
                     <span>社区中心</span>
                 </div>
-                <div class="channel-link__right">
+                <div class="channel-link__right" @click="openNewPage(`/song`)">
                     <i class="iconfont icon-xinge"></i>
                     <span>新歌热榜</span>
                 </div>
@@ -222,6 +222,12 @@
                 return this.$store.state.channels;
             }
         },
+        methods: {
+            // 打开新标签页
+            openNewPage(route) {
+                window.open(this.$router.resolve(route).href, '_blank');
+            }
+        }
     }
 </script>
 

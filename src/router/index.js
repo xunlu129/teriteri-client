@@ -11,7 +11,7 @@ const PlatformComment = () => import('@/views/platform/children/PlatformComment.
 const PlatformDanmu = () => import('@/views/platform/children/PlatformDanmu.vue')
 const VideoUpload = () => import('@/views/platform/children/uploadChildren/VideoUpload.vue')
 const TextUpload = () => import('@/views/platform/children/uploadChildren/TextUpload.vue')
-
+const VideoDetail = () => import('@/views/detail/VideoDetail.vue')
 
 
 const routes = [
@@ -40,6 +40,7 @@ const routes = [
             { path: '/platform/danmu', component: PlatformDanmu, meta: { requestAuth: true } },
         ]
     },
+    { path: '/video/:vid', component: VideoDetail, meta: { requestAuth: false } },
     { path: '/:catchAll(.*)', component: NotFound, meta: { requestAuth: false } },
 ]
 

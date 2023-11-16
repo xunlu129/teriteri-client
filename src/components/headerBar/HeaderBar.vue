@@ -159,19 +159,21 @@
             </div>
             <!-- 登录后显示头像 -->
             <div v-else class="header-avatar-wrap" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
-                <div class="header-avatar-wrap--container mini-avatar--small">
+                <a :href="`/space/${user.uid}`" target="_blank" class="header-avatar-wrap--container mini-avatar--small">
                     <picture class="v-img">
                         <img :src="user.avatar_url" :alt="`${user.nickname}的头像`" />
                     </picture>
-                </div>
+                </a>
                 <div class="v-popover to-bottom">
                     <div class="avatar-panel-popover" :class="isPopoverShow ? 'popShow' : 'popHide'" :style="{ display: popoverDisplay }">
-                        <div class="nickname">
+                        <a :href="`/space/${user.uid}`" target="_blank" class="nickname" :class="user.vip !== 0 ? 'vip-name' : ''">
                             <span>{{ user.nickname }}</span>
-                        </div>
+                        </a>
                         <div class="vip-level-tag">
-                            <div class="vip-tag">年度大会员</div>
-                            <i class="iconfont icon-lv6"></i>
+                            <div class="vip-tag" v-if="user.vip !== 0">
+                                {{ user.vip === 1 ? '月度' : user.vip === 2 ? '季度' : '年度' }}大会员
+                            </div>
+                            <i :class="`iconfont icon-lv${handleLevel(user.exp)}`"></i>
                             <div class="gender female" v-if="user.gender == 0"><el-icon size="12"><Female /></el-icon></div>
                             <div class="gender male" v-if="user.gender == 1"><el-icon size="12"><Male /></el-icon></div>
                         </div>
@@ -180,18 +182,18 @@
                             <span class="coins-num">0</span>
                         </div>
                         <div class="counts">
-                            <div class="counts-item">
-                                <div class="count-num">114</div>
+                            <a :href="`/space/${user.uid}/fans/follow`" target="_blank" class="counts-item">
+                                <div class="count-num">{{ handleNum(114) }}</div>
                                 <div class="count-text">关注</div>
-                            </div>
-                            <div class="counts-item">
-                                <div class="count-num">514</div>
+                            </a>
+                            <a :href="`/space/${user.uid}/fans/fans`" target="_blank" class="counts-item">
+                                <div class="count-num">{{ handleNum(514000) }}</div>
                                 <div class="count-text">粉丝</div>
-                            </div>
-                            <div class="counts-item">
-                                <div class="count-num">1919</div>
+                            </a>
+                            <a :href="`/space/${user.uid}/dynamic`" target="_blank" class="counts-item">
+                                <div class="count-num">{{ handleNum(1919) }}</div>
                                 <div class="count-text">动态</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="single-item middle" @click="noPage">
                             <div class="single-item-left">
@@ -200,7 +202,7 @@
                             </div>                            
                             <el-icon><ArrowRightBold /></el-icon>
                         </div>
-                        <div class="single-item middle" @click="this.$router.push('/platform/upload-manager')">
+                        <div class="single-item middle" @click="openNewPage('/platform/upload-manager')">
                             <div class="single-item-left">
                                 <el-icon size="16"><Document /></el-icon>
                                 <span>投稿管理</span>
@@ -314,7 +316,7 @@
             </div>
             <div 
                 class="right-entry-item"
-                @click="this.$store.state.isLogin ? this.$router.push('/platform') : dialogVisible = true;"
+                @click="this.$store.state.isLogin ? openNewPage('/platform') : dialogVisible = true;"
             >
                 <div class="right-entry--outside">
                     <i class="iconfont icon-dengpao"></i>
@@ -323,7 +325,7 @@
             </div>
             <div
                 class="right-entry-item right-entry-item--upload"
-                @click="this.$store.state.isLogin ? this.$router.push('/platform/upload') : dialogVisible = true;"
+                @click="this.$store.state.isLogin ? openNewPage('/platform/upload') : dialogVisible = true;"
             >
                 <div class="upload-buttom">
                     <i class="iconfont icon-shangchuan"></i>
@@ -344,6 +346,7 @@
     import VPopover from '../popover/VPopover.vue';
     import LoginRegister from '../loginRegister/LoginRegister.vue';
     import { ElMessage } from 'element-plus';
+    import { handleNum, handleLevel } from '@/utils/utils.js';
 
     export default {
         name: "HeaderBarIndex",
@@ -506,6 +509,21 @@
             // 退出登录
             logout() {
                 this.$store.dispatch("logout");
+            },
+
+            // 打开新标签页
+            openNewPage(route) {
+                window.open(this.$router.resolve(route).href, '_blank');
+            },
+
+            // 处理大于一万的数字
+            handleNum(number) {
+                return handleNum(number);
+            },
+
+            // 计算用户等级
+            handleLevel(exp) {
+                return handleLevel(exp);
             },
 
             noPage() {
@@ -991,6 +1009,7 @@
     z-index: 1;
     padding-top: 20px;
     margin-left: -20px;
+    cursor: default;
 }
 
 .to-bottom {
@@ -1058,13 +1077,21 @@
 }
 
 .vip-tag {
-    font-size: 11px;
-    line-height: 13px;
-    border-radius: 6px;
-    padding: 0 6px;
-    background-color: var(--brand_pink);
+    display: inline-block;
+    box-sizing: border-box;
+    max-width: 58px;
+    height: 16px;
     color: #fff;
+    background: var(--brand_pink);
+    border-radius: 2px;
+    line-height: 16px;
+    font-size: 10px;
+    padding: 0 3px;
     margin-right: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 400;
+    cursor: pointer;
 }
 
 .gender {
@@ -1121,7 +1148,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 50px;
+    width: fit-content;
 }
 
 .count-num {

@@ -70,3 +70,46 @@ export function handleDate(dateTime) {
         return `${month}-${day}`;
     }
 }
+
+
+/**
+ * 计算昵称长度，中日文字符占2长度，其他1长度，用于判断昵称长度是否超出24的限制
+ * @param {String} nickname 
+ * @returns 
+ */
+export function getNicknameLength(nickname) {
+    let length = 0;  
+    for (let i = 0; i < nickname.length; i++) {
+        // 使用正则表达式检测字符是否为中文或日文
+        if (/[\u4e00-\u9fa5\u0800-\u4e00]/.test(nickname[i])) {
+            length += 2;
+        } else {
+            length += 1;
+        }
+    }
+    return length;
+}
+
+
+/**
+ * 根据经验值计算用户等级
+ * @param {Number} exp 
+ * @returns 
+ */
+export function handleLevel(exp) {
+    if (exp < 50) {
+        return 0;
+    } else if (exp < 200) {
+        return 1;
+    } else if (exp < 1500) {
+        return 2;
+    } else if (exp < 4500) {
+        return 3;
+    } else if (exp < 10800) {
+        return 4;
+    } else if (exp < 28800) {
+        return 5;
+    } else {
+        return 6;
+    }
+}
