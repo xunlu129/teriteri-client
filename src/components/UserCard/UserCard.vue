@@ -6,19 +6,19 @@
                 <VAvatar :img="user.avatar_url" :size="48"></VAvatar>
             </a>
             <div class="info">
-                <p class="user">
+                <div class="user">
                     <a :href="`/space/${user.uid}`" target="_blank"
                         class="name" :class="user.vip !== 0 ? 'vip-name' : ''"
                     >{{ user.nickname }}</a>
-                    <div class="gender female" v-if="user.gender == 0"><el-icon size="12"><Female /></el-icon></div>
-                    <div class="gender male" v-if="user.gender == 1"><el-icon size="12"><Male /></el-icon></div>
+                    <div class="gender female" v-if="user.gender === 0"><el-icon size="12"><Female /></el-icon></div>
+                    <div class="gender male" v-if="user.gender === 1"><el-icon size="12"><Male /></el-icon></div>
                     <a class="level">
                         <i :class="`iconfont icon-lv${handleLevel(user.exp)}`"></i>
                     </a>
                     <span class="vip" v-if="user.vip !== 0">
                         {{ user.vip === 1 ? '月度' : user.vip === 2 ? '季度' : '年度' }}大会员
                     </span>
-                </p>
+                </div>
                 <p class="social">
                     <a :href="`/space/${user.uid}/fans/follow`" target="_blank">
                         <span class="num">{{ handleNum(114) }}</span>
@@ -66,6 +66,7 @@ export default {
         }
     },
     props: {
+        // 用户信息
         user: {
             type: Object,
             default() {
