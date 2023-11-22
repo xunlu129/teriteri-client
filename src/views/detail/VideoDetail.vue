@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <!-- 播放器组件 -->
-                <PlayerWrap @resize="(width) => leftWidth = width"></PlayerWrap>
+                <PlayerWrap :videoUrl="video.videoUrl" :title="video.title" :duration="video.duration" :user="user" @resize="(width) => leftWidth = width"></PlayerWrap>
                 <!-- 点赞 -->
                 <div class="video-toolbar-container">
                     <div class="video-toolbar-left">
@@ -70,7 +70,7 @@
                     </div>
                     <div class="video-toolbar-right">
                         <div class="video-toolbar-right-item">
-                            <VPopover placement="top" popStyle="padding-bottom: 10px;">
+                            <VPopover placement="top" popStyle="padding-bottom: 10px; z-index: 1000;">
                                 <template #reference>
                                     <div class="video-tool-more">
                                         <i class="iconfont icon-gengduo"></i>
