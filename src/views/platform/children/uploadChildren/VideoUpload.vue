@@ -228,8 +228,8 @@
                     <!-- 进度条组件 -->
                     <div class="cover-cut-content-pick-bar">
                         <div class="cover-slider" ref="coverSlider">
-                            <PlayerProgress style="top: 20px; visibility: hidden;" :currentPer="currentPre" @changeCurrent="changeCurrentPer"></PlayerProgress>
-                            <div class="slider-handle" ref="sliderHandle" :style="`left: ${currentPre * 100}%;`"></div>
+                            <PlayerProgress style="top: 20px; visibility: hidden;" :currentPer="currentPer" @changeCurrent="changeCurrentPer"></PlayerProgress>
+                            <div class="slider-handle" ref="sliderHandle" :style="`left: ${currentPer * 100}%;`"></div>
                             <div class="cover-slider-image-list" v-if="sliderImages.length == 7">
                                 <div
                                     class="cover-slider-image"
@@ -323,7 +323,7 @@ export default {
             progress: 0,    // 上传进度 0~100
             duration: 0,    // 视频总时长
             coverImageURL: null,   // 封面原图url
-            currentPre: 0.00001,   // 当前封面的视频时间占总时长的百分比 进度条百分比 小数0~1
+            currentPer: 0.00001,   // 当前封面的视频时间占总时长的百分比 进度条百分比 小数0~1
             sliderImages: [],   // 滑块预览的7张图
             picURL: null,   // 上传的原图url
             coverURL: null, // 裁剪后的封面url
@@ -370,7 +370,7 @@ export default {
             this.coverImageURL = null;
             this.coverURL = null;
             this.duration = 0;
-            this.currentPre = 0.00001;
+            this.currentPer = 0.00001;
             this.sliderImages = [],
             this.picURL = null,
             this.form = {
@@ -420,7 +420,7 @@ export default {
                 this.isPause = false;   // 先暂停当前
                 // 初始化内容
                 this.selectedVideo = file;
-                this.currentPre = 0.00001;
+                this.currentPer = 0.00001;
                 this.sliderImages = [];
                 this.picURL = null;
                 this.videoName = file.name.split(".mp4")[0];
@@ -480,7 +480,7 @@ export default {
                 this.isPause = false;   // 先暂停当前
                 // 初始化内容
                 this.selectedVideo = file;
-                this.currentPre = 0.00001;
+                this.currentPer = 0.00001;
                 this.sliderImages = [];
                 this.picURL = null;
                 this.videoName = file.name.split(".mp4")[0];
@@ -742,7 +742,7 @@ export default {
                 // 边界值判定
                 currPer = Math.max(0.00001, currPer);
                 currPer = Math.min(0.99999, currPer);
-                this.currentPre = currPer;    // 更新
+                this.currentPer = currPer;    // 更新
                 const currentTime = currPer * this.duration;
                 this.selectCoverSlice(currentTime);
             });
@@ -756,7 +756,7 @@ export default {
                 // 边界值判定
                 currPer = Math.max(0.00001, currPer);
                 currPer = Math.min(0.99999, currPer);
-                this.currentPre = currPer;    // 更新
+                this.currentPer = currPer;    // 更新
                 const currentTime = currPer * this.duration;
                 this.selectCoverSlice(currentTime);
             }, { passive: false });
@@ -773,7 +773,7 @@ export default {
         },
 
         changeCurrentPer(curr) {
-            this.currentPre = curr;
+            this.currentPer = curr;
             const currentTime = curr * this.duration;
             this.selectCoverSlice(currentTime);
         },

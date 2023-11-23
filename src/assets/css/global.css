@@ -529,6 +529,16 @@ a:hover {
     color: var(--Pi6);
 }
 
+[role=button], a, area, button, input:not([type=range]), label, select, summary, textarea {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+input[type=checkbox], input[type=radio] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
 .icon-lv0, .icon-lv1 {
     color: var(--Ga3);
 }
@@ -565,4 +575,228 @@ a:hover {
 
 .v-url:hover {
     color: var(--Lb6);
+}
+
+.v-ui {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: flex-start;
+    vertical-align: middle;
+}
+
+.v-ui-panel {
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+}
+
+.v-ui-panel.v-ui-dark {
+    background: hsla(0,0%,8%,.9);
+    border: none;
+}
+
+.v-ui .v-ui-area {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    justify-content: flex-start;
+    line-height: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.v-ui-panel .v-ui-panel-wrap {
+    position: relative;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-transition: all .25s;
+    transition: all .25s;
+}
+
+.v-ui-panel .v-ui-panel-move {
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+    -webkit-transition: -webkit-transform .25s;
+    transition: -webkit-transform .25s;
+    transition: transform .25s;
+    transition: transform .25s,-webkit-transform .25s;
+}
+
+.v-ui-panel .v-ui-panel-item, .v-ui-panel .v-ui-panel-move {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.v-ui-panel .v-ui-panel-item {
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: opacity .1s;
+    transition: opacity .1s;
+}
+
+.v-ui-panel .v-ui-panel-item.v-ui-panel-item-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.v-ui-switch {
+    cursor: pointer;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    position: relative;
+}
+
+.v-ui-switch .v-ui-switch-input {
+    cursor: pointer;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.v-ui-switch .v-ui-switch-label {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-between;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.v-ui-switch .v-ui-switch-name {
+    position: relative;
+}
+
+.v-ui-switch:hover .v-ui-switch-name {
+    color: var(--brand_pink);
+}
+
+.v-ui-switch .v-ui-switch-body {
+    background: #757575;
+    border-radius: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 20px;
+    outline: none;
+    vertical-align: middle;
+    width: 30px;
+}
+
+.v-ui-switch .v-ui-switch-body, .v-ui-switch .v-ui-switch-dot {
+    position: relative;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+.v-ui-switch.checked .v-ui-switch-label .v-ui-switch-body {
+    background: var(--brand_pink);
+}
+
+.v-ui-switch .v-ui-switch-dot {
+    fill: #757575;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 100%;
+    -webkit-box-shadow: 0 3px 1px 0 rgba(0,0,0,.05), 0 2px 2px 0 rgba(0,0,0,.1), 0 3px 3px 0 rgba(0,0,0,.05);
+    box-shadow: 0 3px 1px 0 rgba(0,0,0,.05), 0 2px 2px 0 rgba(0,0,0,.1), 0 3px 3px 0 rgba(0,0,0,.05);
+    color: #757575;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 16px;
+    justify-content: center;
+    left: 2px;
+    line-height: 16px;
+    text-align: center;
+    top: 2px;
+    width: 16px;
+}
+
+.v-ui-switch.checked .v-ui-switch-label .v-ui-switch-body .v-ui-switch-dot {
+    fill: var(--brand_pink);
+    color: var(--brand_pink);
+    left: 100%;
+    margin-left: -18px;
+}
+
+.v-ui-switch .v-ui-switch-dot span {
+    display: inline-block;
+    font-size: 0;
+    height: 10px;
+    width: 10px;
+}
+
+.v-ui-input {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-size: 0;
+    position: relative;
+}
+
+.v-ui-input .v-ui-input-wrap {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.v-ui-input .v-ui-input-input {
+    -moz-appearance: textfield;
+    border: 1px solid silver;
+    border-radius: 2px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    height: 100%;
+    outline: none;
+    padding: 4px 7px;
+    resize: none;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    width: 100%;
 }
