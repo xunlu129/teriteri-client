@@ -12,18 +12,21 @@
 export default {
     name: "VAvatar",
     props: {
+        // 头像的大小 有效值 24 30 36 40 48 50 60
         size: {
             type: Number,
             default() {
                 return 40;
             }
         },
+        // 头像的url地址
         img: {
             type: String,
             default() {
                 return 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png';
             }
         },
+        // 官方认证，0 无认证 1 个人认证 2 机构认证
         auth: {
             type: Number,
             default() {

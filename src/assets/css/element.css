@@ -39,3 +39,10 @@
 .el-message-box {
     padding-bottom: 15px;
 }
+
+/* 文字提示相关 */
+.el-popper.is-dark {
+    padding: 6px 12px !important;
+    border: none !important;
+    background: hsla(0,0%,8%,.8);
+}
