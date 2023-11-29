@@ -136,7 +136,7 @@
                                                                                 <div class="player-dm-setting-left-content">
                                                                                     <div class="v-ui" style="height: 12px;">
                                                                                         <div class="v-ui-area">
-                                                                                            <SliderRow class="player-dm-setting-left-progress" :currentPer="dmSetting.opacity / 100" :sliderWidth="182" @changeCurrent="changeDmOpacity"></SliderRow>
+                                                                                            <SliderRow class="player-dm-setting-left-progress" :currentPer="dmSetting.opacity / 100" :sliderWidth="182" v-model:order="dmOpacityOrder" @changeCurrent="changeDmOpacity"></SliderRow>
                                                                                             <div class="player-dm-setting-left-value">{{ dmSetting.opacity }}%</div>
                                                                                         </div>
                                                                                     </div>
@@ -392,7 +392,7 @@
                                                             <div class="player-dm-setting-left-content">
                                                                 <div class="v-ui" style="height: 12px;">
                                                                     <div class="v-ui-area">
-                                                                        <SliderRow class="player-dm-setting-left-progress" :currentPer="dmSetting.opacity / 100" :sliderWidth="182" @changeCurrent="changeDmOpacity"></SliderRow>
+                                                                        <SliderRow class="player-dm-setting-left-progress" :currentPer="dmSetting.opacity / 100" :sliderWidth="182" v-model:order="dmOpacityOrder" @changeCurrent="changeDmOpacity"></SliderRow>
                                                                         <div class="player-dm-setting-left-value">{{ dmSetting.opacity }}%</div>
                                                                     </div>
                                                                 </div>
@@ -519,6 +519,7 @@ export default {
             videoWidth: 704,
             videoHeight: 396,
             danmuOpen: true,    // 是否开启弹幕
+            dmOpacityOrder: false,  // 更新弹幕不透明度slider的命令
             dmList: [],     // 弹幕列表
             lastTimePoint: 0,   // 上一个播放时间点，用于筛选将展示的弹幕
             dmIndex: -1,     // 当前时间点之前的最后一个弹幕的指针，播放更新的时候这个弹幕及之前的都不会展示（使用索引可以提升筛选效率，前提是根据时间点排序的弹幕列表）
@@ -1177,6 +1178,7 @@ export default {
         },
         "dmSetting.opacity"() {
             localStorage.setItem("dmSetting", JSON.stringify(this.dmSetting));
+            this.dmOpacityOrder = true;
         },
         "dmSetting.dmSpeed"() {
             localStorage.setItem("dmSetting", JSON.stringify(this.dmSetting));
