@@ -27,9 +27,7 @@
                         </div>
                     </div>
                     <!-- 弹幕 -->
-                    <div class="player-row-dm-wrap">
-
-                    </div>
+                    <div class="player-row-dm-wrap" :class="{'dm-show': danmuOpen}"></div>
                     <!-- 状态 -->
                     <div class="player-state">
                         <div class="player-state-play"></div>
@@ -120,12 +118,47 @@
                                                     <svg v-else t="1700488288201" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7204" width="100%" height="100%"><path d="M673.10933333 432.64H616.6755552v40.50488854h56.43377813v-40.50488854z m-106.95111146 0h-53.7031104v40.50488854h53.7031104v-40.50488854z m0 82.37511147h-53.7031104v38.22933333h53.7031104v-38.22933333z m106.95111146 0H616.6755552v38.22933333h56.43377813v-38.22933333z m-27.30666666-206.16533333l48.69688853 17.29422186c-10.0124448 23.66577813-21.39022187 44.60088853-33.67822187 63.2604448h57.344v207.0755552h-101.94488853v37.77422187h44.60088853l-15.01866666 48.24177813h-29.58222187l-0.45511147-0.45511146-121.51466666 0.45511146h-46.42133334v-48.24177813h117.41866667v-37.77422187h-99.66933333v-207.0755552h59.1644448a386.38933333 386.38933333 0 0 0-36.864-60.9848896l46.87644373-15.92888853c13.65333333 19.56977813 26.3964448 40.50488853 36.4088896 62.80533333l-30.94755627 13.65333334h68.26666667c14.5635552-24.576 26.3964448-51.88266667 37.31911147-80.0995552z m-212.08177814 21.84533333v151.552H344.97422187l-6.82666667 66.44622187h98.75911147c0 84.65066667-3.18577813 141.0844448-7.73688854 169.7564448-5.9164448 28.672-30.9475552 44.14577813-76.00355626 47.3315552-12.74311147 0-25.48622187-0.91022187-39.59466667-1.8204448l-13.19822187-47.78666667c12.74311147 1.36533333 26.8515552 2.2755552 40.50488854 2.27555627 24.576 0 38.6844448-7.73688853 41.87022293-23.66577814 3.64088853-15.92888853 5.46133333-49.60711147 5.46133333-101.94488853H285.35466667l13.65333333-154.28266667h83.28533333v-63.71555626H289.90577813v-43.69066667h143.8151104v-0.4551104z" p-id="7205"></path><path d="M792.9856 171.40622187a182.0444448 182.0444448 0 0 1 181.8624 172.94222293l0.1820448 9.10222187v79.18933333a45.51111147 45.51111147 0 0 1-90.7036448 5.3248l-0.31857813-5.3248v-79.18933333a91.02222187 91.02222187 0 0 0-84.1955552-90.7491552l-6.82666667-0.27306667H229.28497813a91.02222187 91.02222187 0 0 0-90.79466666 84.24106667l-0.22755627 6.82666667v427.30382186a91.02222187 91.02222187 0 0 0 84.19555627 90.79466667l6.82666666 0.2275552h300.55537707a45.51111147 45.51111147 0 0 1 5.3248 90.7036448l-5.3248 0.31857813H229.28497813a182.0444448 182.0444448 0 0 1-181.8168896-172.94222293l-0.2275552-9.10222187v-427.34933333a182.0444448 182.0444448 0 0 1 172.94222187-181.81688853l9.10222293-0.22755627h563.70062187z" p-id="7206"></path><path d="M286.76551147 48.2076448a45.51111147 45.51111147 0 0 1 60.07466666-3.77742293l4.27804374 3.77742293 136.53333333 136.53333334a45.51111147 45.51111147 0 0 1-60.07466667 68.17564373l-4.27804373-3.77742187-136.53333333-136.53333333a45.51111147 45.51111147 0 0 1 0-64.39822187z" p-id="7207"></path><path d="M715.20711147 48.2076448a45.51111147 45.51111147 0 0 0-60.07466667-3.77742293l-4.2780448 3.77742293-136.53333333 136.53333334a45.51111147 45.51111147 0 0 0 60.07466666 68.17564373l4.2780448-3.77742187 136.53333334-136.53333333a45.51111147 45.51111147 0 0 0 0-64.39822187z" p-id="7208"></path><path d="M785.06666667 490.66666667a227.5555552 227.5555552 0 1 0 0 455.11111147 227.5555552 227.5555552 0 0 0 0-455.11111147z m0 91.02222187a136.53333333 136.53333333 0 1 1 0 273.06666666 136.53333333 136.53333333 0 0 1 0-273.06666666z" p-id="7209"></path><path d="M870.94613333 571.99502187a45.51111147 45.51111147 0 0 1 66.7648 61.57653333l-3.8684448 4.18702294-229.28497706 219.31804373a45.51111147 45.51111147 0 0 1-66.7648-61.57653333l3.86844373-4.18702187 229.28497813-219.3635552z" p-id="7210"></path></svg>
                                                 </div>
                                             </el-tooltip>
-                                            <!-- 弹幕屏蔽设置，目前没做 -->
+                                            <!-- 弹幕显示设置 -->
                                             <div class="player-dm-setting player-dm-outside"
                                                 @mouseenter="enterBtn('player-dm-setting', 0)"
                                                 @mouseleave="leaveBtn('player-dm-setting', 0)"
                                             >
                                                 <svg t="1700490442936" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3841" width="100%" height="100%"><path d="M167.25546667 293.9904h-54.61333333c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555555s33.10933333-73.95555555 73.95555555-73.95555556h54.61333333c40.84622222 0 73.95555555 33.10933333 73.95555555 73.95555556s-33.10933333 73.95555555-73.95555555 73.95555555zM732.73102222 293.9904h-366.36444444c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555555s33.10933333-73.95555555 73.95555555-73.95555556h366.36444444c40.84622222 0 73.95555555 33.10933333 73.95555557 73.95555556s-33.10933333 73.95555555-73.95555557 73.95555555zM367.50435555 589.81262222h-254.86222221c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555555s33.10933333-73.95555555 73.95555555-73.95555556h254.86222221c40.84622222 0 73.95555555 33.10933333 73.95555556 73.95555556s-33.10933333 73.95555555-73.95555556 73.95555555zM195.69991111 884.49706667h-83.05777777c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555556s33.10933333-73.95555555 73.95555555-73.95555556h83.05777777c40.84622222 0 73.95555555 33.10933333 73.95555556 73.95555556s-33.10933333 73.95555555-73.95555556 73.95555556zM392.53546667 884.49706667h-1.13777778c-40.84622222 0-73.95555555-33.10933333-73.95555556-73.95555556s33.10933333-73.95555555 73.95555556-73.95555556h1.13777778c40.84622222 0 73.95555555 33.10933333 73.95555555 73.95555556s-33.10933333 73.95555555-73.95555555 73.95555556zM995.83075556 599.1424l-106.26844445-184.06968889a67.34392889 67.34392889 0 0 0-58.33386666-33.67822222h-212.5368889a67.35758222 67.35758222 0 0 0-58.33386666 33.67822222l-106.26844443 184.06968889a67.38488889 67.38488889 0 0 0 0 67.35644445l106.26844443 184.06968888a67.34392889 67.34392889 0 0 0 58.33386666 33.67822222h212.54826667c24.064 0 46.29617778-12.83413333 58.33386667-33.67822222l106.26844445-184.06968888a67.35644445 67.35644445 0 0 0-0.01137778-67.35644445z m-270.87075555 108.97635555c-41.58577778 0-75.29813333-33.71235555-75.29813334-75.29813333 0-41.58577778 33.71235555-75.29813333 75.29813334-75.29813333 41.58577778 0 75.29813333 33.71235555 75.29813332 75.29813333 0 41.58577778-33.71235555 75.29813333-75.29813332 75.29813333z" p-id="3842"></path></svg>
+                                                <div class="player-dm-setting-wrap">
+                                                    <div class="player-dm-setting-box v-ui v-ui-panel v-ui-dark">
+                                                        <div class="v-ui-area">
+                                                            <div class="v-ui-panel-wrap" style="width: 320px; height: 78px;">
+                                                                <div class="v-ui-panel-move" style="width: 586px; transform: translateX(0px);">
+                                                                    <div class="v-ui-panel-item v-ui-panel-item-active" style="width: 320px; height: 78px;">
+                                                                        <div class="player-dm-setting-left">
+                                                                            <div class="player-dm-setting-left-opacity">
+                                                                                <div class="player-dm-setting-left-title">不透明度</div>
+                                                                                <div class="player-dm-setting-left-content">
+                                                                                    <div class="v-ui" style="height: 12px;">
+                                                                                        <div class="v-ui-area">
+                                                                                            <SliderRow class="player-dm-setting-left-progress" :currentPer="dmSetting.opacity / 100" :sliderWidth="182" @changeCurrent="changeDmOpacity"></SliderRow>
+                                                                                            <div class="player-dm-setting-left-value">{{ dmSetting.opacity }}%</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="player-dm-setting-left-speed">
+                                                                                <div class="player-dm-setting-left-title">弹幕速度</div>
+                                                                                <div class="player-dm-setting-left-content" style="height: 22px;">
+                                                                                    <div class="dm-speed-items">
+                                                                                        <div class="dm-speed-item" :class="{'active': dmSetting.dmSpeed === 1}" @click="dmSetting.dmSpeed = 1">慢</div>
+                                                                                        <div class="dm-speed-item" :class="{'active': dmSetting.dmSpeed === 2}" @click="dmSetting.dmSpeed = 2">适中</div>
+                                                                                        <div class="dm-speed-item" :class="{'active': dmSetting.dmSpeed === 4}" @click="dmSetting.dmSpeed = 4">快</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="player-dm-inputbar" v-if="showDmInput">
                                                 <div class="player-video-inputbar-wrap">
@@ -341,12 +374,47 @@
                                 <svg v-else t="1700488288201" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7204" width="100%" height="100%"><path d="M673.10933333 432.64H616.6755552v40.50488854h56.43377813v-40.50488854z m-106.95111146 0h-53.7031104v40.50488854h53.7031104v-40.50488854z m0 82.37511147h-53.7031104v38.22933333h53.7031104v-38.22933333z m106.95111146 0H616.6755552v38.22933333h56.43377813v-38.22933333z m-27.30666666-206.16533333l48.69688853 17.29422186c-10.0124448 23.66577813-21.39022187 44.60088853-33.67822187 63.2604448h57.344v207.0755552h-101.94488853v37.77422187h44.60088853l-15.01866666 48.24177813h-29.58222187l-0.45511147-0.45511146-121.51466666 0.45511146h-46.42133334v-48.24177813h117.41866667v-37.77422187h-99.66933333v-207.0755552h59.1644448a386.38933333 386.38933333 0 0 0-36.864-60.9848896l46.87644373-15.92888853c13.65333333 19.56977813 26.3964448 40.50488853 36.4088896 62.80533333l-30.94755627 13.65333334h68.26666667c14.5635552-24.576 26.3964448-51.88266667 37.31911147-80.0995552z m-212.08177814 21.84533333v151.552H344.97422187l-6.82666667 66.44622187h98.75911147c0 84.65066667-3.18577813 141.0844448-7.73688854 169.7564448-5.9164448 28.672-30.9475552 44.14577813-76.00355626 47.3315552-12.74311147 0-25.48622187-0.91022187-39.59466667-1.8204448l-13.19822187-47.78666667c12.74311147 1.36533333 26.8515552 2.2755552 40.50488854 2.27555627 24.576 0 38.6844448-7.73688853 41.87022293-23.66577814 3.64088853-15.92888853 5.46133333-49.60711147 5.46133333-101.94488853H285.35466667l13.65333333-154.28266667h83.28533333v-63.71555626H289.90577813v-43.69066667h143.8151104v-0.4551104z" p-id="7205"></path><path d="M792.9856 171.40622187a182.0444448 182.0444448 0 0 1 181.8624 172.94222293l0.1820448 9.10222187v79.18933333a45.51111147 45.51111147 0 0 1-90.7036448 5.3248l-0.31857813-5.3248v-79.18933333a91.02222187 91.02222187 0 0 0-84.1955552-90.7491552l-6.82666667-0.27306667H229.28497813a91.02222187 91.02222187 0 0 0-90.79466666 84.24106667l-0.22755627 6.82666667v427.30382186a91.02222187 91.02222187 0 0 0 84.19555627 90.79466667l6.82666666 0.2275552h300.55537707a45.51111147 45.51111147 0 0 1 5.3248 90.7036448l-5.3248 0.31857813H229.28497813a182.0444448 182.0444448 0 0 1-181.8168896-172.94222293l-0.2275552-9.10222187v-427.34933333a182.0444448 182.0444448 0 0 1 172.94222187-181.81688853l9.10222293-0.22755627h563.70062187z" p-id="7206"></path><path d="M286.76551147 48.2076448a45.51111147 45.51111147 0 0 1 60.07466666-3.77742293l4.27804374 3.77742293 136.53333333 136.53333334a45.51111147 45.51111147 0 0 1-60.07466667 68.17564373l-4.27804373-3.77742187-136.53333333-136.53333333a45.51111147 45.51111147 0 0 1 0-64.39822187z" p-id="7207"></path><path d="M715.20711147 48.2076448a45.51111147 45.51111147 0 0 0-60.07466667-3.77742293l-4.2780448 3.77742293-136.53333333 136.53333334a45.51111147 45.51111147 0 0 0 60.07466666 68.17564373l4.2780448-3.77742187 136.53333334-136.53333333a45.51111147 45.51111147 0 0 0 0-64.39822187z" p-id="7208"></path><path d="M785.06666667 490.66666667a227.5555552 227.5555552 0 1 0 0 455.11111147 227.5555552 227.5555552 0 0 0 0-455.11111147z m0 91.02222187a136.53333333 136.53333333 0 1 1 0 273.06666666 136.53333333 136.53333333 0 0 1 0-273.06666666z" p-id="7209"></path><path d="M870.94613333 571.99502187a45.51111147 45.51111147 0 0 1 66.7648 61.57653333l-3.8684448 4.18702294-229.28497706 219.31804373a45.51111147 45.51111147 0 0 1-66.7648-61.57653333l3.86844373-4.18702187 229.28497813-219.3635552z" p-id="7210"></path></svg>
                             </div>
                         </el-tooltip>
-                        <!-- 弹幕屏蔽设置，目前没做 -->
+                        <!-- 弹幕显示设置 -->
                         <div class="player-dm-setting player-dm-outside"
                             @mouseenter="enterBtn('player-dm-setting', 0)"
                             @mouseleave="leaveBtn('player-dm-setting', 0)"
                         >
                             <svg t="1700490442936" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3841" width="100%" height="100%"><path d="M167.25546667 293.9904h-54.61333333c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555555s33.10933333-73.95555555 73.95555555-73.95555556h54.61333333c40.84622222 0 73.95555555 33.10933333 73.95555555 73.95555556s-33.10933333 73.95555555-73.95555555 73.95555555zM732.73102222 293.9904h-366.36444444c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555555s33.10933333-73.95555555 73.95555555-73.95555556h366.36444444c40.84622222 0 73.95555555 33.10933333 73.95555557 73.95555556s-33.10933333 73.95555555-73.95555557 73.95555555zM367.50435555 589.81262222h-254.86222221c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555555s33.10933333-73.95555555 73.95555555-73.95555556h254.86222221c40.84622222 0 73.95555555 33.10933333 73.95555556 73.95555556s-33.10933333 73.95555555-73.95555556 73.95555555zM195.69991111 884.49706667h-83.05777777c-40.84622222 0-73.95555555-33.10933333-73.95555555-73.95555556s33.10933333-73.95555555 73.95555555-73.95555556h83.05777777c40.84622222 0 73.95555555 33.10933333 73.95555556 73.95555556s-33.10933333 73.95555555-73.95555556 73.95555556zM392.53546667 884.49706667h-1.13777778c-40.84622222 0-73.95555555-33.10933333-73.95555556-73.95555556s33.10933333-73.95555555 73.95555556-73.95555556h1.13777778c40.84622222 0 73.95555555 33.10933333 73.95555555 73.95555556s-33.10933333 73.95555555-73.95555555 73.95555556zM995.83075556 599.1424l-106.26844445-184.06968889a67.34392889 67.34392889 0 0 0-58.33386666-33.67822222h-212.5368889a67.35758222 67.35758222 0 0 0-58.33386666 33.67822222l-106.26844443 184.06968889a67.38488889 67.38488889 0 0 0 0 67.35644445l106.26844443 184.06968888a67.34392889 67.34392889 0 0 0 58.33386666 33.67822222h212.54826667c24.064 0 46.29617778-12.83413333 58.33386667-33.67822222l106.26844445-184.06968888a67.35644445 67.35644445 0 0 0-0.01137778-67.35644445z m-270.87075555 108.97635555c-41.58577778 0-75.29813333-33.71235555-75.29813334-75.29813333 0-41.58577778 33.71235555-75.29813333 75.29813334-75.29813333 41.58577778 0 75.29813333 33.71235555 75.29813332 75.29813333 0 41.58577778-33.71235555 75.29813333-75.29813332 75.29813333z" p-id="3842" ></path></svg>    
+                            <div class="player-dm-setting-wrap">
+                                <div class="player-dm-setting-box v-ui v-ui-panel v-ui-dark">
+                                    <div class="v-ui-area">
+                                        <div class="v-ui-panel-wrap" style="width: 320px; height: 78px;">
+                                            <div class="v-ui-panel-move" style="width: 586px; transform: translateX(0px);">
+                                                <div class="v-ui-panel-item v-ui-panel-item-active" style="width: 320px; height: 78px;">
+                                                    <div class="player-dm-setting-left">
+                                                        <div class="player-dm-setting-left-opacity">
+                                                            <div class="player-dm-setting-left-title">不透明度</div>
+                                                            <div class="player-dm-setting-left-content">
+                                                                <div class="v-ui" style="height: 12px;">
+                                                                    <div class="v-ui-area">
+                                                                        <SliderRow class="player-dm-setting-left-progress" :currentPer="dmSetting.opacity / 100" :sliderWidth="182" @changeCurrent="changeDmOpacity"></SliderRow>
+                                                                        <div class="player-dm-setting-left-value">{{ dmSetting.opacity }}%</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="player-dm-setting-left-speed">
+                                                            <div class="player-dm-setting-left-title">弹幕速度</div>
+                                                            <div class="player-dm-setting-left-content" style="height: 22px;">
+                                                                <div class="dm-speed-items">
+                                                                    <div class="dm-speed-item" :class="{'active': dmSetting.dmSpeed === 1}" @click="dmSetting.dmSpeed = 1">慢</div>
+                                                                    <div class="dm-speed-item" :class="{'active': dmSetting.dmSpeed === 2}" @click="dmSetting.dmSpeed = 2">适中</div>
+                                                                    <div class="dm-speed-item" :class="{'active': dmSetting.dmSpeed === 4}" @click="dmSetting.dmSpeed = 4">快</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="player-dm-inputbar">
                             <div class="player-video-inputbar-wrap">
@@ -422,8 +490,10 @@ import PlayerLoading from './PlayerLoading.vue';
 import LoadingBuff from './LoadingBuff.vue';
 import PlayerProgress from './PlayerProgress.vue';
 import SliderColumn from '@/components/slider/SliderColumn.vue';
+import SliderRow from '@/components/slider/SliderRow.vue';
 import ColorPicker from '@/components/color/ColorPicker.vue';
 import { handleTime } from '@/utils/utils.js';
+import dms from '@/assets/json/dm.json';
 
 
 let hideCtrlTimer;  // 隐藏控制器的计时器
@@ -438,6 +508,7 @@ export default {
         PlayerLoading,
         LoadingBuff,
         SliderColumn,
+        SliderRow,
         PlayerProgress,
         ColorPicker,
     },
@@ -448,6 +519,16 @@ export default {
             videoWidth: 704,
             videoHeight: 396,
             danmuOpen: true,    // 是否开启弹幕
+            dmList: [],     // 弹幕列表
+            lastTimePoint: 0,   // 上一个播放时间点，用于筛选将展示的弹幕
+            dmIndex: -1,     // 当前时间点之前的最后一个弹幕的指针，播放更新的时候这个弹幕及之前的都不会展示（使用索引可以提升筛选效率，前提是根据时间点排序的弹幕列表）
+            dmSetting: {
+                opacity: 100,     // 弹幕透明度 
+                dmSpeed: 2,   // 弹幕滚动速度，1慢速75px/s 2正常150px/s 4快速300px/s
+            },
+            rollRow: new Array(12).fill(-1),    // 滚动模式下用于记录每一行上一个弹幕的全呈现时间
+            topRow: new Array(12).fill(-1),    // 顶部模式下用于记录每一行上一个弹幕的结束时间
+            bottomRow: new Array(12).fill(-1),    // 底部模式下用于记录每一行上一个弹幕的结束时间
             input: '',  // 要发送的弹幕内容
             canPlay: false, // 视频可以播放了
             screenType: 'normal',   // 屏幕类型，normal 正常模式 web 网页全屏 full 屏幕全屏
@@ -458,11 +539,11 @@ export default {
             currentPer: 0,  // 进度条百分比 0~1
             currentTime: 0, // 当前播放时间
             bufferPer: 0,   // 缓冲百分比 0~1
-            bufferSpeed: 0.00, // 缓冲网速 KB/s (我不会算QAQ)
+            bufferSpeed: 0.00, // 缓冲网速 KB/s
             videoSize: 0,   // 视频字节大小
             lastByte: 0,    // 上次缓冲的字节
             isMuted: false, // 是否静音
-            volumeOrder: false, // 更新slider的命令
+            volumeOrder: false, // 更新音量slider的命令
             volume: 35,     // 音量
             showDmInput: false, // 是否显示全屏状态下的弹幕输入框
             playbackrate: '倍速',   // 倍速文本
@@ -580,12 +661,26 @@ export default {
                 // 阻止默认的→键行为（水平滚动页面）
                 event.preventDefault();
                 this.$refs.videoPlayer.currentTime += 5;
+                // 初始化弹幕索引
+                this.removeAllDanmu();
+                this.lastTimePoint = this.$refs.videoPlayer.currentTime;
+                this.dmIndex = -1;
+                this.rollRow = new Array(12).fill(-1);
+                this.topRow = new Array(12).fill(-1);
+                this.bottomRow = new Array(12).fill(-1);
             }
             // ←键 回退5秒
             else if (event.keyCode === 37 && !isInputField) {
                 // 阻止默认的←键行为（水平滚动页面）
                 event.preventDefault();
                 this.$refs.videoPlayer.currentTime -= 5;
+                // 初始化弹幕索引
+                this.removeAllDanmu();
+                this.lastTimePoint = this.$refs.videoPlayer.currentTime;
+                this.dmIndex = -1;
+                this.rollRow = new Array(12).fill(-1);
+                this.topRow = new Array(12).fill(-1);
+                this.bottomRow = new Array(12).fill(-1);
             }
             // ↑键 音量+10
             else if (event.keyCode === 38 && !isInputField) {
@@ -608,17 +703,6 @@ export default {
                 volume = Math.max(0, volume);
                 this.changeVolume(volume);
                 this.volumeOrder = true;
-            }
-        },
-
-        // 打开关闭弹幕
-        changeDanmu() {
-            if (this.danmuOpen) {
-                this.danmuOpen = false;
-                localStorage.setItem("danmuOpen", 'off');
-            } else {
-                this.danmuOpen = true;
-                localStorage.setItem("danmuOpen", 'on');
             }
         },
 
@@ -802,6 +886,151 @@ export default {
             }
         },
 
+        // 打开关闭弹幕
+        changeDanmu() {
+            if (this.danmuOpen) {
+                this.danmuOpen = false;
+                localStorage.setItem("danmuOpen", 'off');
+            } else {
+                this.danmuOpen = true;
+                localStorage.setItem("danmuOpen", 'on');
+            }
+        },
+
+        // 更新弹幕透明度
+        changeDmOpacity(per) {
+            let opacity = Math.floor(per * 100);
+            this.dmSetting.opacity = opacity;
+        },
+
+        // 更新弹幕列表（按时间点排序）
+        updateDanmuList() {
+            this.dmList = dms;
+            this.dmList.sort((a, b) => a.timePoint - b.timePoint);
+        },
+
+        // 加载展示弹幕
+        displayDanmus(currTimePoint) {
+            const dmWrap = document.querySelector('.player-row-dm-wrap');
+            const screen = document.querySelector('.player-video-area');
+            // 选出当前时间需要展示的弹幕
+            while(this.dmIndex + 1 < this.dmList.length && this.dmList[this.dmIndex + 1].timePoint <= currTimePoint) {
+                const dm = this.dmList[this.dmIndex + 1];
+                if (dm.timePoint > this.lastTimePoint) {
+                    // 如果该弹幕处在当前时间区间，就挂载到document
+                    const danmuElement = document.createElement('div');
+                    danmuElement.classList.add('dm');
+                    danmuElement.innerText = dm.content;
+                    danmuElement.style.setProperty('--opacity', `${this.dmSetting.opacity / 100}`);
+                    danmuElement.style.setProperty('--fontSize', `${dm.fontsize}px`);
+                    danmuElement.style.setProperty('--color', `${dm.color}`);
+                    dmWrap.appendChild(danmuElement);
+                    if (dm.mode === 1) {
+                        // 滚动模式
+                        danmuElement.classList.add('roll');
+                        const contentWidth = danmuElement.offsetWidth;    // 内容长度
+                        const distance = screen.offsetWidth + contentWidth;    // 总位移距离
+                        danmuElement.style.setProperty('--offset', `${screen.offsetWidth}px`);
+                        danmuElement.style.setProperty('--translateX', `-${distance}px`);
+                        danmuElement.style.setProperty('--duration', `${distance / (this.dmSetting.dmSpeed * 75)}s`);
+                        // 计算弹幕位置
+                        const rowOutTime = (contentWidth + 10) / (this.dmSetting.dmSpeed * 75) + currTimePoint; // 当前弹幕全部呈现时的时间点
+                        let i = 0, full = false, min = -1, minIndex = 0;
+                        while (i < 12) {
+                            if (this.rollRow[i] <= currTimePoint) {
+                                danmuElement.style.setProperty('--top', `${i * 30 + 4}px`);
+                                this.rollRow[i] = rowOutTime;
+                                break;
+                            }
+                            // 记录最早全呈现的一行的时间点，以便全部行都占有弹幕时选出一行放新弹幕
+                            if (min === -1 || this.rollRow[i] < min) {
+                                min = this.rollRow[i];
+                                minIndex = i;
+                            }
+                            i ++;
+                            if (i === 12) {
+                                full = true;
+                            }
+                        }
+                        if (full) {
+                            danmuElement.style.setProperty('--top', `${minIndex * 30 + 4}px`);
+                            this.rollRow[minIndex] = rowOutTime;
+                        }
+                    } else if (dm.mode === 2) {
+                        // 顶部
+                        danmuElement.classList.add('center');
+                        const duration = this.dmSetting.dmSpeed === 1 ? 6 : this.dmSetting.dmSpeed === 2 ? 4 : 2;
+                        danmuElement.style.setProperty('--duration', `${duration}s`);
+                        // 计算弹幕位置
+                        const rowOutTime = duration + currTimePoint; // 当前弹幕消失时的时间点
+                        let i = 0, full = false, min = -1, minIndex = 0;
+                        while (i < 12) {
+                            if (this.topRow[i] <= currTimePoint) {
+                                danmuElement.style.setProperty('--top', `${i * 30 + 4}px`);
+                                this.topRow[i] = rowOutTime;
+                                break;
+                            }
+                            // 记录最早消失的一行的时间点，以便全部行都占有弹幕时选出一行放新弹幕
+                            if (min === -1 || this.topRow[i] < min) {
+                                min = this.topRow[i];
+                                minIndex = i;
+                            }
+                            i ++;
+                            if (i === 12) {
+                                full = true;
+                            }
+                        }
+                        if (full) {
+                            danmuElement.style.setProperty('--top', `${minIndex * 30 + 4}px`);
+                            this.topRow[minIndex] = rowOutTime;
+                        }
+                    } else  {
+                        // 底部
+                        danmuElement.classList.add('center');
+                        const duration = this.dmSetting.dmSpeed === 1 ? 6 : this.dmSetting.dmSpeed === 2 ? 4 : 2;
+                        danmuElement.style.setProperty('--duration', `${duration}s`);
+                        // 计算弹幕位置
+                        const rowOutTime = duration + currTimePoint; // 当前弹幕消失时的时间点
+                        let i = 0, full = false, min = -1, minIndex = 0;
+                        while (i < 12) {
+                            if (this.bottomRow[i] <= currTimePoint) {
+                                danmuElement.style.setProperty('bottom', `${i * 30 + 5}px`);
+                                this.bottomRow[i] = rowOutTime;
+                                break;
+                            }
+                            // 记录最早消失的一行的时间点，以便全部行都占有弹幕时选出一行放新弹幕
+                            if (min === -1 || this.bottomRow[i] < min) {
+                                min = this.bottomRow[i];
+                                minIndex = i;
+                            }
+                            i ++;
+                            if (i === 12) {
+                                full = true;
+                            }
+                        }
+                        if (full) {
+                            danmuElement.style.setProperty('bottom', `${minIndex * 30 + 5}px`);
+                            this.bottomRow[minIndex] = rowOutTime;
+                        }
+                    }
+                    // 动画结束就移除弹幕
+                    danmuElement.addEventListener('animationend', () => {
+                        danmuElement.remove();
+                    });
+                }
+                this.dmIndex ++;
+            }
+        },
+
+        // 移除挂载的全部弹幕
+        removeAllDanmu() {
+            const dmWrap = document.querySelector('.player-row-dm-wrap');
+            const dmElements = dmWrap.querySelectorAll('.dm');
+            dmElements.forEach((dmElement) => {
+                dmElement.remove();
+            });
+        },
+
         // 拖动进度条的回调
         changeCurrentPer(curr) {
             this.currentPer = curr;
@@ -809,6 +1038,13 @@ export default {
             let time = curr * this.duration;
             this.currentTime = time;
             this.$refs.videoPlayer.currentTime = time;
+            // 初始化弹幕索引
+            this.removeAllDanmu();
+            this.lastTimePoint = time;
+            this.dmIndex = -1;
+            this.rollRow = new Array(12).fill(-1);
+            this.topRow = new Array(12).fill(-1);
+            this.bottomRow = new Array(12).fill(-1);
         },
 
         // 实时更新当前播放的时间
@@ -817,6 +1053,11 @@ export default {
             this.currentTime = time;
             // 计算进度条的位置
             this.currentPer = time / this.duration;
+            // 展示该时间段的弹幕
+            if (this.danmuOpen) {
+                this.displayDanmus(time);
+            }            
+            this.lastTimePoint = time;
         },
 
         // 更新缓冲条
@@ -890,6 +1131,10 @@ export default {
         if (localStorage.getItem("danmuOpen") === 'off') {
             this.danmuOpen = false;
         }
+        // 同步弹幕设置
+        if (localStorage.getItem("dmSetting")) {
+            this.dmSetting = JSON.parse(localStorage.getItem("dmSetting"));
+        }
         // 同步播放设置
         if (localStorage.getItem("playerSetting")) {
             this.setting = JSON.parse(localStorage.getItem("playerSetting"));
@@ -902,6 +1147,8 @@ export default {
         if (localStorage.getItem("dmStyle")) {
             this.dmStyle = JSON.parse(localStorage.getItem("dmStyle"));
         }
+        // 获取弹幕列表
+        this.updateDanmuList();
     },
     mounted() {
         this.changeWindowSize();
@@ -927,6 +1174,12 @@ export default {
         },
         "dmStyle.color"() {
             localStorage.setItem("dmStyle", JSON.stringify(this.dmStyle));
+        },
+        "dmSetting.opacity"() {
+            localStorage.setItem("dmSetting", JSON.stringify(this.dmSetting));
+        },
+        "dmSetting.dmSpeed"() {
+            localStorage.setItem("dmSetting", JSON.stringify(this.dmSetting));
         }
     }
 }
@@ -1049,6 +1302,24 @@ export default {
     height: 100%;
     margin: auto;
     width: 100%;
+}
+
+.player-adv-dm-wrap, .player-bas-dm-wrap, .player-row-dm-wrap {
+    cursor: pointer;
+    height: 100%;
+    left: 0;
+    -webkit-mask-position: center;
+    mask-position: center;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+    z-index: 2;
 }
 
 .player-row-dm-wrap {
@@ -1716,6 +1987,123 @@ export default {
     margin-right: 12px;
     position: relative;
     width: 24px;
+}
+
+.player-dm-setting-wrap {
+    display: none;
+    background: none;
+    border: none;
+    border-radius: 4px 4px 0 0;
+    bottom: 39px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: default;
+    font-size: 12px;
+    height: 359px;
+    position: absolute;
+    right: -149px;
+    text-align: left;
+    width: 320px;
+    z-index: 1001;
+}
+
+.player-dm-setting.state-show .player-dm-setting-wrap {
+    display: block;
+}
+
+.player-dm-setting-box {
+    border-radius: 2px;
+    bottom: 0;
+    position: absolute;
+    right: 0;
+}
+
+.player-dm-setting-left {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 12px 20px;
+    width: 100%;
+}
+
+.player-dm-setting-left-opacity {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 16px;
+    line-height: 16px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.player-dm-setting-left-speed {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 22px;
+    line-height: 22px;
+    width: 100%;
+}
+
+.dm-speed-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-gap: 10px;
+    width: 100%;
+}
+
+.dm-speed-item {
+    background: hsla(0,0%,100%,.2);
+    border-radius: 2px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+}
+
+.dm-speed-item.active {
+    background: var(--brand_pink);
+}
+
+.player-dm-setting-left-title {
+    color: #fff;
+    height: 16px;
+    line-height: 15px;
+    text-align: left;
+}
+
+.player-dm-setting-left-content {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    height: 12px;
+    margin-left: 10px;
+    width: 200px;
+}
+
+.player-dm-setting-left-progress {
+    width: 182px !important;
+    margin: auto;
+}
+
+.player-dm-setting-left-value {
+    color: hsla(0,0%,100%,.8);
+    cursor: default;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: right;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 40px
 }
 
 .player-dm-inputbar {
