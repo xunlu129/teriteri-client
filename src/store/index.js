@@ -14,6 +14,8 @@ export default createStore({
         channels: [],
         // 轮播图列表
         carousels: [],
+        // 弹幕列表
+        danmuList: [],
     },
     mutations: {
         // 更新登录状态
@@ -34,7 +36,12 @@ export default createStore({
         updateCarousels(state, carousels) {
             state.carousels = carousels;
             // console.log("vuex中的轮播图: ", state.carousels);
-        }
+        },
+        // 更新弹幕列表
+        updateDanmuList(state, danmuList) {
+            state.danmuList = danmuList;
+            console.log("vuex中的弹幕列表: ", state.danmuList);
+        },
     },
     actions: {
         // 获取当前用户信息

@@ -220,7 +220,7 @@
                                                         v-model="input"
                                                     />
                                                 </div>
-                                                <div class="player-dm-btn-send">发送</div>
+                                                <div class="player-dm-btn-send" @click="sendDm">发送</div>
                                             </div>
                                         </div>
                                     </div>
@@ -359,8 +359,8 @@
                 <!-- 发送弹幕区域 -->
                 <div class="player-sending-area">
                     <div class="player-video-info">
-                        <div class="player-video-info-dm">
-                            已装填 {{ 114514 }} 条弹幕
+                        <div class="player-video-info-text">
+                            {{ population }} 人正在观看，已装填 {{ dmList.length }} 条弹幕
                         </div>
                     </div>
                     <div class="player-dm-root">
@@ -476,7 +476,7 @@
                                     v-model="input"
                                 />
                             </div>
-                            <div class="player-dm-btn-send">发送</div>
+                            <div class="player-dm-btn-send" @click="sendDm">发送</div>
                         </div>
                     </div>
                 </div>
@@ -493,7 +493,7 @@ import SliderColumn from '@/components/slider/SliderColumn.vue';
 import SliderRow from '@/components/slider/SliderRow.vue';
 import ColorPicker from '@/components/color/ColorPicker.vue';
 import { handleTime } from '@/utils/utils.js';
-import dms from '@/assets/json/dm.json';
+import { ElMessage } from 'element-plus';
 
 
 let hideCtrlTimer;  // 隐藏控制器的计时器
@@ -589,6 +589,13 @@ export default {
             type: Object,
             default() {
                 return {};
+            }
+        },
+        // 当前观看人数
+        population: {
+            type: Number,
+            default() {
+                return 0;
             }
         }
     },
@@ -905,16 +912,20 @@ export default {
         },
 
         // 更新弹幕列表（按时间点排序）
-        updateDanmuList() {
+        updateDanmuList(dms) {
             this.dmList = dms;
             this.dmList.sort((a, b) => a.timePoint - b.timePoint);
         },
 
         // 加载展示弹幕
         displayDanmus(currTimePoint) {
+            // console.log(currTimePoint, this.lastTimePoint);
             const dmWrap = document.querySelector('.player-row-dm-wrap');
             const screen = document.querySelector('.player-video-area');
             // 选出当前时间需要展示的弹幕
+            // 一定要 lastTimePoint < timePoint <= currTimePoint 
+            // 发送弹幕时一定要是 this.currentTime 不能是this.$refs.videoPlayer.currentTime
+            // 并且需要手动挂载新弹幕，否则会有概率出现弹幕不显示情况
             while(this.dmIndex + 1 < this.dmList.length && this.dmList[this.dmIndex + 1].timePoint <= currTimePoint) {
                 const dm = this.dmList[this.dmIndex + 1];
                 if (dm.timePoint > this.lastTimePoint) {
@@ -925,6 +936,10 @@ export default {
                     danmuElement.style.setProperty('--opacity', `${this.dmSetting.opacity / 100}`);
                     danmuElement.style.setProperty('--fontSize', `${dm.fontsize}px`);
                     danmuElement.style.setProperty('--color', `${dm.color}`);
+                    // 标识自己发的弹幕
+                    if (this.$store.state.user.uid && dm.uid === this.$store.state.user.uid) {
+                        danmuElement.style.setProperty('border', '2px solid #FFFFFF');
+                    }
                     dmWrap.appendChild(danmuElement);
                     if (dm.mode === 1) {
                         // 滚动模式
@@ -1023,6 +1038,112 @@ export default {
             }
         },
 
+        // 挂载刚刚发送的弹幕
+        displaySentDanmus() {
+            const dmWrap = document.querySelector('.player-row-dm-wrap');
+            const screen = document.querySelector('.player-video-area');
+            const danmuElement = document.createElement('div');
+            danmuElement.classList.add('dm');
+            danmuElement.innerText = this.input;
+            danmuElement.style.setProperty('--opacity', `${this.dmSetting.opacity / 100}`);
+            danmuElement.style.setProperty('--fontSize', `${this.dmStyle.fontsize}px`);
+            danmuElement.style.setProperty('--color', `${this.dmStyle.color}`);
+            danmuElement.style.setProperty('border', '2px solid #FFFFFF');
+            dmWrap.appendChild(danmuElement);
+            if (this.dmStyle.mode === 1) {
+                // 滚动模式
+                danmuElement.classList.add('roll');
+                const contentWidth = danmuElement.offsetWidth;    // 内容长度
+                const distance = screen.offsetWidth + contentWidth;    // 总位移距离
+                danmuElement.style.setProperty('--offset', `${screen.offsetWidth}px`);
+                danmuElement.style.setProperty('--translateX', `-${distance}px`);
+                danmuElement.style.setProperty('--duration', `${distance / (this.dmSetting.dmSpeed * 75)}s`);
+                // 计算弹幕位置
+                const rowOutTime = (contentWidth + 10) / (this.dmSetting.dmSpeed * 75) + this.currentTime; // 当前弹幕全部呈现时的时间点
+                let i = 0, full = false, min = -1, minIndex = 0;
+                while (i < 12) {
+                    if (this.rollRow[i] <= this.currentTime) {
+                        danmuElement.style.setProperty('--top', `${i * 30 + 4}px`);
+                        this.rollRow[i] = rowOutTime;
+                        break;
+                    }
+                    // 记录最早全呈现的一行的时间点，以便全部行都占有弹幕时选出一行放新弹幕
+                    if (min === -1 || this.rollRow[i] < min) {
+                        min = this.rollRow[i];
+                        minIndex = i;
+                    }
+                    i ++;
+                    if (i === 12) {
+                        full = true;
+                    }
+                }
+                if (full) {
+                    danmuElement.style.setProperty('--top', `${minIndex * 30 + 4}px`);
+                    this.rollRow[minIndex] = rowOutTime;
+                }
+            } else if (this.dmStyle.mode === 2) {
+                // 顶部
+                danmuElement.classList.add('center');
+                const duration = this.dmSetting.dmSpeed === 1 ? 6 : this.dmSetting.dmSpeed === 2 ? 4 : 2;
+                danmuElement.style.setProperty('--duration', `${duration}s`);
+                // 计算弹幕位置
+                const rowOutTime = duration + this.currentTime; // 当前弹幕消失时的时间点
+                let i = 0, full = false, min = -1, minIndex = 0;
+                while (i < 12) {
+                    if (this.topRow[i] <= this.currentTime) {
+                        danmuElement.style.setProperty('--top', `${i * 30 + 4}px`);
+                        this.topRow[i] = rowOutTime;
+                        break;
+                    }
+                    // 记录最早消失的一行的时间点，以便全部行都占有弹幕时选出一行放新弹幕
+                    if (min === -1 || this.topRow[i] < min) {
+                        min = this.topRow[i];
+                        minIndex = i;
+                    }
+                    i ++;
+                    if (i === 12) {
+                        full = true;
+                    }
+                }
+                if (full) {
+                    danmuElement.style.setProperty('--top', `${minIndex * 30 + 4}px`);
+                    this.topRow[minIndex] = rowOutTime;
+                }
+            } else  {
+                // 底部
+                danmuElement.classList.add('center');
+                const duration = this.dmSetting.dmSpeed === 1 ? 6 : this.dmSetting.dmSpeed === 2 ? 4 : 2;
+                danmuElement.style.setProperty('--duration', `${duration}s`);
+                // 计算弹幕位置
+                const rowOutTime = duration + this.currentTime; // 当前弹幕消失时的时间点
+                let i = 0, full = false, min = -1, minIndex = 0;
+                while (i < 12) {
+                    if (this.bottomRow[i] <= this.currentTime) {
+                        danmuElement.style.setProperty('bottom', `${i * 30 + 5}px`);
+                        this.bottomRow[i] = rowOutTime;
+                        break;
+                    }
+                    // 记录最早消失的一行的时间点，以便全部行都占有弹幕时选出一行放新弹幕
+                    if (min === -1 || this.bottomRow[i] < min) {
+                        min = this.bottomRow[i];
+                        minIndex = i;
+                    }
+                    i ++;
+                    if (i === 12) {
+                        full = true;
+                    }
+                }
+                if (full) {
+                    danmuElement.style.setProperty('bottom', `${minIndex * 30 + 5}px`);
+                    this.bottomRow[minIndex] = rowOutTime;
+                }
+            }
+            // 动画结束就移除弹幕
+            danmuElement.addEventListener('animationend', () => {
+                danmuElement.remove();
+            });
+        },
+
         // 移除挂载的全部弹幕
         removeAllDanmu() {
             const dmWrap = document.querySelector('.player-row-dm-wrap');
@@ -1030,6 +1151,28 @@ export default {
             dmElements.forEach((dmElement) => {
                 dmElement.remove();
             });
+        },
+
+        // 发送弹幕
+        sendDm() {
+            if (!localStorage.getItem('teri_token')) {
+                ElMessage.error("请登录后发送");
+                return;
+            }
+            if (this.input.trim().length === 0) {
+                ElMessage.error("写点东西吧");
+                return;
+            }
+            const dm = {
+                content: this.input,
+                fontsize: this.dmStyle.fontsize,
+                mode: this.dmStyle.mode,
+                color: this.dmStyle.color,
+                timePoint: this.currentTime     // 不能是this.$refs.videoPlayer.currentTime
+            }
+            this.$emit("sendDm", dm);
+            this.displaySentDanmus();
+            this.input = '';
         },
 
         // 拖动进度条的回调
@@ -1149,7 +1292,7 @@ export default {
             this.dmStyle = JSON.parse(localStorage.getItem("dmStyle"));
         }
         // 获取弹幕列表
-        this.updateDanmuList();
+        // this.updateDanmuList(this.$store.state.danmuList);
     },
     mounted() {
         this.changeWindowSize();
@@ -1182,6 +1325,13 @@ export default {
         },
         "dmSetting.dmSpeed"() {
             localStorage.setItem("dmSetting", JSON.stringify(this.dmSetting));
+        },
+        // 深度监听vuex中弹幕列表的变化，因为对于数组的push操作并不是总能监听到
+        "$store.state.danmuList": {
+            handler(curr) {
+                this.updateDanmuList(curr);
+            },
+            deep: true
         }
     }
 }
@@ -1950,7 +2100,7 @@ export default {
     white-space: nowrap;
 }
 
-.player-video-info-dm {
+.player-video-info-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

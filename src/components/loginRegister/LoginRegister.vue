@@ -12,7 +12,7 @@
             <canvas id="cvs2" width="360" height="360" @click="playVideo" loop></canvas>
         </div>
         <div class="login-register-container">
-            <el-tabs stretch class="login-tabs">
+            <el-tabs stretch class="login-tabs" @tab-click="handleClick">
                 <el-tab-pane label="登录" lazy>
                     <div class="login-box">
                         <el-input type="text" class="input" v-model="usernameLogin" placeholder="请输入账号" />
@@ -48,11 +48,16 @@ export default {
             usernameRegister: "",
             passwordRegister: "",
             confirmedPassword: "",
+            type: 1,    // 1登录 2注册
         }
     },
     mounted() {
         this.videoElement = this.$refs.loginVideo;
         this.init();
+        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+    },
+    unmounted() {
+        document.removeEventListener('keydown', (e) => this.handleKeyboard(e));
     },
     methods: {
 
@@ -91,8 +96,33 @@ export default {
             this.videoElement.play();
         },
 
+        // 点击标签页触发的事件
+        handleClick(tab) {
+            if (tab.props.label === '登录') {
+                this.type = 1;
+            } else {
+                this.type = 2;
+            }
+        },
+
+        // 监听键盘回车触发登录
+        handleKeyboard(event) {
+            if (event.keyCode === 13 && this.type === 1) {
+                this.submitLogin();
+            }
+        },
+
         // 登录的回调
         async submitLogin() {
+            // 前端先做判断，减轻服务器负担
+            if (this.usernameLogin.trim() == "") {
+                ElMessage.error("请输入账号");
+                return;
+            }
+            if (this.passwordLogin == "") {
+                ElMessage.error("请输入密码");
+                return;
+            }
             this.$store.state.isLoading = true;
             // 这里为了更方便捕捉到错误后给出提示，就不使用封装的函数了
             const result = await axios.post("/api/user/account/login", {
