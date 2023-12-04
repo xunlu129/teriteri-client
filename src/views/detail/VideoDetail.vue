@@ -18,9 +18,9 @@
                                 <i class="iconfont icon-bofangshu"></i>
                                 &nbsp;{{ handleNum(view) }}&nbsp;
                             </span>
-                            <span class="dm item">
+                            <span class="danmu item">
                                 <i class="iconfont icon-danmushu"></i>
-                                &nbsp;{{ handleNum(danmu) }}&nbsp;
+                                &nbsp;{{ handleNum(this.$store.state.danmuList.length) }}&nbsp;
                             </span>
                             <span class="date item">
                                 {{ video.uploadDate }}
@@ -33,7 +33,15 @@
                     </div>
                 </div>
                 <!-- 播放器组件 -->
-                <PlayerWrap :videoUrl="video.videoUrl" :title="video.title" :duration="video.duration" :user="user" @resize="(width) => leftWidth = width"></PlayerWrap>
+                <PlayerWrap
+                    :videoUrl="video.videoUrl"
+                    :title="video.title"
+                    :duration="video.duration"
+                    :user="user"
+                    :population="population"
+                    @resize="(width) => leftWidth = width"
+                    @sendDm="sendDanmu"
+                ></PlayerWrap>
                 <!-- 点赞 -->
                 <div class="video-toolbar-container">
                     <div class="video-toolbar-left">
@@ -209,6 +217,7 @@ import VPopover from '@/components/popover/VPopover.vue';
 import VAvatar from '@/components/avatar/VAvatar.vue';
 import UserCard from '@/components/UserCard/UserCard.vue';
 import { handleTime, handleNum, handleDate, linkify } from '@/utils/utils.js';
+import { ElMessage } from 'element-plus';
 
 export default {
     name: "VideoDetail",
@@ -221,6 +230,8 @@ export default {
     },
     data() {
         return {
+            socket: null,
+            sessionUuid: null,
             leftWidth: 704, // 左边区域的宽度
             video: {},  // 视频信息
             view: 0,    // 播放数
@@ -229,6 +240,7 @@ export default {
             coin: 0,    // 投币数
             collect: 0, // 收藏数
             share: 0,   // 分享数
+            population: 0,  // 当前观看人数
             user: {},   // 投稿用户信息
             category: {},   // 视频分区信息
             tags: [],   // 投稿标签
@@ -262,6 +274,36 @@ export default {
                 this.share = res.data.data.stats.share;
             }
             this.isDescTooLong();
+        },
+
+        // 获取弹幕列表
+        async getDanmuList() {
+            const res = await this.$get(`/danmu-list/${this.$route.params.vid}`);
+            if (res.data.data == null) {
+                this.$store.commit("updateDanmuList", []);
+            } else if (res.data.data.length > 0) {
+                this.$store.commit("updateDanmuList", res.data.data);
+            }
+        },
+
+        // 初始化实时弹幕的websocket
+        initWebsocket() {
+            this.sessionUuid = this.generateUUID();
+            const socketUrl = `ws://localhost:7070/ws/danmu/${this.$route.params.vid}/${this.sessionUuid}`;
+            if (this.socket != null) {
+                this.socket.close();
+                this.socket = null;
+            }
+            this.socket = new WebSocket(socketUrl);
+        },
+
+        // 生成UUID
+        generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = (Math.random() * 16) | 0,
+                    v = c === 'x' ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+            });
         },
 
 
@@ -313,15 +355,67 @@ export default {
                 rightPart.style.top = `-${rightPart.clientHeight - windowHeight}px`;
             }
         },
+
+
+        // 处理websocket事件
+        handleWsOpen() {
+            // console.log("弹幕websocket信道已建立");
+        },
+        
+        handleWsClose() {
+            console.log("弹幕websocket信道关闭,请刷新页面重试");
+        },
+
+        handleWsMessage(e) {
+            if (e.data === '登录已过期') {
+                ElMessage.error(e.data);
+            } else if (e.data.startsWith("当前观看人数")) {
+                let numberPart = e.data.substring(6).trim();
+                this.population = parseInt(numberPart, 10);
+                // console.log("当前观看人数: ", this.population);
+            } else {
+                let dm = JSON.parse(e.data);
+                // console.log("ws message: ", dm);
+                this.$store.state.danmuList.push(dm);
+                // console.log("vuex中的弹幕列表: ", this.$store.state.danmuList);
+            }
+        },
+
+        handleWsError(e) {
+            console.log("弹幕websocket信道报错: ", e);
+        },
+
+        // 发送弹幕
+        sendDanmu(dm) {
+            if (!localStorage.getItem('teri_token')) {
+                ElMessage.error("请登录后发送");
+                return;
+            }
+            const dmJson = JSON.stringify({
+                token: "Bearer " + localStorage.getItem('teri_token'),
+                data: dm
+            });
+            this.socket.send(dmJson);
+        }
     },
     async created() {
+        this.initWebsocket();
         await this.getVideoDetail();
+        await this.getDanmuList();
     },
     mounted() {
         window.addEventListener('scroll', this.handleScroll);
         this.handleScroll();
+        this.socket.addEventListener('open', this.handleWsOpen);
+        this.socket.addEventListener('close', this.handleWsClose);
+        this.socket.addEventListener('message', this.handleWsMessage);
+        this.socket.addEventListener('error', this.handleWsError);
     },
     unmounted() {
+        if (this.socket != null) {
+            this.socket.close();
+            this.socket = null;
+        }
         window.removeEventListener('scroll', this.handleScroll);
     }
 }
@@ -391,7 +485,7 @@ export default {
     margin-right: 0;
 }
 
-.view, .dm, .copyright {
+.view, .danmu, .copyright {
     display: inline-flex;
     align-items: center;
 }
