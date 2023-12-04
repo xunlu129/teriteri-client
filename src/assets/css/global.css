@@ -830,6 +830,7 @@ input[type=checkbox], input[type=radio] {
     user-select: none;
     white-space: pre;
     will-change: transform, opacity;
+    box-sizing: initial;
 }
 
 .state-paused .dm {
