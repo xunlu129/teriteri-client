@@ -16,6 +16,8 @@ export default createStore({
         carousels: [],
         // 弹幕列表
         danmuList: [],
+        // 未读消息数
+        msgUnread: [11, 0, 45, 1, 4],
     },
     mutations: {
         // 更新登录状态

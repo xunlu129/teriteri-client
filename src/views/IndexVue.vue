@@ -370,7 +370,7 @@
                     this.vids.push(...res.data.data.vids);
                     this.hasMore = res.data.data.more;
                 }
-                console.log(this.cumulativeVideos);
+                // console.log(this.cumulativeVideos);
                 this.loadingMore = false;
             },
 

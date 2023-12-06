@@ -233,14 +233,46 @@
             <div class="v-popover-wrap">
                 <VPopover pop-style="padding-top: 17px;">
                     <template #reference>
-                        <div class="right-entry--outside" @click="this.$store.state.isLogin ? noPage() : dialogVisible = true;">
+                        <div class="red-num--dynamic" v-if="msgUnread > 0">{{ msgUnread > 99 ? '99+' : msgUnread }}</div>
+                        <div class="right-entry--outside" @click="this.$store.state.isLogin ? openNewPage('/message') : dialogVisible = true;">
                             <i class="iconfont icon-xinfeng"></i>
                             <span>消息</span>
                         </div>
                     </template>
                     <template #content>
-                        <div style="height: 228.1px; width: 143.6px;" v-if="this.$store.state.isLogin">
-                            
+                        <div class="message-entry-popover" v-if="this.$store.state.isLogin">
+                            <div class="message-inner-list">
+                                <div class="message-inner-list__item" @click="openNewPage('/message/reply')">
+                                    回复我的
+                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[0] > 0">
+                                        {{ this.$store.state.msgUnread[0] <= 99 ? this.$store.state.msgUnread[0] : '99+' }}
+                                    </span>
+                                </div>
+                                <div class="message-inner-list__item" @click="openNewPage('/message/at')">
+                                    @ 我的
+                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[1] > 0">
+                                        {{ this.$store.state.msgUnread[1] <= 99 ? this.$store.state.msgUnread[1] : '99+' }}
+                                    </span>
+                                </div>
+                                <div class="message-inner-list__item" @click="openNewPage('/message/love')">
+                                    收到的赞
+                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[2] > 0">
+                                        {{ this.$store.state.msgUnread[2] <= 99 ? this.$store.state.msgUnread[2] : '99+' }}
+                                    </span>
+                                </div>
+                                <div class="message-inner-list__item" @click="openNewPage('/message/system')">
+                                    系统消息
+                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[3] > 0">
+                                        {{ this.$store.state.msgUnread[3] <= 99 ? this.$store.state.msgUnread[3] : '99+' }}
+                                    </span>
+                                </div>
+                                <div class="message-inner-list__item" @click="openNewPage('/message/whisper')">
+                                    我的消息
+                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[4] > 0">
+                                        {{ this.$store.state.msgUnread[4] <= 99 ? this.$store.state.msgUnread[4] : '99+' }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="not-login" v-else>
                             <p class="not-login-tips">登录即可查看消息记录</p>
@@ -399,6 +431,14 @@
             user() {
                 return this.$store.state.user;
             },
+            // 计算消息未读数
+            msgUnread() {
+                let count = 0;
+                for (var i = 0; i < this.$store.state.msgUnread.length; i++) {
+                    count += this.$store.state.msgUnread[i];
+                }
+                return count;
+            }
         },
         methods: {
             //////// 请求 ////////
@@ -1206,6 +1246,20 @@
     justify-content: initial !important; 
 }
 
+.red-num--dynamic {
+    z-index: 1;
+    position: absolute;
+    top: -5px;
+    left: 25px;
+    padding: 0 4px;
+    min-width: 15px;
+    border-radius: 10px;
+    background-color: var(--stress_red);
+    color: #fff;
+    font-size: 12px;
+    line-height: 15px;
+}
+
 .slide-down .right-entry--outside .iconfont {
     color: var(--text1);
 }
@@ -1231,6 +1285,53 @@
     font-size: 20px;
     display: inline-block;
     position: relative;
+}
+
+.message-entry-popover {
+    overflow: hidden;
+    width: 142px;
+}
+
+.message-entry-popover .message-inner-list {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+}
+
+.message-entry-popover .message-inner-list__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 27px;
+    color: var(--text2);
+    text-align: left;
+    font-size: 14px;
+    transition: background-color .3s;
+    cursor: pointer;
+}
+
+.message-entry-popover .message-inner-list__item:hover {
+    background-color: var(--graph_bg_thick);
+}
+
+.notify {
+    text-align: center;
+    color: #fff;
+    position: absolute;
+    -webkit-transition: width 200ms, height 200ms, top 200ms, right 200ms;
+    transition: width 200ms, height 200ms, top 200ms, right 200ms;
+}
+
+.notify-number {
+    background-color: var(--stress_red);
+    line-height: 16px;
+    height: 16px;
+    font-size: 12px;
+    border-radius: 10px;
+    width: 28px;
+    top: 10px;
+    right: 20px;
+    font-weight: 500;
 }
 
 .right-entry-item--upload {
