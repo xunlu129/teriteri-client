@@ -37,7 +37,7 @@
                             <span>{{ router[routerIndex] ? router[routerIndex].name : "消息设置" }}</span>
                         </div>
                     </div>
-                    <div class="space-right-bottom ps">
+                    <div class="space-right-bottom">
                         <div class="message-router-view">
                             <router-view></router-view>
                         </div>                        
@@ -283,14 +283,6 @@ li::before {
     font-size: 15px;
     color: #666;
     border-radius: 4px;
-}
-
-.ps {
-    overflow: hidden !important;
-    overflow-anchor: none;
-    -ms-overflow-style: none;
-    touch-action: auto;
-    -ms-touch-action: auto;
 }
 
 .space-right-bottom {

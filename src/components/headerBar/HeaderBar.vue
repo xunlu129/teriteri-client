@@ -244,31 +244,31 @@
                             <div class="message-inner-list">
                                 <div class="message-inner-list__item" @click="openNewPage('/message/reply')">
                                     回复我的
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[0] > 0">
+                                    <span class="notify-number" v-if="this.$store.state.msgUnread[0] > 0">
                                         {{ this.$store.state.msgUnread[0] <= 99 ? this.$store.state.msgUnread[0] : '99+' }}
                                     </span>
                                 </div>
                                 <div class="message-inner-list__item" @click="openNewPage('/message/at')">
                                     @ 我的
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[1] > 0">
+                                    <span class="notify-number" v-if="this.$store.state.msgUnread[1] > 0">
                                         {{ this.$store.state.msgUnread[1] <= 99 ? this.$store.state.msgUnread[1] : '99+' }}
                                     </span>
                                 </div>
                                 <div class="message-inner-list__item" @click="openNewPage('/message/love')">
                                     收到的赞
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[2] > 0">
+                                    <span class="notify-number" v-if="this.$store.state.msgUnread[2] > 0">
                                         {{ this.$store.state.msgUnread[2] <= 99 ? this.$store.state.msgUnread[2] : '99+' }}
                                     </span>
                                 </div>
                                 <div class="message-inner-list__item" @click="openNewPage('/message/system')">
                                     系统消息
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[3] > 0">
+                                    <span class="notify-number" v-if="this.$store.state.msgUnread[3] > 0">
                                         {{ this.$store.state.msgUnread[3] <= 99 ? this.$store.state.msgUnread[3] : '99+' }}
                                     </span>
                                 </div>
                                 <div class="message-inner-list__item" @click="openNewPage('/message/whisper')">
                                     我的消息
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[4] > 0">
+                                    <span class="notify-number" v-if="this.$store.state.msgUnread[4] > 0">
                                         {{ this.$store.state.msgUnread[4] <= 99 ? this.$store.state.msgUnread[4] : '99+' }}
                                     </span>
                                 </div>
@@ -1314,24 +1314,15 @@
     background-color: var(--graph_bg_thick);
 }
 
-.notify {
-    text-align: center;
-    color: #fff;
-    position: absolute;
-    -webkit-transition: width 200ms, height 200ms, top 200ms, right 200ms;
-    transition: width 200ms, height 200ms, top 200ms, right 200ms;
-}
-
 .notify-number {
-    background-color: var(--stress_red);
-    line-height: 16px;
-    height: 16px;
+    position: absolute;
+    right: 17px;
+    padding: 0 5px;
+    border-radius: 8px;
+    background: var(--stress_red);
+    color: #fff;
     font-size: 12px;
-    border-radius: 10px;
-    width: 28px;
-    top: 10px;
-    right: 20px;
-    font-weight: 500;
+    line-height: 16px;
 }
 
 .right-entry-item--upload {
@@ -1416,6 +1407,10 @@
 
     .right-entry--outside span, .upload-buttom span {
         display: none;
+    }
+
+    .red-num--dynamic {
+        left: 17px;
     }
 }
 

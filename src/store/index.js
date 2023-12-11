@@ -18,6 +18,8 @@ export default createStore({
         danmuList: [],
         // 未读消息数
         msgUnread: [11, 0, 45, 1, 4],
+        // 聊天列表
+        chatList: [],
     },
     mutations: {
         // 更新登录状态
@@ -44,6 +46,11 @@ export default createStore({
             state.danmuList = danmuList;
             console.log("vuex中的弹幕列表: ", state.danmuList);
         },
+        // 追加更新聊天列表
+        updateChatList(state, chatList) {
+            state.chatList.push(...chatList);
+            console.log("vuex中的聊天列表: ", state.chatList);
+        }
     },
     actions: {
         // 获取当前用户信息

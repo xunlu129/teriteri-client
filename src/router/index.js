@@ -19,6 +19,7 @@ const MessageLove = () => import('@/views/message/children/MessageLove.vue')
 const MessageSystem = () => import('@/views/message/children/MessageSystem.vue')
 const MessageWhisper = () => import('@/views/message/children/MessageWhisper.vue')
 const MessageConfig = () => import('@/views/message/children/MessageConfig.vue')
+const WhisperDialog = () => import('@/views/message/children/children/WhisperDialog.vue')
 
 
 const routes = [
@@ -56,7 +57,12 @@ const routes = [
             { path: '/message/at', component: MessageAt, meta: { requestAuth: true } },
             { path: '/message/love', component: MessageLove, meta: { requestAuth: true } },
             { path: '/message/system', component: MessageSystem, meta: { requestAuth: true } },
-            { path: '/message/whisper', component: MessageWhisper, meta: { requestAuth: true } },
+            {
+                path: '/message/whisper', component: MessageWhisper, meta: { requestAuth: true },
+                children: [
+                    { path: '/message/whisper/:mid', component: WhisperDialog, meta: { requestAuth: true } }
+                ]
+            },
             { path: '/message/config', component: MessageConfig, meta: { requestAuth: true } },
         ]
     },

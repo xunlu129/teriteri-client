@@ -148,7 +148,7 @@
                                         <a :href="`/space/${user.uid}`" target="_blank"
                                             class="up-name" :class="user.vip !== 0 ? 'vip-name' : ''"
                                         >{{ user.nickname }}</a>
-                                        <a :href="`/message/whisper/${user.uid}`" target="_blank" class="send-msg">
+                                        <a class="send-msg" @click="createChat">
                                             <i class="iconfont icon-xinfeng1"></i>
                                             发消息
                                         </a>
@@ -306,6 +306,15 @@ export default {
             });
         },
 
+        // 创建聊天
+        createChat() {
+            if (!this.$store.state.user.uid) {
+                ElMessage.error("登录后才能发消息哦");
+                return;
+            }
+            this.openNewPage(`/message/whisper/${this.user.uid}`);
+        },
+
 
         ////// 事件 //////
         // 处理播放时长
@@ -337,6 +346,11 @@ export default {
                     this.showAllDesc = false;
                 }
             });
+        },
+
+        // 打开新标签页
+        openNewPage(route) {
+            window.open(this.$router.resolve(route).href, '_blank');
         },
 
         // 处理窗口滚动触发的事件
@@ -778,6 +792,7 @@ export default {
     font-size: 13px;
     transition: color 0.3s;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .send-msg:hover {
