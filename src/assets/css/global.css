@@ -879,3 +879,14 @@ input[type=checkbox], input[type=radio] {
         transform: translateX(-50%);
     }
 }
+
+
+
+/* 表情相关 */
+.msg-input_emoji {
+    margin: -1px 1px 0px;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    vertical-align: text-bottom;
+}

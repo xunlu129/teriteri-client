@@ -58,46 +58,46 @@
                 <div class="header-channel-fixed-right">
                     <div class="header-channel-fixed-right-left">
                         <div class="left-top">
-                            <a :href="`${baseUrl}/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
-                            <a :href="`${baseUrl}/movie`" target="_blank" class="header-channel-fixed-right-item">电影</a>
-                            <a :href="`${baseUrl}/v/guochuang`" target="_blank" class="header-channel-fixed-right-item">国创</a>
-                            <a :href="`${baseUrl}/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
-                            <a :href="`${baseUrl}/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
-                            <a :href="`${baseUrl}/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
-                            <a :href="`${baseUrl}/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
+                            <a :href="`$/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
+                            <a :href="`$/movie`" target="_blank" class="header-channel-fixed-right-item">电影</a>
+                            <a :href="`$/v/guochuang`" target="_blank" class="header-channel-fixed-right-item">国创</a>
+                            <a :href="`$/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
+                            <a :href="`$/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
+                            <a :href="`$/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
+                            <a :href="`$/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
                                 {{ item.mcName }}
                             </a>
                             <!-- 这里的url要在VLOG标签做出来后重新修改，目前先暂定到生活日常区 -->
-                            <a :href="`${baseUrl}/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
-                            <a :href="`${baseUrl}/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
-                            <a :href="`${baseUrl}/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
-                            <a :href="`${baseUrl}/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
-                            <a :href="`${baseUrl}/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
+                            <a :href="`$/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
+                            <a :href="`$/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
+                            <a :href="`$/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
+                            <a :href="`$/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
+                            <a :href="`$/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
                         </div>
                     </div>
                     <div class="header-channel-fixed-right-right">
-                        <a :href="`${baseUrl}/read/home`" target="_blank" class="header-channel-fixed-right-item">专栏</a>
-                        <a :href="`${baseUrl}/live`" target="_blank" class="header-channel-fixed-right-item">直播</a>
-                        <a :href="`${baseUrl}/activity`" target="_blank" class="header-channel-fixed-right-item">活动</a>
-                        <a :href="`${baseUrl}/cheese`" target="_blank" class="header-channel-fixed-right-item">课堂</a>
-                        <a :href="`${baseUrl}/community`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">社区中心</a>
-                        <a :href="`${baseUrl}/song`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">新歌热榜</a>
+                        <a :href="`$/read/home`" target="_blank" class="header-channel-fixed-right-item">专栏</a>
+                        <a :href="`$/live`" target="_blank" class="header-channel-fixed-right-item">直播</a>
+                        <a :href="`$/activity`" target="_blank" class="header-channel-fixed-right-item">活动</a>
+                        <a :href="`$/cheese`" target="_blank" class="header-channel-fixed-right-item">课堂</a>
+                        <a :href="`$/community`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">社区中心</a>
+                        <a :href="`$/song`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">新歌热榜</a>
                     </div>
                     <div class="left-bottom">
-                        <a :href="`${baseUrl}/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
-                        <a :href="`${baseUrl}/movie`" target="_blank" class="header-channel-fixed-right-item">电影</a>
-                        <a :href="`${baseUrl}/v/guochuang`" target="_blank" class="header-channel-fixed-right-item">国创</a>
-                        <a :href="`${baseUrl}/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
-                        <a :href="`${baseUrl}/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
-                        <a :href="`${baseUrl}/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
-                        <a :href="`${baseUrl}/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
+                        <a :href="`$/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
+                        <a :href="`$/movie`" target="_blank" class="header-channel-fixed-right-item">电影</a>
+                        <a :href="`$/v/guochuang`" target="_blank" class="header-channel-fixed-right-item">国创</a>
+                        <a :href="`$/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
+                        <a :href="`$/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
+                        <a :href="`$/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
+                        <a :href="`$/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
                             {{ item.mcName }}
                         </a>
-                        <a :href="`${baseUrl}/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
-                        <a :href="`${baseUrl}/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
-                        <a :href="`${baseUrl}/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
-                        <a :href="`${baseUrl}/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
-                        <a :href="`${baseUrl}/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
+                        <a :href="`$/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
+                        <a :href="`$/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
+                        <a :href="`$/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
+                        <a :href="`$/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
+                        <a :href="`$/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
                     </div>
                 </div>
                 <div class="header-channel-fixed-arrow">
@@ -156,7 +156,7 @@
                             </div>
                             <!-- 实体内容 -->
                             <div class="video-card__wrap" v-if="randomVideos[index - 1]">
-                                <a :href="`${baseUrl}/video/${randomVideos[index - 1].video.vid}`" target="_blank">
+                                <a :href="`$/video/${randomVideos[index - 1].video.vid}`" target="_blank">
                                     <div class="video-card__image">
                                         <div class="video-card__image--wrap">
                                             <picture class="video-card__cover">
@@ -189,13 +189,13 @@
                                 <div class="video-card__info">
                                     <div class="video-card__info--right">
                                         <h3 class="video-card__info--tit">
-                                            <a :href="`${baseUrl}/video/${randomVideos[index - 1].video.vid}`" target="_blank">
+                                            <a :href="`$/video/${randomVideos[index - 1].video.vid}`" target="_blank">
                                                 {{ randomVideos[index - 1].video.title }}
                                             </a>
                                         </h3>
                                         <div class="video-card__info--bottom">
                                             <div class="video-card__info--icon-text" :style="'display: none;'">已关注</div>
-                                            <a class="video-card__info--owner" :href="`${baseUrl}/space/${randomVideos[index - 1].user.uid}`" target="_blank">
+                                            <a class="video-card__info--owner" :href="`$/space/${randomVideos[index - 1].user.uid}`" target="_blank">
                                                 <i class="iconfont icon-uper" :style="''"></i>
                                                 <span class="video-card__info--author">{{ randomVideos[index - 1].user.nickname }}</span>
                                                 <span class="video-card__info--date">
@@ -223,7 +223,7 @@
                         </div>
                         <!-- 实体内容 -->
                         <div class="video-card__wrap">
-                            <a :href="`${baseUrl}/video/${item.video.vid}`" target="_blank">
+                            <a :href="`$/video/${item.video.vid}`" target="_blank">
                                 <div class="video-card__image">
                                     <div class="video-card__image--wrap">
                                         <picture class="video-card__cover">
@@ -256,13 +256,13 @@
                             <div class="video-card__info">
                                 <div class="video-card__info--right">
                                     <h3 class="video-card__info--tit">
-                                        <a :href="`${baseUrl}/video/${item.video.vid}`" target="_blank">
+                                        <a :href="`$/video/${item.video.vid}`" target="_blank">
                                             {{ item.video.title }}
                                         </a>
                                     </h3>
                                     <div class="video-card__info--bottom">
                                         <div class="video-card__info--icon-text" :style="'display: none;'">已关注</div>
-                                        <a class="video-card__info--owner" :href="`${baseUrl}/space/${item.user.uid}`" target="_blank">
+                                        <a class="video-card__info--owner" :href="`$/space/${item.user.uid}`" target="_blank">
                                             <i class="iconfont icon-uper" :style="''"></i>
                                             <span class="video-card__info--author">{{ item.user.nickname }}</span>
                                             <span class="video-card__info--date">
@@ -328,8 +328,6 @@
                 cumulativeVideos: [],
                 // 累加视频id列表
                 vids: [],
-                // 基础URL
-                baseUrl: window.location.protocol,
                 // 是否正在加载随机推荐
                 loadingRandom: true,
                 // 是否还有更多累加视频

@@ -1247,6 +1247,11 @@
 }
 
 .red-num--dynamic {
+    cursor: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     z-index: 1;
     position: absolute;
     top: -5px;
