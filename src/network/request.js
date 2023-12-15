@@ -29,7 +29,7 @@ export function get(url, config) {
   instance.interceptors.response.use(
     (config) => {
       const code = config.data.code;
-      if (code !== 200)
+      if (code && code !== 200)
         ElMessage.error(config.data.message || '未知错误, 请打开控制台查看');
       return config;
     },
@@ -40,6 +40,11 @@ export function get(url, config) {
         store.state.isLogin = false;
         // 清空user信息
         store.state.user = {};
+        // 关闭websocket
+        if (store.state.ws) {
+          store.state.ws.close();
+          store.commit('setWebSocket', null);
+        }
         // 清除本地token缓存
         localStorage.removeItem("teri_token");
         ElMessage.error("请登录后查看");
@@ -101,7 +106,7 @@ export function post(url, data, headers) {
   instance.interceptors.response.use(
     (config) => {
       const code = config.data.code;
-      if (code !== 200)
+      if (code && code !== 200)
         ElMessage.error(config.data.message || '未知错误, 请打开控制台查看');
       return config;
     },
@@ -112,6 +117,11 @@ export function post(url, data, headers) {
         store.state.isLogin = false;
         // 清空user信息
         store.state.user = {};
+        // 关闭websocket
+        if (store.state.ws) {
+          store.state.ws.close();
+          store.commit('setWebSocket', null);
+        }
         // 清除本地token缓存
         localStorage.removeItem("teri_token");
         ElMessage.error("请登录后查看");

@@ -20,6 +20,8 @@ export default createStore({
         msgUnread: [11, 0, 45, 1, 4],
         // 聊天列表
         chatList: [],
+        // 实时通讯的socket
+        ws: null,
     },
     mutations: {
         // 更新登录状态
@@ -50,7 +52,25 @@ export default createStore({
         updateChatList(state, chatList) {
             state.chatList.push(...chatList);
             console.log("vuex中的聊天列表: ", state.chatList);
-        }
+        },
+
+        // 处理websocket事件
+        setWebSocket(state, ws) {
+            state.ws = ws;
+        },
+        handleWsOpen() {
+            console.log("实时通信websocket已建立");
+        },
+        handleWsClose() {
+            console.log("实时通信websocket关闭,请刷新页面重试");
+        },
+        handleWsMessage(_, e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+        },
+        handleWsError(_, e) {
+            console.log("实时通信websocket报错: ", e);
+        },
     },
     actions: {
         // 获取当前用户信息
@@ -67,6 +87,11 @@ export default createStore({
                 context.state.isLogin = false;
                 // 清空user信息
                 context.state.user = {};
+                // 关闭websocket
+                if (context.state.ws) {
+                    context.state.ws.close();
+                    context.commit('setWebSocket', null);
+                }                
                 // 清除本地token缓存
                 localStorage.removeItem("teri_token");
                 ElMessage.error("请登录后查看");
@@ -85,6 +110,11 @@ export default createStore({
             context.state.isLogin = false;
             // 清空user信息
             context.state.user = {};
+            // 关闭websocket
+            if (context.state.ws) {
+                context.state.ws.close();
+                context.commit('setWebSocket', null);
+            }
             // 发送退出请求，处理redis中的缓存信息，不能用异步，不然token过期导致退出失败，后面步骤卡死
             axios.get("/api/user/account/logout", {
                 headers: {
@@ -93,6 +123,32 @@ export default createStore({
             });
             // 清除本地token缓存
             localStorage.removeItem("teri_token");
-        }
+        },
+
+        connectWebSocket({ commit, state }) {
+            return new Promise((resolve) => {
+                if (state.ws) {
+                    state.ws.close();
+                    commit('setWebSocket', null); // 关闭后清空 WebSocket 实例
+                }
+                const ws = new WebSocket('ws://localhost:7071/im');
+                commit('setWebSocket', ws);
+          
+                ws.addEventListener('open', () => {
+                  commit('handleWsOpen');
+                  resolve(); // 解决 Promise
+                });
+          
+                ws.addEventListener('close', () => commit('handleWsClose'));
+                ws.addEventListener('message', e => commit('handleWsMessage', e));
+                ws.addEventListener('error', e => commit('handleWsError', e));
+            });
+        },
+        closeWebSocket({ commit, state }) {
+            if (state.ws) {
+                state.ws.close();
+                commit('setWebSocket', null); // 关闭后清空 WebSocket 实例
+            }
+        },
     }
 })

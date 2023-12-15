@@ -69,6 +69,7 @@ export default {
                 uid: null,
                 nickname: null,
             },
+            myId: null, // 暂存自己的uid 以便登录过期时可以发送离线请求
             emojiBoxShow: false,    // 表情框显示的双向绑定
             input: "",      // 保存输入的内容
             emojiMap: EmojiJson,    // 表情列表
@@ -82,18 +83,36 @@ export default {
     },
     methods: {
         ///////// 请求 /////////
+        // 更新对方用户 以及缓存自己的id
+        updateUser() {
+            let i = this.$store.state.chatList.findIndex(item => item.user.uid === this.mid);
+            this.user = this.$store.state.chatList[i].user;
+            this.myId = this.$store.state.chatList[i].chat.anotherId;
+        },
+
         // 清除红点
-        clearRed() {
+        async clearRed() {
             let i = this.$store.state.chatList.findIndex(item => item.chat.userId === this.mid);
             if (i !== -1) {
                 this.$store.state.chatList[i].chat.unread = 0;
             }
+            await this.updateOnline();
         },
 
-        // 更新对方用户
-        updateUser() {
-            let i = this.$store.state.chatList.findIndex(item => item.user.uid === this.mid);
-            this.user = this.$store.state.chatList[i].user;
+        // 更新窗口在线状态
+        async updateOnline() {
+            await this.$get("/msg/chat/online", {
+                params: { from: this.user.uid },
+                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+            })
+        },
+        
+        // 更新聊天窗口离开状态
+        async updateOutline() {
+            console.log(this.user.uid, this.myId);
+            await this.$get("/msg/chat/outline", {
+                params: { from: this.user.uid, to: this.myId }
+            })
         },
 
         // 发送消息
@@ -109,6 +128,12 @@ export default {
                 ElMessage.error("随便说点吧");
                 return;
             }
+            const msg = {
+                code: 101,
+                anotherId: this.user.uid,
+                content: this.input,
+            }
+            this.$store.state.ws.send(JSON.stringify(msg));
             // 清空文本
             this.$refs.editor.innerHTML = '';
             this.input = "";
@@ -204,9 +229,9 @@ export default {
                     this.rangeOfEditor.endOffset === this.rangeOfEditor.endContainer.length
                 ) {
                     // 选中不同两段文本之间的全部 删除该两段段文本之间的全部元素
-                    var childNodesArray = Array.from(this.$refs.editor.childNodes);
-                    var i = childNodesArray.indexOf(this.rangeOfEditor.startContainer);
-                    var j = childNodesArray.indexOf(this.rangeOfEditor.endContainer);
+                    const childNodesArray = Array.from(this.$refs.editor.childNodes);
+                    const i = childNodesArray.indexOf(this.rangeOfEditor.startContainer);
+                    const j = childNodesArray.indexOf(this.rangeOfEditor.endContainer);
                     for (var k = i; k <= j; k ++) {
                         this.$refs.editor.removeChild(this.$refs.editor.childNodes[i]);
                     }                    
@@ -218,8 +243,8 @@ export default {
             }
             // 此时有可能光标在一个文本元素中
             if (this.rangeOfEditor.endContainer.nodeName === "#text") {
-                var childNodesArray = Array.from(this.$refs.editor.childNodes);
-                var i = childNodesArray.indexOf(this.rangeOfEditor.endContainer);
+                const childNodesArray = Array.from(this.$refs.editor.childNodes);
+                const i = childNodesArray.indexOf(this.rangeOfEditor.endContainer);
 
                 if (this.rangeOfEditor.endContainer.length === this.rangeOfEditor.endOffset) {
                     // 光标在文本末尾 设置光标到编辑器下文本域后边
@@ -326,26 +351,28 @@ export default {
             }
         },
     },
-    mounted() {
+    async mounted() {
         this.mid = Number(this.$route.params.mid);
         this.updateUser();
-        this.clearRed();
+        await this.clearRed();
         // 页面渲染后创建点击事件的监听器
         window.addEventListener("click", this.handleOutsideClick);
         document.addEventListener("selectionchange", this.selectionChange);
     },
-    beforeUnmount() {
+    async beforeUnmount() {
+        await this.updateOutline();
         // 关闭页面前清除点击事件的监听器
         window.removeEventListener("click", this.handleOutsideClick);
         document.removeEventListener("selectionchange", this.selectionChange);
     },
     watch: {
         // 监听路由变化打开对应聊天
-        "$route.path"() {            
+        async "$route.path"() {
+            await this.updateOutline(); // 先从原先的离开
             this.mid = Number(this.$route.params.mid);
             this.init();
             this.updateUser();
-            this.clearRed();
+            await this.clearRed();
         }
     }
 }

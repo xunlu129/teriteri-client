@@ -143,6 +143,7 @@ export default {
             if (result.data.code === 200) {
                 localStorage.setItem("teri_token", result.data.data.token); // 浏览器缓存token
                 this.$store.commit("updateUser", result.data.data.user);    // 更新vuex中当前用户信息
+                await this.initIMServer();  // 开启即时通信websocket
                 ElMessage.success(result.data.message);
                 this.$store.commit("updateIsLogin", true);  // 修改在线状态
                 this.$emit("loginSuccess"); // 触发父组件关闭登录框的回调
@@ -177,7 +178,18 @@ export default {
                 this.passwordRegister = "";
                 this.confirmedPassword = "";
             }
-        }
+        },
+
+        
+        // 开启实时通信消息服务
+        async initIMServer() {
+            await this.$store.dispatch("connectWebSocket");
+            const connection = JSON.stringify({
+                code: 100,
+                content: "Bearer " + localStorage.getItem('teri_token'),
+            });
+            this.$store.state.ws.send(connection);
+        },
     }
 }
 </script>

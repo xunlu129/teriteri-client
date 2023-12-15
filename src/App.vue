@@ -38,12 +38,23 @@ export default {
       setTimeout(() => {
         this.markDisplay = "none";
       }, 200);
-    }
+    },
+
+    // 开启实时通信消息服务
+    async initIMServer() {
+      await this.$store.dispatch("connectWebSocket");
+      const connection = JSON.stringify({
+        code: 100,
+        content: "Bearer " + localStorage.getItem('teri_token'),
+      });
+      this.$store.state.ws.send(connection);
+    },
   },
-  created() {
-    // 如果缓存中有token，尝试获取用户数据
+  async created() {
+    // 如果缓存中有token，尝试获取用户数据，并建立全双工通信
     if (localStorage.getItem("teri_token")) {
       this.$store.dispatch("getPersonalInfo");
+      await this.initIMServer();
     }
     this.getChannels();
   },
