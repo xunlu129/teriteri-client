@@ -478,7 +478,7 @@
                 await this.handleScroll();
             }
         },
-        unmounted() {
+        beforeUnmount() {
             document.removeEventListener('mousemove', this.handleMouseMove);
             document.removeEventListener('mouseout', this.handleMouseOut);
             window.removeEventListener('scroll', this.handleScroll);

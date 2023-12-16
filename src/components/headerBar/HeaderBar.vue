@@ -233,7 +233,7 @@
             <div class="v-popover-wrap">
                 <VPopover pop-style="padding-top: 17px;">
                     <template #reference>
-                        <div class="red-num--dynamic" v-if="msgUnread > 0">{{ msgUnread > 99 ? '99+' : msgUnread }}</div>
+                        <div class="red-num--dynamic" v-if="user.uid && msgUnread > 0">{{ msgUnread > 99 ? '99+' : msgUnread }}</div>
                         <div class="right-entry--outside" @click="this.$store.state.isLogin ? openNewPage('/message') : dialogVisible = true;">
                             <i class="iconfont icon-xinfeng"></i>
                             <span>消息</span>
@@ -434,7 +434,7 @@
             // 计算消息未读数
             msgUnread() {
                 let count = 0;
-                for (var i = 0; i < this.$store.state.msgUnread.length; i++) {
+                for (var i = 0; i < 5; i++) {
                     count += this.$store.state.msgUnread[i];
                 }
                 return count;

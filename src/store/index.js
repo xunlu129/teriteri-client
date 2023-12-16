@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import { get } from '@/network/request'
 
 export default createStore({
     state: {
@@ -16,10 +17,12 @@ export default createStore({
         carousels: [],
         // 弹幕列表
         danmuList: [],
-        // 未读消息数
-        msgUnread: [11, 0, 45, 1, 4],
+        // 未读消息数 分别对应"reply"/"at"/"love"/"system"/"whisper"/"dynamic"
+        msgUnread: [0, 0, 0, 0, 0, 0],
         // 聊天列表
         chatList: [],
+        // 当前聊天对象的uid (不是聊天的id)
+        chatId: -1,
         // 实时通讯的socket
         ws: null,
     },
@@ -64,9 +67,130 @@ export default createStore({
         handleWsClose() {
             console.log("实时通信websocket关闭,请刷新页面重试");
         },
-        handleWsMessage(_, e) {
+        handleWsMessage(state, e) {
             const data = JSON.parse(e.data);
             console.log(data);
+
+            switch(data.type) {
+                case "error": {
+                    // 系统错误
+                    if (data.content === "登录已过期") {
+                        // 由于 App.vue 那先做获取用户资料在前，所以基本上这里不会出现登录过期的情况
+                        // 修改当前的登录状态
+                        state.isLogin = false;
+                        // 清空user信息
+                        state.user = {};
+                        // 清除本地token缓存
+                        localStorage.removeItem("teri_token");
+                    }
+                    ElMessage.error(data.content);
+                    break;
+                }
+                case "reply": {
+                    // 回复我的
+                    let content = data.content;
+                    console.log(content);
+                    switch(content.type) {
+                        case "全部已读": {
+                            state.msgUnread[0] = 0; // 清除回复我的的未读数
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case "at": {
+                    // @ 我的
+                    let content = data.content;
+                    console.log(content);
+                    switch(content.type) {
+                        case "全部已读": {
+                            state.msgUnread[1] = 0; // 清除@我的的未读数
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case "love": {
+                    // 收到的赞
+                    let content = data.content;
+                    console.log(content);
+                    switch(content.type) {
+                        case "全部已读": {
+                            state.msgUnread[2] = 0; // 清除收到的赞的未读数
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case "system": {
+                    // 系统通知
+                    let content = data.content;
+                    console.log(content);
+                    switch(content.type) {
+                        case "全部已读": {
+                            state.msgUnread[3] = 0; // 清除系统通知的未读数
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case "whisper": {
+                    // 我的消息（私聊）
+                    let content = data.data;
+                    console.log(content);
+                    switch(content.type) {
+                        case "全部已读": {
+                            state.msgUnread[4] = 0; // 清除我的消息的未读数
+                            state.chatList.forEach(item => {
+                                item.chat.unread = 0;   // 将聊天列表中的全部未读清除
+                            })
+                            break;
+                        }
+                        case "已读": {
+                            const chatid = content.id;  // 聊天id（不是url那个参数mid）
+                            const count = content.count;
+                            state.msgUnread[4] = Math.max(0, state.msgUnread[4] - count);   // 减少相应的未读数
+                            let chat = state.chatList.find(item => item.chat.id === chatid);
+                            if (chat) {
+                                chat.chat.unread = 0;   // 清除对应聊天的未读
+                            }                            
+                            break;
+                        }
+                        case "移除": {
+                            const chatid = content.id;  // 聊天id（不是url那个参数mid）
+                            const count = content.count;
+                            state.msgUnread[4] = Math.max(0, state.msgUnread[4] - count);   // 减少相应的未读数
+                            let i = state.chatList.findIndex(item => item.chat.id === chatid);
+                            console.log(i)
+                            if (i !== -1) {
+                                // 如果是当前聊天先关闭窗口
+                                if (state.chatList[i].user.uid === state.chatId) state.chatId = -1;
+                                state.chatList.splice(i, 1);    // 再移除这个聊天
+                            }
+                            break;
+                        }
+                        // case "接收": {
+                        //     const detail = content.detail;  // 新消息详情
+                        //     if ()
+                            
+                        // }
+                    }
+                    break;
+                }
+                case "dynamic": {
+                    // 动态
+                    let content = data.content;
+                    console.log(content);
+                    switch(content.type) {
+                        case "全部已读": {
+                            state.msgUnread[5] = 0; // 清除动态的未读数
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
         },
         handleWsError(_, e) {
             console.log("实时通信websocket报错: ", e);
@@ -125,6 +249,21 @@ export default createStore({
             localStorage.removeItem("teri_token");
         },
 
+        // 获取全部未读消息数
+        async getMsgUnread({ state }) {
+            const res = await get("/msg-unread/all", {
+                headers: { Authorization: "Bearer " + localStorage.getItem('teri_token') }
+            });
+            const data = res.data.data;
+            state.msgUnread[0] = data.reply;
+            state.msgUnread[1] = data.at;
+            state.msgUnread[2] = data.love;
+            state.msgUnread[3] = data.system;
+            state.msgUnread[4] = data.whisper;
+            state.msgUnread[5] = data.dynamic;
+        },
+
+        // 初始化websocket实例
         connectWebSocket({ commit, state }) {
             return new Promise((resolve) => {
                 if (state.ws) {
@@ -144,10 +283,12 @@ export default createStore({
                 ws.addEventListener('error', e => commit('handleWsError', e));
             });
         },
-        closeWebSocket({ commit, state }) {
+
+        // 关闭后清空 WebSocket 实例
+        async closeWebSocket({ commit, state }) {
             if (state.ws) {
-                state.ws.close();
-                commit('setWebSocket', null); // 关闭后清空 WebSocket 实例
+                await state.ws.close();
+                commit('setWebSocket', null);
             }
         },
     }

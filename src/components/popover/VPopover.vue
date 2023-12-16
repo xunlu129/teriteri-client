@@ -99,7 +99,7 @@ let inTimer;  // 节流计时器
                 window.addEventListener("click", this.handleOutsideClick);
             }
         },
-        unmounted() {
+        beforeUnmount() {
             if (this.trigger === 'click') {
                 window.removeEventListener("click", this.handleOutsideClick);
             }

@@ -56,7 +56,7 @@ export default {
         this.init();
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
     },
-    unmounted() {
+    beforeUnmount() {
         document.removeEventListener('keydown', (e) => this.handleKeyboard(e));
     },
     methods: {

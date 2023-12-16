@@ -49,14 +49,31 @@ export default {
       });
       this.$store.state.ws.send(connection);
     },
+
+    // 关闭websocket
+    async closeIMWebSocket() {
+      await this.$store.dispatch("closeWebSocket");
+    }
+
   },
   async created() {
     // 如果缓存中有token，尝试获取用户数据，并建立全双工通信
     if (localStorage.getItem("teri_token")) {
-      this.$store.dispatch("getPersonalInfo");
+      await this.$store.dispatch("getPersonalInfo");
+    }
+    // 有可能上面获取信息时token过期就清掉了 所以这里再做个存在判断
+    if (localStorage.getItem("teri_token")) {
+      await this.$store.dispatch("getMsgUnread");
       await this.initIMServer();
     }
     this.getChannels();
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.closeIMWebSocket);    // beforeunload 事件监听标签页关闭
+  },
+  async beforeUnmount() {
+    await this.closeIMWebSocket();
+    window.removeEventListener('beforeunload', this.closeIMWebSocket);
   },
   watch: {
     "$store.state.isLoading"(current) {

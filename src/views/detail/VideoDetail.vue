@@ -1,6 +1,6 @@
 <template>
     <div class="videoDetail">
-        <HeaderBar isFixHeaderBar="true"></HeaderBar>
+        <HeaderBar :isFixHeaderBar="true"></HeaderBar>
         <div class="video-container">
             <div class="left-container" :style="`width: ${leftWidth}px;`">
                 <!-- 标题 -->
@@ -297,6 +297,13 @@ export default {
             this.socket = new WebSocket(socketUrl);
         },
 
+        async closeWebSocket() {
+            if (this.socket != null) {
+                await this.socket.close();
+                this.socket = null;
+            }
+        },
+
         // 生成UUID
         generateUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -424,12 +431,11 @@ export default {
         this.socket.addEventListener('close', this.handleWsClose);
         this.socket.addEventListener('message', this.handleWsMessage);
         this.socket.addEventListener('error', this.handleWsError);
+        window.addEventListener('beforeunload', this.closeWebSocket);    // beforeunload 事件监听标签页关闭
     },
-    unmounted() {
-        if (this.socket != null) {
-            this.socket.close();
-            this.socket = null;
-        }
+    async beforeUnmount() {
+        await this.closeWebSocket();
+        window.removeEventListener('beforeunload', this.closeWebSocket);
         window.removeEventListener('scroll', this.handleScroll);
     }
 }

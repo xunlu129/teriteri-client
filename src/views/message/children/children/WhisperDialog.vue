@@ -90,15 +90,6 @@ export default {
             this.myId = this.$store.state.chatList[i].chat.anotherId;
         },
 
-        // 清除红点
-        async clearRed() {
-            let i = this.$store.state.chatList.findIndex(item => item.chat.userId === this.mid);
-            if (i !== -1) {
-                this.$store.state.chatList[i].chat.unread = 0;
-            }
-            await this.updateOnline();
-        },
-
         // 更新窗口在线状态
         async updateOnline() {
             await this.$get("/msg/chat/online", {
@@ -109,7 +100,6 @@ export default {
         
         // 更新聊天窗口离开状态
         async updateOutline() {
-            console.log(this.user.uid, this.myId);
             await this.$get("/msg/chat/outline", {
                 params: { from: this.user.uid, to: this.myId }
             })
@@ -126,6 +116,10 @@ export default {
                 return;
             } else if (this.input.length === 0) {
                 ElMessage.error("随便说点吧");
+                return;
+            }
+            if (!this.$store.state.ws) {
+                ElMessage.error("服务已断开，请刷新后尝试");
                 return;
             }
             const msg = {
@@ -354,25 +348,25 @@ export default {
     async mounted() {
         this.mid = Number(this.$route.params.mid);
         this.updateUser();
-        await this.clearRed();
-        // 页面渲染后创建点击事件的监听器
+        await this.updateOnline();
         window.addEventListener("click", this.handleOutsideClick);
         document.addEventListener("selectionchange", this.selectionChange);
+        window.addEventListener('beforeunload', this.updateOutline);    // beforeunload 事件监听标签页关闭
     },
-    async beforeUnmount() {
-        await this.updateOutline();
-        // 关闭页面前清除点击事件的监听器
+    beforeUnmount() {
         window.removeEventListener("click", this.handleOutsideClick);
         document.removeEventListener("selectionchange", this.selectionChange);
+        window.removeEventListener('beforeunload', this.updateOutline);
     },
     watch: {
         // 监听路由变化打开对应聊天
         async "$route.path"() {
             await this.updateOutline(); // 先从原先的离开
             this.mid = Number(this.$route.params.mid);
+            if (!this.$route.params.mid) return;
             this.init();
             this.updateUser();
-            await this.clearRed();
+            await this.updateOnline();
         }
     }
 }

@@ -7,7 +7,7 @@
                 </div>
                 <div class="list-container">
                     <div class="list">
-                        <div class="list-item" :class="{'active': chatId === item.user.uid}"
+                        <div class="list-item" :class="{'active': this.$store.state.chatId === item.user.uid}"
                             @click="changeChat(item.user.uid)"
                             v-for="(item, index) in this.$store.state.chatList" :key="index"
                         >
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="right">
-                <router-view v-if="chatId > 0"></router-view>
+                <router-view v-if="this.$store.state.chatId > 0"></router-view>
                 <div class="placeholder" v-else>
                     <div class="placeholder-img is-im"></div>
                     <div class="tip">快找小伙伴聊天吧 ( ゜- ゜)つロ</div>
@@ -47,7 +47,6 @@ export default {
         return {
             more: true,
             showDialog: false,
-            chatId: -1,
         }
     },
     methods: {
@@ -72,7 +71,7 @@ export default {
 
         // 创建聊天
         async createChat() {
-            const res = await this.$get(`/msg/chat/create/${this.$route.params.mid}/${this.$store.state.user.uid}`, {
+            const res = await this.$get(`/msg/chat/create/${this.$route.params.mid}`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("teri_token"),
                 },
@@ -82,25 +81,25 @@ export default {
                     // 新创建
                     this.$store.state.chatList.unshift(res.data.data);
                 }
-                this.chatId = Number(this.$route.params.mid);
+                this.$store.state.chatId = Number(this.$route.params.mid);
             } else {
-                this.chatId = -1;
+                this.$store.state.chatId = -1;
             }
         },
 
         // 移除聊天
-        async closeChat(mid) {
-            let i = this.$store.state.chatList.findIndex(item => item.user.uid === mid);
+        async closeChat(uid) {
+            let i = this.$store.state.chatList.findIndex(item => item.user.uid === uid);
             this.$store.state.chatList.splice(i, 1);    // 移除这个元素
-            if (Number(this.$route.params.mid) === mid) {
+            if (Number(this.$route.params.mid) === uid) {
                 // 如果移除的是当前聊天 就打开第一个聊天
                 if (this.$store.state.chatList.length > 0) {
                     this.changeChat(this.$store.state.chatList[0].chat.userId);
                 } else {
-                    this.chatId = -1;
+                    this.$store.state.chatId = -1;
                 }
             }
-            await this.$get(`/msg/chat/delete/${mid}/${this.$store.state.user.uid}`, {
+            await this.$get(`/msg/chat/delete/${uid}`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("teri_token"),
                 },
@@ -133,9 +132,9 @@ export default {
         // 监听路由变化打开对应聊天
         "$route.path"() {           
             if (this.$route.path.startsWith('/message/whisper/')) {
-                this.chatId = Number(this.$route.params.mid);
+                this.$store.state.chatId = Number(this.$route.params.mid);
             } else {
-                this.chatId = -1;
+                this.$store.state.chatId = -1;
             }
         }
     }

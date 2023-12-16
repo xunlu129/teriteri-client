@@ -1,6 +1,6 @@
 <template>
     <div class="message-view">
-        <HeaderBar isFixHeaderBar="true"></HeaderBar>
+        <HeaderBar :isFixHeaderBar="true"></HeaderBar>
         <div class="message-container">
             <div class="message-layout">
                 <div class="space-left">
