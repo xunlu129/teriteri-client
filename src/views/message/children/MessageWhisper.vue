@@ -14,7 +14,9 @@
                             <VAvatar class="avatar" :size="40" :img="item.user.avatar_url" :auth="item.user.auth"></VAvatar>
                             <div class="name-box">
                                 <div class="name">{{ item.user.nickname }}</div>
-                                <div class="last-word">不想前进的时候就暂且停下脚步吧</div>
+                                <div class="last-word" v-if="item.detail.list.length > 0">
+                                    {{ item.detail.list[item.detail.list.length - 1].content }}
+                                </div>
                             </div>
                             <div class="close">
                                 <svg @click.stop="closeChat(item.user.uid)" t="1702107603641" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7402" width="20" height="20"><path d="M791.67016602 269.61962891l-37.28979493-37.28320313L512 474.71020508l-242.3737793-242.3803711-37.28979492 37.28979493L474.71020508 512l-242.3737793 242.38037109 37.28320313 37.28979493L512 549.28979492l242.38037109 242.3803711 37.28979493-37.28979493L549.28979492 512z" p-id="7403"></path></svg>
@@ -116,7 +118,8 @@ export default {
         // 触底加载
         
     },
-    async created() {
+    async mounted() {
+        this.$store.state.isChatPage = true;
         await this.getChatList();
         if (this.$route.path === '/message/whisper') {
             // 自动打开第一个聊天
@@ -127,6 +130,9 @@ export default {
             // 否则就是直接用url进入的/message/whisper/{mid}的子页面
             await this.createChat();
         }
+    },
+    beforeUnmount() {
+        this.$store.state.isChatPage = false;
     },
     watch: {
         // 监听路由变化打开对应聊天

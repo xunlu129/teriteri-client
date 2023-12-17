@@ -143,6 +143,7 @@ export default {
             if (result.data.code === 200) {
                 localStorage.setItem("teri_token", result.data.data.token); // 浏览器缓存token
                 this.$store.commit("updateUser", result.data.data.user);    // 更新vuex中当前用户信息
+                await this.$store.dispatch("getMsgUnread");
                 await this.initIMServer();  // 开启即时通信websocket
                 ElMessage.success(result.data.message);
                 this.$store.commit("updateIsLogin", true);  // 修改在线状态

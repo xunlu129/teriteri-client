@@ -16,7 +16,7 @@
                             >
                                 <div class="text">
                                     {{ item.name }}
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[index] > 0">
+                                    <span class="notify notify-number" v-if="this.$store.state.user.uid && this.$store.state.msgUnread[index] > 0">
                                         {{ this.$store.state.msgUnread[index] <= 99 ? this.$store.state.msgUnread[index] : '99+' }}
                                     </span>
                                 </div>

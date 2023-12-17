@@ -34,6 +34,7 @@
                     @compositionend="compositionend"
                     @click="(e) => handleEditorClick(e)"
                     @keydown="handleKeyDown"
+                    @paste="handlePaste"
                     style="height: 60px;"
                 ></div>
                 <div class="indicator">
@@ -162,10 +163,10 @@ export default {
             for (var i = 0; i < this.emojiMap.length; i++) {
                 const emojiCode = this.emojiMap[i].name;
                 const emojiUrl = this.emojiMap[i].url;
-                const emojiImgTag = `<img src="${emojiUrl}" alt="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false">`;
-                const emojiImgTagCopy = `<img src="${this.baseUrl}${emojiUrl}" alt="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false" style="font-family: &quot;Harmony Font&quot;; font-size: 14px;">`;
-                const emojiTmgTagCopy2 = `<img src="${this.baseUrl}${emojiUrl}" alt="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false" style="background-color: transparent; font-size: 14px; font-family: &quot;Harmony Font&quot;;">`;
-                const emojiTmgTagCopy3 = `<img src="${emojiUrl}" alt="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false" style="background-color: transparent; font-size: 14px; font-family: &quot;Harmony Font&quot;;">`;
+                const emojiImgTag = `<img src="${emojiUrl}" alt="${emojiCode}" title="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false">`;
+                const emojiImgTagCopy = `<img src="${this.baseUrl}${emojiUrl}" alt="${emojiCode}" title="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false" style="font-family: &quot;Harmony Font&quot;; font-size: 14px;">`;
+                const emojiTmgTagCopy2 = `<img src="${this.baseUrl}${emojiUrl}" alt="${emojiCode}" title="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false" style="background-color: transparent; font-size: 14px; font-family: &quot;Harmony Font&quot;;">`;
+                const emojiTmgTagCopy3 = `<img src="${emojiUrl}" alt="${emojiCode}" title="${emojiCode}" class="msg-input_emoji" contenteditable="false" draggable="false" style="background-color: transparent; font-size: 14px; font-family: &quot;Harmony Font&quot;;">`;
                 // 全部替换
                 updatedContent = updatedContent.replace(new RegExp(escapeRegExp(emojiImgTag), 'g'), emojiCode);
                 updatedContent = updatedContent.replace(new RegExp(escapeRegExp(emojiImgTagCopy), 'g'), emojiCode);
@@ -196,6 +197,7 @@ export default {
             const img = document.createElement('img');
             img.src = emoji.url;
             img.alt = emoji.name;
+            img.title = emoji.name;
             img.classList.add("msg-input_emoji");
             img.contentEditable = false;
             img.draggable = false;
@@ -279,6 +281,30 @@ export default {
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(range);
             }
+        },
+
+        async handlePaste(event) {
+            event.preventDefault();
+            try {
+                const pastedText = await navigator.clipboard.readText();
+                this.insertTextAtCursor(pastedText);
+            } catch (error) {
+                console.error('Failed to read clipboard data:', error);
+            }
+        },
+
+        insertTextAtCursor(text) {
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(0);
+            // 创建一个新的文本节点并插入到选区中
+            const textNode = document.createTextNode(text);
+            range.deleteContents();
+            range.insertNode(textNode);
+            // 将光标移动到插入文本的末尾
+            range.setStartAfter(textNode);
+            range.setEndAfter(textNode);
+            selection.removeAllRanges();
+            selection.addRange(range);
         },
 
         // 键盘按下按键的回调

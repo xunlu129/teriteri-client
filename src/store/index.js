@@ -23,6 +23,8 @@ export default createStore({
         chatList: [],
         // 当前聊天对象的uid (不是聊天的id)
         chatId: -1,
+        // 当前页面是否在聊天界面
+        isChatPage: false,
         // 实时通讯的socket
         ws: null,
     },
@@ -62,14 +64,14 @@ export default createStore({
             state.ws = ws;
         },
         handleWsOpen() {
-            console.log("实时通信websocket已建立");
+            // console.log("实时通信websocket已建立");
         },
         handleWsClose() {
-            console.log("实时通信websocket关闭,请刷新页面重试");
+            ElMessage.error("实时通信websocket关闭,请刷新页面重试");
+            console.log();
         },
         handleWsMessage(state, e) {
             const data = JSON.parse(e.data);
-            console.log(data);
 
             switch(data.type) {
                 case "error": {
@@ -161,7 +163,6 @@ export default createStore({
                             const count = content.count;
                             state.msgUnread[4] = Math.max(0, state.msgUnread[4] - count);   // 减少相应的未读数
                             let i = state.chatList.findIndex(item => item.chat.id === chatid);
-                            console.log(i)
                             if (i !== -1) {
                                 // 如果是当前聊天先关闭窗口
                                 if (state.chatList[i].user.uid === state.chatId) state.chatId = -1;
@@ -169,11 +170,55 @@ export default createStore({
                             }
                             break;
                         }
-                        // case "接收": {
-                        //     const detail = content.detail;  // 新消息详情
-                        //     if ()
-                            
-                        // }
+                        case "接收": {
+                            const chat = content.chat;
+                            const detail = content.detail;  // 新消息详情
+                            const user = content.user;
+                            // 按时间从最近到最远排序
+                            const sortByLatestTime = list => {
+                                list.sort((a, b) => {
+                                  const timeA = new Date(a.chat.latestTime).getTime();
+                                  const timeB = new Date(b.chat.latestTime).getTime();
+                                  return timeB - timeA;
+                                });
+                            }
+                            if (detail.userId === state.user.uid) {
+                                // 如果发送方是自己
+                                let chatItem = state.chatList.find(item => item.chat.userId === detail.anotherId);
+                                if (chatItem && state.isChatPage) {
+                                    // 如果该聊天存在并且当前在聊天界面 就尾插新消息以及更新时间并重排序
+                                    chatItem.detail.list.push(detail);
+                                    chatItem.chat.latestTime = chat.latestTime;
+                                    sortByLatestTime(state.chatList);
+                                }
+                            } else {
+                                // 如果发送方是别人 需要判断当前是否有一个页面在该聊天窗口以更新全部未读数
+                                if (!content.online) {
+                                    state.msgUnread[4] ++;
+                                }
+                                // 不需判断当前页面是否聊天页面了 都要更新消息
+                                let chatItem = state.chatList.find(item => item.chat.userId === detail.userId);
+                                if (chatItem) {
+                                    // 如果原来有这个聊天就更新数据
+                                    chatItem.detail.list.push(detail);
+                                    chatItem.chat = chat;
+                                    sortByLatestTime(state.chatList);
+                                } else {
+                                    // 如果没有就创建聊天
+                                    chatItem = {
+                                        chat: chat,
+                                        user: user,
+                                        detail: {
+                                            more: true,
+                                            list: []
+                                        }
+                                    };
+                                    chatItem.detail.list.push(detail);
+                                    state.chatList.unshift(chatItem);
+                                }
+                            }
+                            break;
+                        }
                     }
                     break;
                 }
