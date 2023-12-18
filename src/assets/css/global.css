@@ -577,6 +577,13 @@ input[type=checkbox], input[type=radio] {
     color: var(--Lb6);
 }
 
+.v-img {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
 .v-ui {
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -878,4 +885,27 @@ input[type=checkbox], input[type=radio] {
         -webkit-transform: translateX(-50%);
         transform: translateX(-50%);
     }
+}
+
+
+
+/* 表情相关 */
+.msg-input_emoji {
+    margin: -1px 1px 0px;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    vertical-align: text-bottom;
+}
+
+.emotion-items {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    vertical-align: text-bottom;
+}
+
+.emotion-items .img-emoji {
+    background: top/20px no-repeat;
 }

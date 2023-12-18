@@ -1304,7 +1304,7 @@ export default {
         // 默认播放音量不等于this.volume，所以挂载时更新同步一下音量
         this.$refs.videoPlayer.volume = this.volume / 100;
     },
-    unmounted() {
+    beforeUnmount() {
         window.removeEventListener('resize', this.changeWindowSize);
         document.removeEventListener('keydown', (e) => this.handleKeyboard(e));
         window.removeEventListener('resize', this.handleVideoResize);

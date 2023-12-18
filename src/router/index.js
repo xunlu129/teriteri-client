@@ -12,6 +12,14 @@ const PlatformDanmu = () => import('@/views/platform/children/PlatformDanmu.vue'
 const VideoUpload = () => import('@/views/platform/children/uploadChildren/VideoUpload.vue')
 const TextUpload = () => import('@/views/platform/children/uploadChildren/TextUpload.vue')
 const VideoDetail = () => import('@/views/detail/VideoDetail.vue')
+const Message = () => import('@/views/message/MessageView.vue')
+const MessageReply = () => import('@/views/message/children/MessageReply.vue')
+const MessageAt = () => import('@/views/message/children/MessageAt.vue')
+const MessageLove = () => import('@/views/message/children/MessageLove.vue')
+const MessageSystem = () => import('@/views/message/children/MessageSystem.vue')
+const MessageWhisper = () => import('@/views/message/children/MessageWhisper.vue')
+const MessageConfig = () => import('@/views/message/children/MessageConfig.vue')
+const WhisperDialog = () => import('@/views/message/children/children/WhisperDialog.vue')
 
 
 const routes = [
@@ -38,6 +46,24 @@ const routes = [
             { path: '/platform/data-up', component: PlatformData, meta: { requestAuth: true } },
             { path: '/platform/comment', component: PlatformComment, meta: { requestAuth: true } },
             { path: '/platform/danmu', component: PlatformDanmu, meta: { requestAuth: true } },
+        ]
+    },
+    {
+        path: '/message',
+        redirect: '/message/reply',
+        component: Message,
+        children: [
+            { path: '/message/reply', component: MessageReply, meta: { requestAuth: true } },
+            { path: '/message/at', component: MessageAt, meta: { requestAuth: true } },
+            { path: '/message/love', component: MessageLove, meta: { requestAuth: true } },
+            { path: '/message/system', component: MessageSystem, meta: { requestAuth: true } },
+            {
+                path: '/message/whisper', component: MessageWhisper, meta: { requestAuth: true },
+                children: [
+                    { path: '/message/whisper/:mid', component: WhisperDialog, meta: { requestAuth: true } }
+                ]
+            },
+            { path: '/message/config', component: MessageConfig, meta: { requestAuth: true } },
         ]
     },
     { path: '/video/:vid', component: VideoDetail, meta: { requestAuth: false } },

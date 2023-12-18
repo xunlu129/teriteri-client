@@ -1,6 +1,6 @@
 <template>
     <div class="notfound">
-        <HeaderBar isFixHeaderBar="true"></HeaderBar>
+        <HeaderBar :isFixHeaderBar="true"></HeaderBar>
         <div class="notfound__body">
             <div class="notfound-container">
                 <img src="~assets/img/404.png" alt="">
