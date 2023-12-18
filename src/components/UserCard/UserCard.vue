@@ -44,7 +44,7 @@
                     <a class="following" v-else @mouseenter="mouseEnter = true" @mouseleave="mouseEnter = false">
                         {{ mouseEnter ? '取消关注' : '已关注' }}
                     </a>
-                    <a :href="`/message/whisper/${user.uid}`" target="_blank" class="message">发消息</a>
+                    <a class="message" @click="createChat">发消息</a>
                 </div>
             </div>
         </div>
@@ -54,6 +54,7 @@
 <script>
 import VAvatar from '@/components/avatar/VAvatar.vue';
 import { handleNum, handleLevel } from '@/utils/utils.js';
+import { ElMessage } from 'element-plus';
 
 export default {
     name: "UserCard",
@@ -83,7 +84,21 @@ export default {
         // 计算用户等级
         handleLevel(exp) {
             return handleLevel(exp);
-        }
+        },
+
+        // 创建聊天
+        createChat() {
+            if (!this.$store.state.user.uid) {
+                ElMessage.error("登录后才能发消息哦");
+                return;
+            }
+            this.openNewPage(`/message/whisper/${this.user.uid}`);
+        },
+
+        // 打开新标签页
+        openNewPage(route) {
+            window.open(this.$router.resolve(route).href, '_blank');
+        },
     }
 }
 </script>

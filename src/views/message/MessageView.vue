@@ -1,6 +1,6 @@
 <template>
     <div class="message-view">
-        <HeaderBar isFixHeaderBar="true"></HeaderBar>
+        <HeaderBar :isFixHeaderBar="true"></HeaderBar>
         <div class="message-container">
             <div class="message-layout">
                 <div class="space-left">
@@ -16,7 +16,7 @@
                             >
                                 <div class="text">
                                     {{ item.name }}
-                                    <span class="notify notify-number" v-if="this.$store.state.msgUnread[index] > 0">
+                                    <span class="notify notify-number" v-if="this.$store.state.user.uid && this.$store.state.msgUnread[index] > 0">
                                         {{ this.$store.state.msgUnread[index] <= 99 ? this.$store.state.msgUnread[index] : '99+' }}
                                     </span>
                                 </div>
@@ -37,7 +37,7 @@
                             <span>{{ router[routerIndex] ? router[routerIndex].name : "消息设置" }}</span>
                         </div>
                     </div>
-                    <div class="space-right-bottom ps">
+                    <div class="space-right-bottom">
                         <div class="message-router-view">
                             <router-view></router-view>
                         </div>                        
@@ -82,6 +82,7 @@ export default {
         // 设置全局背景
         const backgroundImage = require('@/assets/img/message-bg.png');
         document.body.style.cssText = `background: url(${backgroundImage}) top/cover no-repeat fixed;`;
+        // document.documentElement.style.overflow = 'hidden';
         let apps = document.querySelectorAll('#app');
         apps.forEach(element => {
             element.style.cssText = 'background-color: transparent;';
@@ -97,6 +98,14 @@ export default {
             // 如果是离开 MessageView.vue 页面，移除背景图
             document.body.style.cssText = "";
             next();
+        }
+    },
+    watch: {
+        // 监听登录状态
+        "$store.state.isLogin"(curr) {
+            if (!curr) {
+                this.$router.push('/');
+            }
         }
     }
 }
@@ -283,14 +292,6 @@ li::before {
     font-size: 15px;
     color: #666;
     border-radius: 4px;
-}
-
-.ps {
-    overflow: hidden !important;
-    overflow-anchor: none;
-    -ms-overflow-style: none;
-    touch-action: auto;
-    -ms-touch-action: auto;
 }
 
 .space-right-bottom {

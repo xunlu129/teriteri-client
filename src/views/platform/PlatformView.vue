@@ -152,6 +152,14 @@ export default {
         noPage() {
             ElMessage.warning("该功能暂未开放");
         }
+    },
+    watch: {
+        // 监听登录状态
+        "$store.state.isLogin"(curr) {
+            if (!curr) {
+                this.$router.push('/');
+            }
+        }
     }
 }
 </script>

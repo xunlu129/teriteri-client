@@ -1,6 +1,6 @@
 <template>
     <div class="videoDetail">
-        <HeaderBar isFixHeaderBar="true"></HeaderBar>
+        <HeaderBar :isFixHeaderBar="true"></HeaderBar>
         <div class="video-container">
             <div class="left-container" :style="`width: ${leftWidth}px;`">
                 <!-- 标题 -->
@@ -148,7 +148,7 @@
                                         <a :href="`/space/${user.uid}`" target="_blank"
                                             class="up-name" :class="user.vip !== 0 ? 'vip-name' : ''"
                                         >{{ user.nickname }}</a>
-                                        <a :href="`/message/whisper/${user.uid}`" target="_blank" class="send-msg">
+                                        <a class="send-msg" @click="createChat">
                                             <i class="iconfont icon-xinfeng1"></i>
                                             发消息
                                         </a>
@@ -297,6 +297,13 @@ export default {
             this.socket = new WebSocket(socketUrl);
         },
 
+        async closeWebSocket() {
+            if (this.socket != null) {
+                await this.socket.close();
+                this.socket = null;
+            }
+        },
+
         // 生成UUID
         generateUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -304,6 +311,15 @@ export default {
                     v = c === 'x' ? r : (r & 0x3) | 0x8;
                 return v.toString(16);
             });
+        },
+
+        // 创建聊天
+        createChat() {
+            if (!this.$store.state.user.uid) {
+                ElMessage.error("登录后才能发消息哦");
+                return;
+            }
+            this.openNewPage(`/message/whisper/${this.user.uid}`);
         },
 
 
@@ -337,6 +353,11 @@ export default {
                     this.showAllDesc = false;
                 }
             });
+        },
+
+        // 打开新标签页
+        openNewPage(route) {
+            window.open(this.$router.resolve(route).href, '_blank');
         },
 
         // 处理窗口滚动触发的事件
@@ -410,12 +431,11 @@ export default {
         this.socket.addEventListener('close', this.handleWsClose);
         this.socket.addEventListener('message', this.handleWsMessage);
         this.socket.addEventListener('error', this.handleWsError);
+        window.addEventListener('beforeunload', this.closeWebSocket);    // beforeunload 事件监听标签页关闭
     },
-    unmounted() {
-        if (this.socket != null) {
-            this.socket.close();
-            this.socket = null;
-        }
+    async beforeUnmount() {
+        await this.closeWebSocket();
+        window.removeEventListener('beforeunload', this.closeWebSocket);
         window.removeEventListener('scroll', this.handleScroll);
     }
 }
@@ -778,6 +798,7 @@ export default {
     font-size: 13px;
     transition: color 0.3s;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .send-msg:hover {
