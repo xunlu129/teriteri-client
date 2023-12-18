@@ -82,6 +82,7 @@ export default {
         // 设置全局背景
         const backgroundImage = require('@/assets/img/message-bg.png');
         document.body.style.cssText = `background: url(${backgroundImage}) top/cover no-repeat fixed;`;
+        // document.documentElement.style.overflow = 'hidden';
         let apps = document.querySelectorAll('#app');
         apps.forEach(element => {
             element.style.cssText = 'background-color: transparent;';
@@ -97,6 +98,14 @@ export default {
             // 如果是离开 MessageView.vue 页面，移除背景图
             document.body.style.cssText = "";
             next();
+        }
+    },
+    watch: {
+        // 监听登录状态
+        "$store.state.isLogin"(curr) {
+            if (!curr) {
+                this.$router.push('/');
+            }
         }
     }
 }

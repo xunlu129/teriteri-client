@@ -51,12 +51,12 @@ export default createStore({
         // 更新弹幕列表
         updateDanmuList(state, danmuList) {
             state.danmuList = danmuList;
-            console.log("vuex中的弹幕列表: ", state.danmuList);
+            // console.log("vuex中的弹幕列表: ", state.danmuList);
         },
         // 追加更新聊天列表
         updateChatList(state, chatList) {
             state.chatList.push(...chatList);
-            console.log("vuex中的聊天列表: ", state.chatList);
+            // console.log("vuex中的聊天列表: ", state.chatList);
         },
 
         // 处理websocket事件
@@ -67,7 +67,7 @@ export default createStore({
             // console.log("实时通信websocket已建立");
         },
         handleWsClose() {
-            ElMessage.error("实时通信websocket关闭,请刷新页面重试");
+            // ElMessage.error("实时通信websocket关闭,请刷新页面重试");
             console.log();
         },
         handleWsMessage(state, e) {

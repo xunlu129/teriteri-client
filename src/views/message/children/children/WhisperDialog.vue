@@ -14,9 +14,9 @@
                 </VPopover>
             </div>
         </div>
-        <div class="message-list">
-
-        </div>
+        <!-- 聊天记录组件 -->
+        <MessageList :mid="mid"></MessageList>
+        <!-- 发送框 -->
         <div class="send-box">
             <div class="row">
                 <div class="space-margin emoji" ref="emoji">
@@ -51,6 +51,7 @@
 <script>
 import VPopover from '@/components/popover/VPopover.vue';
 import EmojiBox from '@/components/emoji/EmojiBox.vue';
+import MessageList from '@/components/message/MessageList.vue';
 import EmojiJson from '@/assets/json/emoji.json';
 import { ElMessage } from 'element-plus';
 
@@ -81,6 +82,7 @@ export default {
     components: {
         VPopover,
         EmojiBox,
+        MessageList,
     },
     methods: {
         ///////// 请求 /////////
@@ -451,27 +453,6 @@ export default {
     justify-content: center;
     cursor: pointer;
     color: #999;
-}
-
-.message-list {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    background-color: #f4f5f7;
-}
-
-.message-list::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: rgba(1,1,1,0);
-}
-
-.message-list::-webkit-scrollbar-thumb {
-    background: #aaa;
-    border-radius: 4px;
 }
 
 .send-box {

@@ -5,7 +5,7 @@
                 <div class="title">
                     <span>近期消息</span>
                 </div>
-                <div class="list-container">
+                <div class="list-container" id="chat-list">
                     <div class="list">
                         <div class="list-item" :class="{'active': this.$store.state.chatId === item.user.uid}"
                             @click="changeChat(item.user.uid)"
@@ -47,15 +47,16 @@ export default {
     },
     data() {
         return {
-            more: true,
-            showDialog: false,
+            more: true,     // 是否还有更多聊天
+            loading: false,     // 是否正在加载更多聊天
         }
     },
     methods: {
         ///////// 请求 /////////
         // 获取聊天列表
         async getChatList() {
-            if (!this.more) return;
+            if (!this.more || this.loading) return;
+            this.loading = true;
             const res = await this.$get("/msg/chat/recent-list", {
                 params: {
                     offset: this.$store.state.chatList.length
@@ -64,11 +65,13 @@ export default {
                     Authorization: "Bearer " + localStorage.getItem("teri_token"),
                 },
             });
-            console.log(res.data);
-            if (res.data.data) {
+            if (res.data && res.data.data) {
                 this.more = res.data.data.more;
                 this.$store.commit("updateChatList", res.data.data.list);
             }
+            this.$nextTick(() => {
+                this.loading = false;
+            });
         },
 
         // 创建聊天
@@ -116,7 +119,14 @@ export default {
         },
 
         // 触底加载
-        
+        async handleScroll() {
+            const scrollContainer = document.getElementById('chat-list');
+            const isAtBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop <= scrollContainer.clientHeight + 100;
+            if (isAtBottom) {
+                // console.log("触底啦")
+                await this.getChatList();
+            }
+        },
     },
     async mounted() {
         this.$store.state.isChatPage = true;
@@ -130,6 +140,8 @@ export default {
             // 否则就是直接用url进入的/message/whisper/{mid}的子页面
             await this.createChat();
         }
+        const scrollContainer = document.getElementById('chat-list');
+        scrollContainer.addEventListener('scroll', this.handleScroll);
     },
     beforeUnmount() {
         this.$store.state.isChatPage = false;
