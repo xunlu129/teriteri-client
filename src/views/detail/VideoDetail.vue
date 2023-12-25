@@ -2,7 +2,7 @@
     <div class="videoDetail">
         <HeaderBar :isFixHeaderBar="true"></HeaderBar>
         <div class="video-container">
-            <div class="left-container" :style="`width: ${leftWidth}px;`">
+            <div class="left-container" :style="`width: ${playerSize.width}px;`">
                 <!-- 标题 -->
                 <div class="video-info-container">
                     <h1 :title="video.title" class="video-title">{{ video.title }}</h1>
@@ -39,7 +39,8 @@
                     :duration="video.duration"
                     :user="user"
                     :population="population"
-                    @resize="(width) => leftWidth = width"
+                    v-model:jumpTimePoint="jumpTimePoint"
+                    @resize="updatePlayerSize"
                     @sendDm="sendDanmu"
                 ></PlayerWrap>
                 <!-- 点赞 -->
@@ -201,7 +202,7 @@
                         </div>
                     </div>
                     <!-- 弹幕组件 -->
-
+                    <DanmuBox :boxHeight="playerSize.height" :authorId="user.uid" @jump="(time) => jumpTimePoint = time"></DanmuBox>
                     <!-- 相关视频列表 -->
 
                 </div>
@@ -216,6 +217,7 @@ import PlayerWrap from '@/components/player/PlayerWrapper.vue';
 import VPopover from '@/components/popover/VPopover.vue';
 import VAvatar from '@/components/avatar/VAvatar.vue';
 import UserCard from '@/components/UserCard/UserCard.vue';
+import DanmuBox from '@/components/danmu/DanmuBox.vue';
 import { handleTime, handleNum, handleDate, linkify } from '@/utils/utils.js';
 import { ElMessage } from 'element-plus';
 
@@ -227,12 +229,16 @@ export default {
         VPopover,
         VAvatar,
         UserCard,
+        DanmuBox,
     },
     data() {
         return {
             socket: null,
             sessionUuid: null,
-            leftWidth: 704, // 左边区域的宽度
+            playerSize: {
+                width: 704,
+                height: 442,
+            },
             video: {},  // 视频信息
             view: 0,    // 播放数
             danmu: 0,   // 弹幕数
@@ -241,11 +247,14 @@ export default {
             collect: 0, // 收藏数
             share: 0,   // 分享数
             population: 0,  // 当前观看人数
-            user: {},   // 投稿用户信息
+            user: {
+                uid: 0,
+            },   // 投稿用户信息
             category: {},   // 视频分区信息
             tags: [],   // 投稿标签
             showAllDesc: true, // 是否展开简介
             descTooLong: false,   // 简介太长需要展开
+            jumpTimePoint: -1,  // 双击弹幕跳转的时间点
         }
     },
     methods: {
@@ -375,6 +384,12 @@ export default {
             } else {
                 rightPart.style.top = `-${rightPart.clientHeight - windowHeight}px`;
             }
+        },
+
+        // 窗口大小变动时更新相关宽高
+        updatePlayerSize(size) {
+            this.playerSize.width = size.width;
+            this.playerSize.height = size.height;
         },
 
 
