@@ -1,5 +1,5 @@
 <template>
-    <div id="playerWrap" class="player-wrap" :style="`height: ${wrapHeight}px; width: ${wrapWidth}px;`">
+    <div id="playerWrap" class="player-wrap" :style="`height: ${wrapSize.height}px; width: ${wrapSize.width}px;`">
         <!-- 占位模板 -->
         <div class="player-placeholder">
             <div class="player-placeholder-top"></div>
@@ -514,6 +514,10 @@ export default {
     },
     data() {
         return {
+            wrapSize: {
+                width: 704,
+                height: 442,
+            },
             wrapWidth: 704,
             wrapHeight: 442,
             videoWidth: 704,
@@ -597,7 +601,15 @@ export default {
             default() {
                 return 0;
             }
-        }
+        },
+        // 外部时间点跳转并播放指令，大于等于0即触发
+        jumpTimePoint: {
+            type: Number,
+            default() {
+                return -1;
+            }
+        },
+
     },
     methods: {
         // 根据窗口大小改变播放器的宽高
@@ -633,11 +645,11 @@ export default {
             width = (heigth - bottomHeight) * (16/9);
 
             // 更新宽高
-            this.wrapWidth = width;
-            this.wrapHeight = heigth;
+            this.wrapSize.width = width;
+            this.wrapSize.height = heigth;
             this.videoWidth = width;
             this.videoHeight = heigth - bottomHeight;
-            this.$emit('resize', width);
+            this.$emit('resize', this.wrapSize);
         },
 
         // 监听键盘按键触发对应事件
@@ -1175,6 +1187,22 @@ export default {
             this.input = '';
         },
 
+        // 外部控制的时间跳转（双击弹幕）
+        jumpTimePointAndPlay(time) {
+            // 计算进度条的位置
+            this.currentPer = time / this.duration;
+            this.currentTime = time;
+            this.$refs.videoPlayer.currentTime = time;
+            // 初始化弹幕索引
+            this.removeAllDanmu();
+            this.lastTimePoint = time;
+            this.dmIndex = -1;
+            this.rollRow = new Array(12).fill(-1);
+            this.topRow = new Array(12).fill(-1);
+            this.bottomRow = new Array(12).fill(-1);
+            this.playVideo();
+        },
+
         // 拖动进度条的回调
         changeCurrentPer(curr) {
             this.currentPer = curr;
@@ -1329,9 +1357,15 @@ export default {
         // 深度监听vuex中弹幕列表的变化，因为对于数组的push操作并不是总能监听到
         "$store.state.danmuList": {
             handler(curr) {
-                this.updateDanmuList(curr);
+                this.updateDanmuList(curr.slice());
             },
             deep: true
+        },
+        "jumpTimePoint"(curr) {
+            if (curr >= 0) {
+                this.jumpTimePointAndPlay(curr);
+                this.$emit("update:jumpTimePoint", -1);
+            }
         }
     }
 }

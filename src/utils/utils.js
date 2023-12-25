@@ -171,6 +171,26 @@ export function handleDateTime(dateTime) {
 
 
 /**
+ * 处理日期，格式化为 月日时分
+ * @param {Number|String|Date} dateTime 传入的日期时间，可以是数字、字符串或日期对象
+ * @returns {String} 处理后的日期字符串 12-26 02:53
+ */
+export function handleDateTime2(dateTime) {
+    // 将传入的日期时间转换为 Date 对象
+    const inputDate = new Date(dateTime);
+    // 如果转换后的日期无效，返回 '未知时间'
+    if (isNaN(inputDate.getTime())) {
+        return '未知时间';
+    }
+    const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+    const day = String(inputDate.getDate()).padStart(2, '0');
+    const hours = String(inputDate.getHours()).padStart(2, '0');
+    const minutes = String(inputDate.getMinutes()).padStart(2, '0');
+    return `${month}-${day} ${hours}:${minutes}`;
+}
+
+
+/**
  * 计算昵称长度，中日文字符占2长度，其他1长度，用于判断昵称长度是否超出24的限制
  * @param {String} nickname 用户输入的昵称名
  * @returns {Number} 昵称的官方长度
