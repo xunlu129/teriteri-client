@@ -30,7 +30,7 @@ export default {
     background: var(--brand_pink);
     transform: rotate(calc(var(--i) * (360deg / 12))) translateY(15px);
     animation: loading-buff 1.2s linear infinite;
-    animation-delay: calc(var(--i) * 0.1s);
+    animation-delay: calc(var(--i) * 0.1s - 1.2s);
     opacity: 0;
 }
 

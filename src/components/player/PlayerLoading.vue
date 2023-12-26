@@ -47,31 +47,31 @@ export default {
 }
 
 .obj:nth-child(2) {
-    animation-delay: 0.2s;
+    animation-delay: -1.4s;
 }
 
 .obj:nth-child(3) {
-    animation-delay: 0.4s;
+    animation-delay: -1.2s;
 }
 
 .obj:nth-child(4) {
-    animation-delay: 0.6s;
+    animation-delay: -1s;
 }
 
 .obj:nth-child(5) {
-    animation-delay: 0.8s;
+    animation-delay: -0.8s;
 }
 
 .obj:nth-child(6) {
-    animation-delay: 1s;
+    animation-delay: -0.6s;
 }
 
 .obj:nth-child(7) {
-    animation-delay: 1.2s;
+    animation-delay: -0.4s;
 }
 
 .obj:nth-child(8) {
-    animation-delay: 1.4s;
+    animation-delay: -0.2s;
 }
 
 @keyframes loading {

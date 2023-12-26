@@ -256,7 +256,7 @@
                             <div class="video-card__info">
                                 <div class="video-card__info--right">
                                     <h3 class="video-card__info--tit">
-                                        <a :href="`/video/${item.video.vid}`" target="_blank">
+                                        <a :href="`/video/${item.video.vid}`" target="_blank" :title="item.video.title">
                                             {{ item.video.title }}
                                         </a>
                                     </h3>

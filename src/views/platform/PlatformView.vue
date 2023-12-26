@@ -43,13 +43,45 @@
                     <div class="line-divid"></div>
                     <VPopover pop-style="padding-top: 10px;">
                         <template #reference>
-                            <div class="message" @click="this.$store.state.isLogin ? noPage() : noLogin()">
+                            <div class="message" @click="this.$store.state.isLogin ? openNewPage('/message') : noLogin()">
                                 <i class="iconfont icon-xinfeng"></i>
+                                <div class="red-num--dynamic" v-if="user.uid && msgUnread > 0">{{ msgUnread > 99 ? '99+' : msgUnread }}</div>
                             </div>
                         </template>
                         <template #content>
-                            <div style="height: 228.1px; width: 144px;" v-if="this.$store.state.isLogin">
-                                
+                            <div class="message-entry-popover" v-if="this.$store.state.isLogin">
+                                <div class="message-inner-list">
+                                    <div class="message-inner-list__item" @click="openNewPage('/message/reply')">
+                                        回复我的
+                                        <span class="notify-number" v-if="this.$store.state.msgUnread[0] > 0">
+                                            {{ this.$store.state.msgUnread[0] <= 99 ? this.$store.state.msgUnread[0] : '99+' }}
+                                        </span>
+                                    </div>
+                                    <div class="message-inner-list__item" @click="openNewPage('/message/at')">
+                                        @ 我的
+                                        <span class="notify-number" v-if="this.$store.state.msgUnread[1] > 0">
+                                            {{ this.$store.state.msgUnread[1] <= 99 ? this.$store.state.msgUnread[1] : '99+' }}
+                                        </span>
+                                    </div>
+                                    <div class="message-inner-list__item" @click="openNewPage('/message/love')">
+                                        收到的赞
+                                        <span class="notify-number" v-if="this.$store.state.msgUnread[2] > 0">
+                                            {{ this.$store.state.msgUnread[2] <= 99 ? this.$store.state.msgUnread[2] : '99+' }}
+                                        </span>
+                                    </div>
+                                    <div class="message-inner-list__item" @click="openNewPage('/message/system')">
+                                        系统消息
+                                        <span class="notify-number" v-if="this.$store.state.msgUnread[3] > 0">
+                                            {{ this.$store.state.msgUnread[3] <= 99 ? this.$store.state.msgUnread[3] : '99+' }}
+                                        </span>
+                                    </div>
+                                    <div class="message-inner-list__item" @click="openNewPage('/message/whisper')">
+                                        我的消息
+                                        <span class="notify-number" v-if="this.$store.state.msgUnread[4] > 0">
+                                            {{ this.$store.state.msgUnread[4] <= 99 ? this.$store.state.msgUnread[4] : '99+' }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </VPopover>
@@ -116,6 +148,14 @@ export default {
     computed: {
         user() {
             return this.$store.state.user;
+        },
+        // 计算消息未读数
+        msgUnread() {
+            let count = 0;
+            for (var i = 0; i < 5; i++) {
+                count += this.$store.state.msgUnread[i];
+            }
+            return count;
         }
     },
     created() {
@@ -149,9 +189,11 @@ export default {
             ElMessage.error("请登录后查看");
         },
 
-        noPage() {
-            ElMessage.warning("该功能暂未开放");
-        }
+        // 打开新标签页
+        openNewPage(route) {
+            window.open(this.$router.resolve(route).href, '_blank');
+        },
+
     },
     watch: {
         // 监听登录状态
@@ -320,6 +362,63 @@ export default {
     font-size: 22px;
     font-weight: 600;
     color: var(--text2);
+}
+
+.red-num--dynamic {
+    cursor: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    z-index: 1;
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    padding: 0 4px;
+    min-width: 15px;
+    border-radius: 10px;
+    background-color: var(--stress_red);
+    color: #fff;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.message-entry-popover {
+    overflow: hidden;
+    width: 142px;
+}
+
+.message-entry-popover .message-inner-list {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+}
+
+.message-entry-popover .message-inner-list__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 27px;
+    color: var(--text2);
+    text-align: left;
+    font-size: 14px;
+    transition: background-color .3s;
+    cursor: pointer;
+}
+
+.message-entry-popover .message-inner-list__item:hover {
+    background-color: var(--graph_bg_thick);
+}
+
+.notify-number {
+    position: absolute;
+    right: 17px;
+    padding: 0 5px;
+    border-radius: 8px;
+    background: var(--stress_red);
+    color: #fff;
+    font-size: 12px;
+    line-height: 16px;
 }
 
 .platform-nav {
