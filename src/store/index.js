@@ -36,7 +36,7 @@ export default createStore({
         // 更新当前用户
         updateUser(state, user) {
             state.user = user;
-            console.log("更新vuex中用户信息: ", state.user);
+            // console.log("更新vuex中用户信息: ", state.user);
         },
         // 更新分区列表
         updateChannels(state, channels) {
@@ -51,7 +51,7 @@ export default createStore({
         // 更新弹幕列表
         updateDanmuList(state, danmuList) {
             state.danmuList = danmuList;
-            console.log("vuex中的弹幕列表: ", state.danmuList);
+            // console.log("vuex中的弹幕列表: ", state.danmuList);
         },
         // 追加更新聊天列表
         updateChatList(state, chatList) {
