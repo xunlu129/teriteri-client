@@ -40,8 +40,10 @@
                     :user="user"
                     :population="population"
                     v-model:jumpTimePoint="jumpTimePoint"
+                    v-model:autonext="autonext"
                     @resize="updatePlayerSize"
                     @sendDm="sendDanmu"
+                    @next="next"
                 ></PlayerWrap>
                 <!-- 点赞 -->
                 <div class="video-toolbar-container">
@@ -204,7 +206,69 @@
                     <!-- 弹幕组件 -->
                     <DanmuBox :boxHeight="playerSize.height" :authorId="user.uid" @jump="(time) => jumpTimePoint = time"></DanmuBox>
                     <!-- 相关视频列表 -->
-
+                    <div class="recommend-list">
+                        <div class="next-play">
+                            <p class="rec-title">
+                                接下来播放
+                                <span class="next-button" @click="autonext = !autonext">
+                                    <span class="txt">自动连播</span>
+                                    <span class="switch-button" :class="{'on': autonext}"></span>
+                                </span>
+                            </p>
+                            <!-- 视频卡片 -->
+                            <div class="video-page-card-small" v-if="recommendVideos.length > 0">
+                                <div class="card-box">
+                                    <div class="pic-box">
+                                        <div class="pic" @click="changeVideo(recommendVideos[0].video.vid)">
+                                            <img :src="recommendVideos[0].video.coverUrl" alt="">
+                                            <span class="duration">{{ handleDuration(recommendVideos[0].video.duration) }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info">
+                                        <p class="title"  @click="changeVideo(recommendVideos[0].video.vid)">{{ recommendVideos[0].video.title }}</p>
+                                        <a :href="`/space/${recommendVideos[0].user.uid}`" target="_blank" class="upname">
+                                            <svg t="1703614018039" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4221" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4222"></path><path d="M419.2 544c0 51.2-3.2 108.8-83.2 108.8S252.8 595.2 252.8 544v-217.6H192v243.2c0 96 51.2 140.8 140.8 140.8 89.6 0 147.2-48 147.2-144v-240h-60.8V544zM710.4 326.4h-156.8V704h60.8v-147.2h96c102.4 0 121.6-67.2 121.6-115.2 0-44.8-19.2-115.2-121.6-115.2z m-3.2 179.2h-92.8V384h92.8c32 0 60.8 12.8 60.8 60.8 0 44.8-32 60.8-60.8 60.8z" p-id="4223"></path></svg>
+                                            <span class="name">{{ recommendVideos[0].user.nickname }}</span>
+                                        </a>
+                                        <div class="playinfo">
+                                            <svg t="1703614610134" class="playinfo-play" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4864" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4865" fill="#aaaaaa"></path><path d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z" p-id="4866"></path></svg>
+                                            {{ handleNum(recommendVideos[0].stats.play) }}
+                                            <svg t="1703614725224" class="playinfo-dm" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5601" id="mx_n_1703614725225" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="5602"></path><path d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z" p-id="5603"></path></svg>
+                                            {{ handleNum(recommendVideos[0].stats.danmu) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 分隔线 -->
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="rec-list" v-if="recommendVideos.length > 1">
+                            <!-- 视频卡片 -->
+                            <div class="video-page-card-small" v-for="(item, index) in recommendVideos.slice(1,)" :key="index">
+                                <div class="card-box">
+                                    <div class="pic-box">
+                                        <div class="pic" @click="changeVideo(item.video.vid)">
+                                            <img :src="item.video.coverUrl" alt="">
+                                            <span class="duration">{{ handleDuration(item.video.duration) }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info">
+                                        <p class="title" @click="changeVideo(item.video.vid)">{{ item.video.title }}</p>
+                                        <a :href="`/space/${item.user.uid}`" target="_blank" class="upname">
+                                            <svg t="1703614018039" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4221" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4222"></path><path d="M419.2 544c0 51.2-3.2 108.8-83.2 108.8S252.8 595.2 252.8 544v-217.6H192v243.2c0 96 51.2 140.8 140.8 140.8 89.6 0 147.2-48 147.2-144v-240h-60.8V544zM710.4 326.4h-156.8V704h60.8v-147.2h96c102.4 0 121.6-67.2 121.6-115.2 0-44.8-19.2-115.2-121.6-115.2z m-3.2 179.2h-92.8V384h92.8c32 0 60.8 12.8 60.8 60.8 0 44.8-32 60.8-60.8 60.8z" p-id="4223"></path></svg>
+                                            <span class="name">{{ item.user.nickname }}</span>
+                                        </a>
+                                        <div class="playinfo">
+                                            <svg t="1703614610134" class="playinfo-play" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4864" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4865" fill="#aaaaaa"></path><path d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z" p-id="4866"></path></svg>
+                                            {{ handleNum(item.stats.play) }}
+                                            <svg t="1703614725224" class="playinfo-dm" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5601" id="mx_n_1703614725225" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="5602"></path><path d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z" p-id="5603"></path></svg>
+                                            {{ handleNum(item.stats.danmu) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -255,6 +319,9 @@ export default {
             showAllDesc: true, // 是否展开简介
             descTooLong: false,   // 简介太长需要展开
             jumpTimePoint: -1,  // 双击弹幕跳转的时间点
+            autonext: false,    // 是否自动连播
+            recommendVideos: [],    // 推荐视频
+            vids: [],   // 存放本视频和已推荐的视频id
         }
     },
     methods: {
@@ -270,7 +337,7 @@ export default {
                 return;
             }
             if (res.data.data) {
-                console.log("视频详情: ", res.data.data);
+                // console.log("视频详情: ", res.data.data);
                 this.video = res.data.data.video;
                 this.user = res.data.data.user;
                 this.category = res.data.data.category;
@@ -285,10 +352,34 @@ export default {
             this.isDescTooLong();
         },
 
+        // 获取推荐视频
+        async getRecommendVideos() {
+            this.recommendVideos = [];
+            this.vids = [];
+            this.vids.push(Number(this.$route.params.vid));
+            let ids = this.vids.join(",");  // 用逗号连接成一个字符串
+            const res = await this.$get("/video/cumulative/visitor", {
+                params: { vids: ids }
+            });
+            if (res.data.data) {
+                this.recommendVideos.push(...res.data.data.videos);
+                this.vids.push(...res.data.data.vids);
+                // 默认一次只能查10条，这里再请求一次，总共查20条
+                ids = this.vids.join(",");
+                const res2 = await this.$get("/video/cumulative/visitor", {
+                    params: { vids: ids }
+                });
+                if (res2.data.data) {
+                    this.recommendVideos.push(...res2.data.data.videos);
+                    this.vids.push(...res2.data.data.vids);
+                }
+            }
+        },
+
         // 获取弹幕列表
         async getDanmuList() {
             const res = await this.$get(`/danmu-list/${this.$route.params.vid}`);
-            if (res.data.data == null) {
+            if (res.data.data == null || res.data.data.length === 0) {
                 this.$store.commit("updateDanmuList", []);
             } else if (res.data.data.length > 0) {
                 this.$store.commit("updateDanmuList", res.data.data);
@@ -296,14 +387,18 @@ export default {
         },
 
         // 初始化实时弹幕的websocket
-        initWebsocket() {
+        async initWebsocket() {
             this.sessionUuid = this.generateUUID();
             const socketUrl = `ws://localhost:7070/ws/danmu/${this.$route.params.vid}/${this.sessionUuid}`;
             if (this.socket != null) {
-                this.socket.close();
+                await this.socket.close();
                 this.socket = null;
             }
             this.socket = new WebSocket(socketUrl);
+            // 开启监听
+            this.socket.addEventListener('close', this.handleWsClose);
+            this.socket.addEventListener('message', this.handleWsMessage);
+            this.socket.addEventListener('error', this.handleWsError);
         },
 
         async closeWebSocket() {
@@ -393,13 +488,14 @@ export default {
         },
 
 
-        // 处理websocket事件
-        handleWsOpen() {
-            // console.log("弹幕websocket信道已建立");
-        },
-        
+        // 处理websocket事件        
         handleWsClose() {
-            console.log("弹幕websocket信道关闭,请刷新页面重试");
+            // console.log("弹幕websocket信道关闭,请刷新页面重试");
+            setTimeout(() => {
+                if (!this.socket) {
+                   this.initWebsocket();    // 如果两秒后还未重连就手动重连
+                }
+            }, 2000);
         },
 
         handleWsMessage(e) {
@@ -432,20 +528,38 @@ export default {
                 data: dm
             });
             this.socket.send(dmJson);
+        },
+
+        // 切换视频
+        async changeVideo(vid) {
+            await this.$router.push(`/video/${vid}`);
+            await this.initWebsocket();
+            await this.getVideoDetail();
+            await this.getDanmuList();
+            await this.getRecommendVideos();
+        },
+
+        // 视频播放结束自动连播
+        next() {
+            if (this.recommendVideos[0]) {
+                this.changeVideo(this.recommendVideos[0].video.vid);
+            }
         }
     },
     async created() {
-        this.initWebsocket();
+        // 同步自动连播
+        if (localStorage.getItem("playerSetting")) {
+            let setting = JSON.parse(localStorage.getItem("playerSetting"));
+            this.autonext = setting.autonext;
+        }
+        await this.initWebsocket();
         await this.getVideoDetail();
         await this.getDanmuList();
+        await this.getRecommendVideos();
     },
     mounted() {
         window.addEventListener('scroll', this.handleScroll);
         this.handleScroll();
-        this.socket.addEventListener('open', this.handleWsOpen);
-        this.socket.addEventListener('close', this.handleWsClose);
-        this.socket.addEventListener('message', this.handleWsMessage);
-        this.socket.addEventListener('error', this.handleWsError);
         window.addEventListener('beforeunload', this.closeWebSocket);    // beforeunload 事件监听标签页关闭
     },
     async beforeUnmount() {
@@ -887,6 +1001,219 @@ export default {
 
 .following-dropdown .dropdown-item:hover {
     color: var(--brand_pink);
+}
+
+.recommend-list {
+    margin-top: 18px;
+}
+
+.rec-title {
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    color: var(--text1);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    line-height: 20px;
+}
+
+.next-button {
+    color: var(--text3);
+    font-size: 13px;
+    line-height: 16px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.next-button .txt {
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.next-button .switch-button {
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 20px;
+    outline: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: border-color .2s,background-color .2s;
+    vertical-align: middle;
+    background: var(--text3);
+    border: 1px solid var(--text3);
+}
+
+.next-button .switch-button.on {
+    background: var(--brand_pink);
+    border: 1px solid var(--brand_pink);
+}
+
+.next-button .switch-button:after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    border-radius: 100%;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    transition: all .2s;
+}
+
+.next-button .switch-button.on:after {
+    left: 11px;
+}
+
+.split-line {
+    width: 100%;
+    height: 1px;
+    background: var(--line_regular);
+}
+
+.rec-list {
+    margin-top: 18px;
+}
+
+.video-page-card-small {
+    margin-bottom: 12px;
+}
+
+.video-page-card-small a {
+    color: #222;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    transition: color .3s;
+    -webkit-text-decoration-skip: objects;
+}
+
+.video-page-card-small .card-box {
+    display: flex;
+}
+
+.video-page-card-small .card-box .pic-box {
+    position: relative;
+    width: 141px;
+    height: 80px;
+    border-radius: 6px;
+    background: var(--graph_weak);
+    flex: 0 0 auto;
+}
+
+.video-page-card-small .card-box .pic-box .pic {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.video-page-card-small .card-box .pic-box .pic img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: crisp-edges;
+}
+
+.video-page-card-small .card-box .pic-box .pic .duration {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    color: #fff;
+    height: 20px;
+    line-height: 20px;
+    transition: opacity 0.3s;
+    z-index: 5;
+    font-size: 13px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+    padding: 0 4px;
+}
+
+.video-page-card-small .card-box .info {
+    margin-left: 10px;
+    flex: 1;
+    font-size: 13px;
+    line-height: 15px;
+}
+
+.video-page-card-small .card-box .info .title {
+    cursor: pointer;
+    color: var(--text1);
+    display: block;
+    font-size: 15px;
+    line-height: 19px;
+    transition: color 0.3s;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    text-overflow: -o-ellipsis-lastline;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    -webkit-line-clamp: 2;
+    -webkit-font-smoothing: antialiased;
+}
+
+.video-page-card-small .card-box .info .title:hover {
+    color: var(--brand_pink);
+}
+
+.video-page-card-small .card-box .info .upname {
+    cursor: pointer;
+    margin: 2px 0;
+    height: 20px;
+    color: var(--text3);
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.video-page-card-small .card-box .info .upname:hover {
+    color: var(--brand_pink);
+}
+
+.video-page-card-small .card-box .info .upname svg {
+    margin-right: 4px;
+    fill: var(--text3);
+    transition: fill 0.3s;
+}
+
+.video-page-card-small .card-box .info .upname:hover svg {
+    fill: var(--brand_pink);
+}
+
+.video-page-card-small .card-box .info .upname .name {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    text-overflow: -o-ellipsis-lastline;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    -webkit-line-clamp: 1;
+}
+
+.video-page-card-small .card-box .info .playinfo {
+    color: var(--text3);
+    fill: var(--text3);
+    display: inline-flex;
+    align-items: center;
+}
+
+.video-page-card-small .card-box .info .playinfo svg {
+    margin-right: 4px;
+}
+
+.playinfo-dm {
+    margin-left: 8px;
 }
 
 @media (min-width: 1681px) {

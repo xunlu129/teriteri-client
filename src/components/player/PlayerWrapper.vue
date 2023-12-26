@@ -22,6 +22,7 @@
                                 @progress="updateBufferingBar"
                                 @waiting="buff = true"
                                 @canplay="buff = false"
+                                @ended="ended"
                                 :loop="setting.loop"
                             ></video>
                         </div>
@@ -557,7 +558,7 @@ export default {
             setting: {
                 loop: false,  // 是否开启洗脑循环
                 autoplay: true, // 是否自动播放
-                autonext: false,  // 是否自动切集
+                autonext: false,  // 是否自动连播
             },
             dmStyle: {
                 fontsize: 25,   // 18 小号 25 标准
@@ -609,7 +610,13 @@ export default {
                 return -1;
             }
         },
-
+        // 外部控制的自动连播
+        autonext: {
+            type: Boolean,
+            default() {
+                return false;
+            }
+        },
     },
     methods: {
         // 根据窗口大小改变播放器的宽高
@@ -816,6 +823,7 @@ export default {
                 } else {
                     this.setting.autonext = true;
                 }
+                this.$emit("update:autonext", this.setting.autonext);
             }
             const setting = JSON.stringify(this.setting);
             localStorage.setItem('playerSetting', setting);
@@ -1193,13 +1201,7 @@ export default {
             this.currentPer = time / this.duration;
             this.currentTime = time;
             this.$refs.videoPlayer.currentTime = time;
-            // 初始化弹幕索引
-            this.removeAllDanmu();
-            this.lastTimePoint = time;
-            this.dmIndex = -1;
-            this.rollRow = new Array(12).fill(-1);
-            this.topRow = new Array(12).fill(-1);
-            this.bottomRow = new Array(12).fill(-1);
+            this.initDanmuIndex(time);
             this.playVideo();
         },
 
@@ -1210,7 +1212,11 @@ export default {
             let time = curr * this.duration;
             this.currentTime = time;
             this.$refs.videoPlayer.currentTime = time;
-            // 初始化弹幕索引
+            this.initDanmuIndex(time);
+        },
+
+        // 初始化弹幕索引
+        initDanmuIndex(time) {
             this.removeAllDanmu();
             this.lastTimePoint = time;
             this.dmIndex = -1;
@@ -1288,8 +1294,11 @@ export default {
             return handleTime(time);
         },
 
-        getTooltipContainer() {
-            return document.getElementById('#video-area');
+        // 视频播放结束
+        ended() {
+            if (this.setting.autonext) {
+                this.$emit("next");
+            }            
         }
     },
     created() {
@@ -1366,6 +1375,16 @@ export default {
                 this.jumpTimePointAndPlay(curr);
                 this.$emit("update:jumpTimePoint", -1);
             }
+        },
+        "autonext"(curr) {
+            this.setting.autonext = curr;
+            const setting = JSON.stringify(this.setting);
+            localStorage.setItem('playerSetting', setting);
+        },
+        // 更换视频时初始化
+        "videoUrl"() {
+            this.canPlay = false;
+            this.initDanmuIndex(0);
         }
     }
 }
