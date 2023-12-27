@@ -298,7 +298,6 @@ export default {
     data() {
         return {
             socket: null,
-            sessionUuid: null,
             playerSize: {
                 width: 704,
                 height: 442,
@@ -388,8 +387,7 @@ export default {
 
         // 初始化实时弹幕的websocket
         async initWebsocket() {
-            this.sessionUuid = this.generateUUID();
-            const socketUrl = `ws://localhost:7070/ws/danmu/${this.$route.params.vid}/${this.sessionUuid}`;
+            const socketUrl = `ws://localhost:7070/ws/danmu/${this.$route.params.vid}`;
             if (this.socket != null) {
                 await this.socket.close();
                 this.socket = null;
@@ -406,15 +404,6 @@ export default {
                 await this.socket.close();
                 this.socket = null;
             }
-        },
-
-        // 生成UUID
-        generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = (Math.random() * 16) | 0,
-                    v = c === 'x' ? r : (r & 0x3) | 0x8;
-                return v.toString(16);
-            });
         },
 
         // 创建聊天
