@@ -1228,6 +1228,10 @@ export default {
         // 实时更新当前播放的时间
         timeUpdate() {
             const time = this.$refs.videoPlayer.currentTime;
+            // 如果是0就表示视频被循环播放了，需要初始化弹幕索引
+            if (time === 0) {
+                this.initDanmuIndex();
+            }
             this.currentTime = time;
             // 计算进度条的位置
             this.currentPer = time / this.duration;
