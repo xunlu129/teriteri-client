@@ -75,7 +75,7 @@ export default createStore({
             switch(data.type) {
                 case "error": {
                     // 系统错误
-                    if (data.content === "登录已过期") {
+                    if (data.data === "登录已过期") {
                         // 由于 App.vue 那先做获取用户资料在前，所以基本上这里不会出现登录过期的情况
                         // 修改当前的登录状态
                         state.isLogin = false;
@@ -84,7 +84,7 @@ export default createStore({
                         // 清除本地token缓存
                         localStorage.removeItem("teri_token");
                     }
-                    ElMessage.error(data.content);
+                    ElMessage.error(data.data);
                     break;
                 }
                 case "reply": {
@@ -138,7 +138,7 @@ export default createStore({
                 case "whisper": {
                     // 我的消息（私聊）
                     let content = data.data;
-                    console.log(content);
+                    // console.log(content);
                     switch(content.type) {
                         case "全部已读": {
                             state.msgUnread[4] = 0; // 清除我的消息的未读数
@@ -214,6 +214,27 @@ export default createStore({
                                     };
                                     chatItem.detail.list.push(detail);
                                     state.chatList.unshift(chatItem);
+                                }
+                            }
+                            break;
+                        }
+                        case "撤回": {
+                            const msgId = content.id;
+                            const sendId = content.sendId;
+                            const acceptId = content.acceptId;
+                            let chat;
+                            if (sendId === state.user.uid) {
+                                // 发送者是自己，找接收者的聊天
+                                chat = state.chatList.find(item => item.chat.userId === acceptId);
+                            } else {
+                                // 发送者是对方，找发送者的聊天
+                                chat = state.chatList.find(item => item.chat.userId === sendId);
+                            }
+                            if (chat) {
+                                // 找到对应消息更改字段
+                                let msg = chat.detail.list.find(item => item.id === msgId);
+                                if (msg) {
+                                    msg.withdraw = 1;
                                 }
                             }
                             break;
