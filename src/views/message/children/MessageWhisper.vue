@@ -15,7 +15,7 @@
                             <div class="name-box">
                                 <div class="name">{{ item.user.nickname }}</div>
                                 <div class="last-word" v-if="item.detail.list.length > 0">
-                                    {{ item.detail.list[item.detail.list.length - 1].content }}
+                                    {{ item.detail.list[item.detail.list.length - 1].withdraw === 1 ? `${item.detail.list[item.detail.list.length - 1].userId === this.$store.state.user.uid ? '你' : '对方'}撤回了一条消息` : item.detail.list[item.detail.list.length - 1].content }}
                                 </div>
                             </div>
                             <div class="close">

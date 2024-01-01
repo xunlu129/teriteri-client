@@ -11,13 +11,22 @@
                 <div class="msg-time" v-if="index === 0 || timeDiff(chat.detail.list[index - 1].time, item.time)">
                     <span class="time">{{ handleDateTime(item.time) }}</span>
                 </div>
-                <div class="msg-item" :class="item.userId === user.uid ? 'is-me' : 'not-me'">
+                <div class="msg-item" v-if="item.withdraw !== 1" :class="item.userId === user.uid ? 'is-me' : 'not-me'">
                     <a :href="`/space/${item.userId}`" target="_blank" class="avatar"
                         :style="`background-image: url('${item.userId === user.uid ? user.avatar_url : chat.user.avatar_url}');`"
                     ></a>
-                    <div class="message">
+                    <div class="message" @contextmenu="(e) => handleContextMenu(item.id, e)">
                         <div class="message-content" v-html="emojiText(item.content)"></div>
+                        <div class="context-menu" v-if="msgId === item.id" :style="`left: ${menuLeft}px; top: ${menuTop}px;`">
+                            <ul>
+                                <li v-if="item.userId === user.uid" @click="withdraw">撤回</li>
+                                <li @click="deleteMsg">删除</li>
+                            </ul>
+                        </div>
                     </div>
+                </div>
+                <div class="notify-wrapper" v-else>
+                    <span class="notify-text">{{ item.userId === user.uid ? '你' : '对方' }}撤回了一条消息</span>
                 </div>
             </div>
         </div>
@@ -47,6 +56,9 @@ export default {
             loading: false,     // 正在加载中
             error: false,       // 加载更多时出错了
             isAtBottom: true,   // 是否正在底部
+            msgId: -1,     // 选中消息的ID
+            menuLeft: 0,    // 右键菜单左偏移量
+            menuTop: 0,     // 右键菜单上偏移量
         }
     },
     computed: {
@@ -155,11 +167,64 @@ export default {
             });
         },
 
+        // 右键消息菜单
+        handleContextMenu(msgId, e) {
+            e.preventDefault();
+            this.menuLeft = e.clientX;
+            this.menuTop = e.clientY;
+            this.msgId = msgId;
+        },
+
+        // 点击空白处关闭菜单
+        handleOutsideClick(event) {
+            const msgList = document.querySelectorAll(".message");
+            for (let i = 0; i < msgList.length; i++) {
+                const element = msgList[i];
+                if (element.contains(event.target)) return;
+            }
+            this.msgId = -1;
+        },
+
+        // 撤回消息
+        withdraw() {
+            const context = {
+                code: 102,
+                id: this.msgId
+            }
+            this.$store.state.ws.send(JSON.stringify(context));
+            this.msgId = -1;
+        },
+
+        // 删除消息
+        async deleteMsg() {
+            const formData = new FormData();
+            formData.append("id", this.msgId);
+            const res = await this.$post("/msg/chat-detailed/delete", formData, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("teri_token"),
+                }
+            });
+            if (res.data.code && res.data.code === 200) {
+                let chat = this.$store.state.chatList.find(item => item.user.uid === this.mid);
+                let index = chat.detail.list.findIndex(item => item.id);
+                if (index !== -1) {
+                    chat.detail.list.splice(index, 1);
+                    this.msgId = -1;
+                }
+            }
+        }
+
     },
     mounted() {
         const scrollContainer = document.getElementById('message-list');
         scrollContainer.addEventListener('scroll', this.handleScroll);
         this.goBottom("auto");
+        window.addEventListener("click", this.handleOutsideClick);
+        window.addEventListener("contextmenu", this.handleOutsideClick);
+    },
+    beforeUnmount() {
+        window.removeEventListener("click", this.handleOutsideClick);
+        window.removeEventListener("contextmenu", this.handleOutsideClick);
     },
     watch: {
         "mid"(curr) {
@@ -172,15 +237,13 @@ export default {
         "$store.state.chatList": {
             handler(curr) {
                 const currChat = curr.find(item => item.user.uid === this.mid);
-                if (currChat.detail.list.length > this.chat.detail.list.length) {
-                    // console.log("深度监听到聊天有新消息：", currChat);
-                    // 复制粘贴新的chat
-                    this.chat = JSON.parse(JSON.stringify(currChat));
-                    if (this.isAtBottom) {
-                        // 如果原本在底部的话还要滚到底部 等元素渲染完再滚
-                        this.goBottom("smooth");
-                    }
-                }             
+                // console.log("深度监听到聊天有新消息：", currChat);
+                // 复制粘贴新的chat
+                this.chat = JSON.parse(JSON.stringify(currChat));
+                if (this.isAtBottom) {
+                    // 如果原本在底部的话还要滚到底部 等元素渲染完再滚
+                    this.goBottom("smooth");
+                }
             },
             deep: true
         }
@@ -307,5 +370,68 @@ export default {
 .message-content:not(.is-img) {
     position: relative;
     z-index: 1;
+}
+
+.context-menu {
+    position: fixed;
+    width: 120px;
+    z-index: 12;
+    background: #eeeff1;
+    color: #6c6c6c;
+    border-radius: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0 2px 4px 0 rgb(167,111,132,33%);
+    box-shadow: 0 2px 4px 0 rgb(167,111,132,33%);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow: visible;
+}
+
+.context-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.context-menu ul li {
+    padding: 3px 12px 3px 12px;
+    cursor: pointer;
+}
+
+.context-menu ul li:first-child {
+    padding-top: 6px;
+}
+
+.context-menu ul li:last-child {
+    padding-bottom: 6px;
+}
+
+.context-menu ul li:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.notify-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 0 10px;
+    color: #b2b2b2;
+    font-size: 12px;
+    line-height: 16px;
+    min-height: 30px;
+}
+
+.notify-wrapper .notify-text {
+    padding: 2px 20px;
+    background-color: #eaeaea;
+    border-radius: 10px;
+    line-height: 16px;
+    height: 20px;
 }
 </style>
