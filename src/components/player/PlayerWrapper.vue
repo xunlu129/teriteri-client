@@ -519,8 +519,6 @@ export default {
                 width: 704,
                 height: 442,
             },
-            wrapWidth: 704,
-            wrapHeight: 442,
             videoWidth: 704,
             videoHeight: 396,
             danmuOpen: true,    // 是否开启弹幕
