@@ -27,8 +27,17 @@ export default createStore({
         isChatPage: false,
         // 实时通讯的socket
         ws: null,
+        // 用户与当前播放视频的互动数据 {love, unlove, coin, collect}
+        attitudeToVideo: {},
     },
     mutations: {
+        // 退出登录或登录过期时初始化个别数据
+        initData(state) {
+            state.isLogin = false;
+            state.user = {};
+            state.msgUnread = [0, 0, 0, 0, 0, 0];
+            state.attitudeToVideo = {};
+        },
         // 更新登录状态
         updateIsLogin(state, isLogin) {
             state.isLogin = isLogin;
@@ -58,6 +67,11 @@ export default createStore({
             state.chatList.push(...chatList);
             // console.log("vuex中的聊天列表: ", state.chatList);
         },
+        // 更新视频互动数据
+        updateAttitudeToVideo(state, atv) {
+            state.attitudeToVideo = atv;
+            // console.log("vuex中的视频互动数据: ", state.attitudeToVideo);
+        },
 
         // 处理websocket事件
         setWebSocket(state, ws) {
@@ -77,10 +91,9 @@ export default createStore({
                     // 系统错误
                     if (data.data === "登录已过期") {
                         // 由于 App.vue 那先做获取用户资料在前，所以基本上这里不会出现登录过期的情况
-                        // 修改当前的登录状态
                         state.isLogin = false;
-                        // 清空user信息
                         state.user = {};
+                        state.attitudeToVideo = {};
                         // 清除本地token缓存
                         localStorage.removeItem("teri_token");
                     }
@@ -272,10 +285,7 @@ export default createStore({
             })
             .catch(() => {
                 // 一般这里捕抓到异常就表示token失效了，所以直接清空浏览器缓存就好了，不需要调用退出函数了
-                // 修改当前的登录状态
-                context.state.isLogin = false;
-                // 清空user信息
-                context.state.user = {};
+                context.commit("initData");
                 // 关闭websocket
                 if (context.state.ws) {
                     context.state.ws.close();
@@ -295,10 +305,7 @@ export default createStore({
         // 退出登录
         logout(context) {
             // 先修改状态再发送请求，防止token过期导致退出失败
-            // 修改当前的登录状态
-            context.state.isLogin = false;
-            // 清空user信息
-            context.state.user = {};
+            context.commit("initData");
             // 关闭websocket
             if (context.state.ws) {
                 context.state.ws.close();

@@ -515,6 +515,7 @@ export default {
     },
     data() {
         return {
+            isMounted: false,   // 做个三秒挂载延迟，防止increasePlay函数重复触发
             wrapSize: {
                 width: 704,
                 height: 442,
@@ -617,6 +618,33 @@ export default {
         },
     },
     methods: {
+        //////// 请求 /////////
+        // 增加一个播放量
+        async increasePlay() {
+            const formData = new FormData();
+            formData.append("vid", Number(this.$route.params.vid));
+            if (this.$store.state.user.uid) {
+                // 如果用户登录了，就算该用户观看了视频
+                const res = await this.$post("/video/play/user", formData, {
+                    headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+                });
+                if (!res.data.data) return;
+                const data = res.data.data;
+                const atv = {
+                    love: data.love === 1 ? true : false,
+                    unlove: data.unlove === 1 ? true : false,
+                    coin: data.coin,
+                    collect: data.collect === 1 ? true : false
+                };
+                this.$store.commit("updateAttitudeToVideo", atv);
+            } else {
+                // 否则算游客观看
+                await this.$post("/video/play/visitor", formData);
+            }
+        },
+
+
+        //////// 事件 /////////
         // 根据窗口大小改变播放器的宽高
         changeWindowSize() {
             const windowWidth = window.innerWidth;
@@ -1226,9 +1254,10 @@ export default {
         // 实时更新当前播放的时间
         timeUpdate() {
             const time = this.$refs.videoPlayer.currentTime;
-            // 如果是0就表示视频被循环播放了，需要初始化弹幕索引
+            // 如果是0就表示视频被循环播放了，需要初始化弹幕索引以及增加一个播放量
             if (time === 0) {
                 this.initDanmuIndex();
+                this.increasePlay();
             }
             this.currentTime = time;
             // 计算进度条的位置
@@ -1342,6 +1371,9 @@ export default {
         // this.$refs.videoPlayer.addEventListener('progress', this.updateBufferingBar);
         // 默认播放音量不等于this.volume，所以挂载时更新同步一下音量
         this.$refs.videoPlayer.volume = this.volume / 100;
+        setTimeout(() => {
+            this.isMounted = true;
+        }, 3000);
     },
     beforeUnmount() {
         window.removeEventListener('resize', this.changeWindowSize);
@@ -1387,6 +1419,12 @@ export default {
         "videoUrl"() {
             this.canPlay = false;
             this.initDanmuIndex(0);
+        },
+        // 监听登录状态，如果重新登录就要新增一个播放记录
+        "$store.state.isLogin"(curr) {
+            if (this.isMounted && curr) {
+                this.increasePlay();
+            }
         }
     }
 }
