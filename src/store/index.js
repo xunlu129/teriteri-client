@@ -29,6 +29,8 @@ export default createStore({
         ws: null,
         // 用户与当前播放视频的互动数据 {love, unlove, coin, collect}
         attitudeToVideo: {},
+        // 登录用户的收藏夹列表
+        favorites: [],
     },
     mutations: {
         // 退出登录或登录过期时初始化个别数据
@@ -37,6 +39,7 @@ export default createStore({
             state.user = {};
             state.msgUnread = [0, 0, 0, 0, 0, 0];
             state.attitudeToVideo = {};
+            state.favorites = [];
         },
         // 更新登录状态
         updateIsLogin(state, isLogin) {
@@ -72,6 +75,10 @@ export default createStore({
             state.attitudeToVideo = atv;
             // console.log("vuex中的视频互动数据: ", state.attitudeToVideo);
         },
+        updateFavorites(state, favorites) {
+            state.favorites = favorites;
+            // console.log("vuex中的收藏夹列表: ", state.favorites);
+        },
 
         // 处理websocket事件
         setWebSocket(state, ws) {
@@ -94,6 +101,7 @@ export default createStore({
                         state.isLogin = false;
                         state.user = {};
                         state.attitudeToVideo = {};
+                        state.favorites = [];
                         // 清除本地token缓存
                         localStorage.removeItem("teri_token");
                     }
