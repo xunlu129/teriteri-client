@@ -37,9 +37,7 @@ export function get(url, config) {
       console.log(err);
       if (err.response.headers.message === 'not login') {
         // 修改当前的登录状态
-        store.state.isLogin = false;
-        // 清空user信息
-        store.state.user = {};
+        store.commit("initData");
         // 关闭websocket
         if (store.state.ws) {
           store.state.ws.close();
@@ -114,9 +112,7 @@ export function post(url, data, headers) {
       console.log(err);
       if (err.response.headers.message == 'not login') {
         // 修改当前的登录状态
-        store.state.isLogin = false;
-        // 清空user信息
-        store.state.user = {};
+        store.commit("initData");
         // 关闭websocket
         if (store.state.ws) {
           store.state.ws.close();

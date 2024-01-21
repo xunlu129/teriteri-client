@@ -8,9 +8,9 @@
                         : `transform: translateX(-${(100 / carousels.length).toFixed(4)}%); transition: transform 0ms ease 0s;width: ${carousels.length}00%;`"
                 >
                 <div class="carousel-slide" :style="`width: ${(100 / carousels.length).toFixed(4)}%`" v-for="(item, index) in carousels" :key="index">
-                    <div class="carousel-inner">
+                    <a class="carousel-inner" :href="item.target" target="_blank">
                         <img :src="item.url" alt="">
-                    </div>
+                    </a>
                 </div>
                 <div class="shadow" :style="`background: linear-gradient(to top, ${color}, ${color}00);`"></div>
             </div>

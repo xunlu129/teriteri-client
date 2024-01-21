@@ -145,6 +145,7 @@ export default {
                 this.$store.commit("updateUser", result.data.data.user);    // 更新vuex中当前用户信息
                 await this.$store.dispatch("getMsgUnread");
                 await this.initIMServer();  // 开启即时通信websocket
+                await this.getFavorites();
                 ElMessage.success(result.data.message);
                 this.$store.commit("updateIsLogin", true);  // 修改在线状态
                 this.$emit("loginSuccess"); // 触发父组件关闭登录框的回调
@@ -191,6 +192,20 @@ export default {
             });
             this.$store.state.ws.send(connection);
         },
+
+        // 获取当前用户的收藏夹列表
+        async getFavorites() {
+            const res = await this.$get("/favorite/get-all/user", {
+                params: { uid: this.$store.state.user.uid },
+                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+            });
+            if (!res.data.data) return;
+            // 将默认置顶
+            const defaultFav = res.data.data.find(item => item.type === 1);
+            const list = res.data.data.filter(item => item.type !== 1);
+            list.unshift(defaultFav);
+            this.$store.commit("updateFavorites", list);
+        }
     }
 }
 </script>

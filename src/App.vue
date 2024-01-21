@@ -53,6 +53,20 @@ export default {
     // 关闭websocket
     async closeIMWebSocket() {
       await this.$store.dispatch("closeWebSocket");
+    },
+
+    // 获取当前用户的收藏夹列表
+    async getFavorites() {
+      const res = await this.$get("/favorite/get-all/user", {
+        params: { uid: this.$store.state.user.uid },
+        headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+      });
+      if (!res.data.data) return;
+      // 将默认置顶
+      const defaultFav = res.data.data.find(item => item.type === 1);
+      const list = res.data.data.filter(item => item.type !== 1);
+      list.unshift(defaultFav);
+      this.$store.commit("updateFavorites", list);
     }
 
   },
@@ -63,8 +77,9 @@ export default {
     }
     // 有可能上面获取信息时token过期就清掉了 所以这里再做个存在判断
     if (localStorage.getItem("teri_token")) {
-      await this.$store.dispatch("getMsgUnread");
-      await this.initIMServer();
+      this.$store.dispatch("getMsgUnread");
+      this.initIMServer();
+      this.getFavorites();
     }
     this.getChannels();
   },

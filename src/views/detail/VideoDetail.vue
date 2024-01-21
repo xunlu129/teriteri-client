@@ -45,35 +45,50 @@
                     @sendDm="sendDanmu"
                     @next="next"
                 ></PlayerWrap>
-                <!-- 点赞 -->
+                <!-- 三连转发 -->
                 <div class="video-toolbar-container">
                     <div class="video-toolbar-left">
                         <div class="toolbar-left-item-wrap">
-                            <div class="video-toolbar-left-item">
+                            <div class="video-toolbar-left-item"
+                                :class="{'on': this.$store.state.attitudeToVideo.love}"
+                                @click="loveOrNot(true, !this.$store.state.attitudeToVideo.love)"
+                            >
                                 <i class="iconfont icon-dianzan"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(good) }}</span>
+                                <div class="dianzan-gif" :class="isGifShow ? 'gif-show' : 'gif-hide'">
+                                    <img src="~assets/img/dianzan.gif" alt="" v-if="gifDisplay">
+                                </div>
                             </div>
                         </div>
                         <div class="toolbar-left-item-wrap">
-                            <div class="video-toolbar-left-item">
+                            <div class="video-toolbar-left-item"
+                                :class="{'on': this.$store.state.attitudeToVideo.unlove}"
+                                @click="loveOrNot(false, !this.$store.state.attitudeToVideo.unlove)"
+                            >
                                 <i class="iconfont icon-diancai"></i>
                                 <span class="video-toolbar-item-text">不喜欢</span>
                             </div>
                         </div>
                         <div class="toolbar-left-item-wrap">
-                            <div class="video-toolbar-left-item">
+                            <div class="video-toolbar-left-item"
+                                :class="{'on': this.$store.state.attitudeToVideo.coin > 0}"
+                                @click="noPage"
+                            >
                                 <i class="iconfont icon-toubi"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(coin) }}</span>
                             </div>
                         </div>
                         <div class="toolbar-left-item-wrap">
-                            <div class="video-toolbar-left-item">
+                            <div class="video-toolbar-left-item"
+                                :class="{'on': this.$store.state.attitudeToVideo.collect}"
+                                @click="openCollectDialog"
+                            >
                                 <i class="iconfont icon-shoucang1"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(collect) }}</span>
                             </div>
                         </div>
                         <div class="toolbar-left-item-wrap">
-                            <div class="video-toolbar-left-item">
+                            <div class="video-toolbar-left-item" @click="noPage">
                                 <i class="iconfont icon-zhuanfa"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(share) }}</span>
                             </div>
@@ -272,6 +287,13 @@
                 </div>
             </div>
         </div>
+        <!-- 收藏框 -->
+        <el-dialog v-model="collectVisible" :close-on-click-modal="false" destroy-on-close align-center>
+            <AddToFavorite :lastSelected="collectedFids"
+                :vid="video.vid ? video.vid : 0"
+                @collected="updateCollect"
+            ></AddToFavorite>
+        </el-dialog>
     </div>
 </template>
 
@@ -282,6 +304,7 @@ import VPopover from '@/components/popover/VPopover.vue';
 import VAvatar from '@/components/avatar/VAvatar.vue';
 import UserCard from '@/components/UserCard/UserCard.vue';
 import DanmuBox from '@/components/danmu/DanmuBox.vue';
+import AddToFavorite from '@/components/favorite/AddToFavorite.vue';
 import { handleTime, handleNum, handleDate, linkify } from '@/utils/utils.js';
 import { ElMessage } from 'element-plus';
 
@@ -294,6 +317,7 @@ export default {
         VAvatar,
         UserCard,
         DanmuBox,
+        AddToFavorite,
     },
     data() {
         return {
@@ -321,6 +345,11 @@ export default {
             autonext: false,    // 是否自动连播
             recommendVideos: [],    // 推荐视频
             vids: [],   // 存放本视频和已推荐的视频id
+            isGifShow: false,
+            gifDisplay: false,
+            collectVisible: false,  // 收藏框的显隐
+            collectedFids: new Set(),   // 收藏了该视频的收藏夹ID集合
+            isMounted: false,
         }
     },
     methods: {
@@ -349,6 +378,9 @@ export default {
                 this.share = res.data.data.stats.share;
             }
             this.isDescTooLong();
+            if (localStorage.getItem("teri_token")) {
+                this.getCollectedFids();
+            }
         },
 
         // 获取推荐视频
@@ -406,13 +438,53 @@ export default {
             }
         },
 
-        // 创建聊天
-        createChat() {
+        // 点赞或取消点赞
+        async loveOrNot(isLove, isSet) {
             if (!this.$store.state.user.uid) {
-                ElMessage.error("登录后才能发消息哦");
+                ElMessage.error("请登录后操作");
                 return;
             }
-            this.openNewPage(`/message/whisper/${this.user.uid}`);
+            if (!this.video.vid) {
+                ElMessage.error("视频不存在");
+                return;
+            }
+            const originalLove = this.$store.state.attitudeToVideo.love;
+            const formData = new FormData();
+            formData.append("vid", Number(this.video.vid));
+            formData.append("isLove", isLove);
+            formData.append("isSet", isSet);
+            const res = await this.$post("/video/love-or-not", formData, {
+                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+            });
+            if (!res.data.data) return;
+            const data = res.data.data;
+            const atv = {
+                love: data.love === 1 ? true : false,
+                unlove: data.unlove === 1 ? true : false,
+                coin: data.coin,
+                collect: data.collect === 1 ? true : false
+            };
+            this.$store.commit("updateAttitudeToVideo", atv);
+            if (isLove && isSet) {
+                this.good ++;   // 点赞 点赞数加一
+                this.gifShow();
+                setTimeout(() => {
+                    this.gifHide();
+                }, 3000);
+            } else if (isLove || (!isLove && isSet && originalLove)) {
+                this.good = this.good - 1 < 0 ? 0 : this.good - 1;   // 取消点赞或者原来是赞但是点踩了 点赞数减一
+            }
+        },
+
+        // 获取收藏了该视频的收藏夹ID列表
+        async getCollectedFids() {
+            const res = await this.$get("/video/collected-fids", {
+                params: { vid: Number(this.video.vid) },
+                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+            });
+            if (!res.data) return;
+            this.collectedFids = new Set(res.data.data);
+            console.log("该用户收藏了该视频的收藏夹ID集合: ", this.collectedFids);
         },
 
 
@@ -451,6 +523,15 @@ export default {
         // 打开新标签页
         openNewPage(route) {
             window.open(this.$router.resolve(route).href, '_blank');
+        },
+
+        // 创建聊天
+        createChat() {
+            if (!this.$store.state.user.uid) {
+                ElMessage.error("登录后才能发消息哦");
+                return;
+            }
+            this.openNewPage(`/message/whisper/${this.user.uid}`);
         },
 
         // 处理窗口滚动触发的事件
@@ -533,6 +614,43 @@ export default {
             if (this.recommendVideos[0]) {
                 this.changeVideo(this.recommendVideos[0].video.vid);
             }
+        },
+
+        // 点赞的动画效果
+        gifShow() {
+            this.gifDisplay = true;
+            this.isGifShow = true;
+        },
+
+        gifHide() {
+            this.isGifShow = false;
+            setTimeout(() => {
+                this.gifDisplay = false;
+            }, 300);
+        },
+
+        // 打开收藏对话框
+        openCollectDialog() {
+            if (!this.$store.state.user.uid) {
+                ElMessage.error("请登录后操作");
+                return;
+            }
+            if (!this.video.vid) {
+                ElMessage.error("视频不存在");
+                return;
+            }
+            this.collectVisible = true;
+        },
+
+        // 更新收藏
+        updateCollect(info) {
+            this.collectedFids = info.fids;
+            this.collect += info.num;
+            this.collectVisible = false;
+        },
+
+        noPage() {
+            ElMessage.warning("该功能暂未开放");
         }
     },
     async created() {
@@ -550,11 +668,28 @@ export default {
         window.addEventListener('scroll', this.handleScroll);
         this.handleScroll();
         window.addEventListener('beforeunload', this.closeWebSocket);    // beforeunload 事件监听标签页关闭
+        setTimeout(() => {
+            this.isMounted = true;
+        }, 3000);
     },
     async beforeUnmount() {
         await this.closeWebSocket();
         window.removeEventListener('beforeunload', this.closeWebSocket);
         window.removeEventListener('scroll', this.handleScroll);
+    },
+    watch: {
+        // 路由变化要关闭收藏对话框
+        "$route.path"() {
+            this.collectVisible = false;
+        },
+        // 当前页面下重新登录要重新获取收藏夹ID 退出登录要清空收藏夹ID
+        "$store.state.isLogin"(curr) {
+            if (this.isMounted && curr) {
+                this.getCollectedFids();
+            } else if (!curr) {
+                this.collectedFids = new Set();
+            }
+        }
     }
 }
 </script>
@@ -728,6 +863,50 @@ export default {
     text-overflow: ellipsis;
     word-break: break-word;
     white-space: nowrap;
+}
+
+.dianzan-gif {
+    position: absolute;
+    top: -50px;
+    left: -10px;
+    height: 40px;
+
+}
+
+.dianzan-gif img {
+    height: 100%;
+}
+
+.gif-hide {
+    animation: disappear 0.2s ease-out forwards;
+    transform-origin: bottom;
+}
+
+.gif-show {
+    animation: appear 0.2s ease-out forwards;
+    transform-origin: bottom;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: translateY(5px) scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes disappear {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(5px) scale(0);
+    }
 }
 
 .video-toolbar-right {
