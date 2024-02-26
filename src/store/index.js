@@ -31,6 +31,10 @@ export default createStore({
         attitudeToVideo: {},
         // 登录用户的收藏夹列表
         favorites: [],
+        // 热搜列表
+        trendings: [],
+        // 搜索到的相关数据数量 [视频, 用户]
+        matchingCount: [0, 0],
     },
     mutations: {
         // 退出登录或登录过期时初始化个别数据
@@ -78,6 +82,15 @@ export default createStore({
         updateFavorites(state, favorites) {
             state.favorites = favorites;
             // console.log("vuex中的收藏夹列表: ", state.favorites);
+        },
+
+        updateTrendings(state, trendings) {
+            state.trendings = trendings;
+            // console.log("vuex中的热搜列表: ", state.trendings);
+        },
+
+        updateMatchingCount(state, matchingCount) {
+            state.matchingCount = matchingCount;
         },
 
         // 处理websocket事件

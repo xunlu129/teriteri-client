@@ -155,7 +155,7 @@
                                 </div>
                             </div>
                             <!-- 实体内容 -->
-                            <div class="video-card__wrap" v-if="randomVideos[index - 1]">
+                            <div class="video-card__wrap" v-if="!loadingRandom">
                                 <a :href="`/video/${randomVideos[index - 1].video.vid}`" target="_blank">
                                     <div class="video-card__image">
                                         <div class="video-card__image--wrap">
@@ -211,7 +211,7 @@
                     <!-- 累加推荐 -->
                     <div class="video-card" v-for="(item, index) in cumulativeVideos" :key="index">
                         <!-- 骨架屏 -->
-                        <div class="video-card__skeleton" :class="loadingRandom ? 'loading_animation' : 'hide'">
+                        <div class="video-card__skeleton hide">
                             <div class="video-card__skeleton--cover"></div>
                             <div class="video-card__skeleton--info">
                                 <div class="video-card__skeleton--right">
@@ -348,6 +348,7 @@
             // 请求
             // 获取游客随机推荐
             async getRandomVideos() {
+                this.loadingRandom = true;
                 const res = await this.$get("/video/random/visitor");
                 if (res.data.data) {
                     this.loadingRandom = false;

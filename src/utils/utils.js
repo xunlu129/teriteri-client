@@ -55,6 +55,19 @@ export function emojiText(text) {
 
 
 /**
+ * 对文本进行关键词高亮
+ * @param {String} keyword 要高亮的关键词
+ * @param {String} inputString 要转换的文本
+ */
+export function highlightKeyword(keyword, inputString) {
+    // 使用正则表达式创建一个匹配关键词的模式
+    const regex = new RegExp(`(${keyword.split('').join('|')})`, 'gi');
+    // 使用字符串替换函数进行替换，添加高亮标签
+    return inputString.replace(regex, '<em class="suggest_high_light">$1</em>');
+}
+
+
+/**
  * 处理播放时长，将秒数转换为分钟和秒的格式
  * @param {Number} time 传入的总时长，以秒为单位
  * @returns {String} 处理后的时间字符串，格式为 'mm:ss'
