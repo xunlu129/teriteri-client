@@ -499,7 +499,7 @@
     }
 }
 
-.index *, .notfound *, .videoDetail * {
+.index *, .notfound *, .videoDetail *, .search * {
     margin: 0;
     padding: 0;
 }
@@ -565,6 +565,66 @@ input[type=checkbox], input[type=radio] {
 
 .vip-name {
     color: var(--Pi4) !important;
+}
+
+.suggest_high_light {
+    color: #f25d8e;
+    font-style: normal;
+}
+
+.flex_center {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.flex_between {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.flex_row, .flex_start {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.i_wrapper {
+    width: 100%;
+    max-width: 2200px;
+    margin: 0 auto;
+    padding: 0 56px;
+}
+
+@media (min-width: 1100px) {
+    .i_wrapper {
+        padding: 0 64px;
+    }
+}
+
+@media (min-width: 1700px) {
+    .i_wrapper {
+        padding: 0 96px;
+    }
 }
 
 .v-url {
@@ -806,6 +866,53 @@ input[type=checkbox], input[type=radio] {
     -webkit-transition: all .3s;
     transition: all .3s;
     width: 100%;
+}
+
+.v-ui-button {
+    height: 34px;
+    padding: 0 var(--v_md);
+    border-radius: var(--v_radius);
+    font-size: var(--v_fs_4);
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.v-ui-button--lg {
+    height: 40px;
+    padding: 0 var(--v_lg);
+    font-size: 16px;
+}
+
+.v-ui-button, .v-ui-button:focus {
+    color: var(--v_text1);
+    background: var(--v_bg1_float);
+    border: 1px solid var(--v_line_regular);
+}
+
+.v-ui-button--pink, .v-ui-button--pink:focus {
+    color: var(--v_text_white);
+    background: var(--v_brand_pink);
+    border: 1px solid var(--v_brand_pink);
+}
+
+.v-ui-button--pink:hover {
+    color: var(--v_text_white);
+    background: var(--v_brand_pink_hover);
+    border: 1px solid var(--v_brand_pink_hover);
+}
+
+.v-ui-button:not(.v-ui-button--no-transition) {
+    -webkit-transition-property: color, background-color, border, -webkit-transform;
+    transition-property: color, background-color, border, -webkit-transform;
+    transition-property: color, background-color, border, transform;
+    transition-property: color, background-color, border, transform, -webkit-transform;
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
 }
 
 
