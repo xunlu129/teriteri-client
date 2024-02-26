@@ -12,7 +12,7 @@
 export default {
     name: "VAvatar",
     props: {
-        // 头像的大小 有效值 24 30 36 40 48 50 60
+        // 头像的大小 有效值 24 30 36 40 48 50 60 86
         size: {
             type: Number,
             default() {
@@ -96,5 +96,10 @@ export default {
 .avatar-size-48, .avatar-size-50, .avatar-size-60 {
     width: 18px;
     height: 18px;
+}
+
+.avatar-size-86 {
+    width: 30px;
+    height: 30px;
 }
 </style>

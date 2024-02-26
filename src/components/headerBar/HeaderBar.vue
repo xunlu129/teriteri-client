@@ -56,6 +56,9 @@
                             placeholder="请输入搜索内容"
                             @focus="searchPopShow()"
                             @keyup.enter="goSearch"
+                            @input="handleInput"
+                            @compositionstart="isComposite = true"
+                            @compositionend="isComposite = false"
                         ></el-input>
                     </div>
                     <div
@@ -106,7 +109,7 @@
                             <div class="trendings-col" style="max-width: calc(50% - 5px);">
                                 <div
                                     class="trending-item"
-                                    v-for="(item, index) in trendings1"
+                                    v-for="(item, index) in this.$store.state.trendings.filter((itm, idx) => idx % 2 === 0)"
                                     :key="index"
                                 >
                                     <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
@@ -118,10 +121,10 @@
                             <div class="trendings-col" style="max-width: calc(50% - 5px);">
                                 <div
                                     class="trending-item"
-                                    v-for="(item, index) in trendings2"
+                                    v-for="(item, index) in this.$store.state.trendings.filter((itm, idx) => idx % 2 !== 0)"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item)">
                                         <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
                                         <div class="trendings-text">{{ item }}</div>
                                     </div>
@@ -132,10 +135,10 @@
                             <div class="trendings-col" style="margin-right: unset;">
                                 <div
                                     class="trending-item"
-                                    v-for="(item, index) in trendings"
+                                    v-for="(item, index) in this.$store.state.trendings"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item)">
                                         <div class="trendings-rank" :class="index < 3 ? 'topThree' : ''">{{ index + 1 }}</div>
                                         <div class="trendings-text">{{ item }}</div>
                                     </div>
@@ -144,7 +147,12 @@
                         </div>
                     </div>
                     <div class="suggestions" v-if="searchInput != ''">
-
+                        <div class="suggest-item"
+                            v-for="(item, index) in matchingWord"
+                            :key="index"
+                            v-html="highlightKeyword(item)"
+                            @click.stop="clickItemToSearch(item)"
+                        ></div>
                     </div>
                 </div>
             </div>
@@ -378,7 +386,7 @@
     import VPopover from '../popover/VPopover.vue';
     import LoginRegister from '../loginRegister/LoginRegister.vue';
     import { ElMessage } from 'element-plus';
-    import { handleNum, handleLevel } from '@/utils/utils.js';
+    import { handleNum, handleLevel, highlightKeyword } from '@/utils/utils.js';
 
     export default {
         name: "HeaderBarIndex",
@@ -392,16 +400,16 @@
                 isOpen: false,
                 // 需要搜索的内容
                 searchInput: "",
+                // 是否正在输入中文
+                isComposite: false,
+                // 搜索推荐词
+                matchingWord: [],
                 // 是否显示搜索气泡框
                 isSearchPopShow: false,
                 // 搜索历史
                 histories: [],
                 // 是否展开搜索历史
                 isHistoryOpen: false,
-                // 热搜列表
-                trendings:["被救博士因业绩差被转卖过", "日本队上演真人版灌篮高手", "Uzi吼退曹军", "88万人打出9.1分的电影", "挂科退学10年后再上大学", "张子豪演出摔下台", "秀才参加非诚勿扰加长版", "29岁如何赚到千万存款", "因文化水平低被诈骗团伙转卖", "2023香港小姐三甲诞生"],
-                trendings1:["被救博士因业绩差被转卖过", "Uzi吼退曹军", "挂科退学10年后再上大学", "秀才参加非诚勿扰加长版", "因文化水平低被诈骗团伙转卖", ],
-                trendings2:["日本队上演真人版灌篮高手", "88万人打出9.1分的电影", "张子豪演出摔下台", "29岁如何赚到千万存款", "2023香港小姐三甲诞生"],
                 // 头像气泡框的显隐
                 popoverDisplay: "none",
                 isPopoverShow: false,
@@ -443,28 +451,49 @@
         methods: {
             //////// 请求 ////////
 
-            // 前往搜索的回调
-            goSearch() {
-                this.searchPopHide();
-                if (this.searchInput.trim() === "") {
-                    // 输入空白符跳转搜索页面
-                    this.searchInput = "";
-                }
-                const index = this.histories.indexOf(this.searchInput);
-                if (index != -1) {
-                    // 值已存在，移除该值
-                    this.histories.splice(index, 1);
-                }
-                this.histories.unshift(this.searchInput);  // 在列表开头插入新记录
-                this.saveToLocalStorage();
+            // 获取搜索推荐
+            async getMatchingWord() {
+                if (this.searchInput.trim() === "") return;
+                const keyword = encodeURIComponent(this.searchInput); // 对特殊字符进行编译
+                const res = await this.$get("/search/word/get", {params: {keyword: keyword}});
+                this.matchingWord = res.data.data;
+                // console.log("推荐搜索词:", this.matchingWord);
             },
+
 
 
             //////// 事件 ////////
 
+            // 边输入边查询相关搜索词条
+            handleInput() {
+                if (this.isComposite) return;   // 如果正在输入拼音 就终止触发函数
+                this.getMatchingWord();
+            },
+
+            // 前往搜索的回调
+            goSearch() {
+                this.searchPopHide();
+                let input = this.searchInput.trim();
+                const index = this.histories.indexOf(input);
+                if (index != -1) {
+                    // 值已存在，移除该值
+                    this.histories.splice(index, 1);
+                }
+                this.histories.unshift(input);  // 在列表开头插入新记录
+                this.saveToLocalStorage();
+                if (input === "") {
+                    // 输入空白符跳转搜索首页
+                    this.openNewPage("/search");
+                } else {
+                    // 否则就跳搜索详情页
+                    this.openNewPage(`/search/video?keyword=${input}`);
+                }
+            },
+
             // 显示搜索气泡框
             searchPopShow() {
                 this.isSearchPopShow = true;
+                this.getMatchingWord();
                 // console.log("显示热搜框: ", this.isSearchPopShow);
             },
 
@@ -564,6 +593,11 @@
             // 计算用户等级
             handleLevel(exp) {
                 return handleLevel(exp);
+            },
+
+            // 高亮关键词
+            highlightKeyword(text) {
+                return highlightKeyword(this.searchInput, text);
             },
 
             noPage() {
@@ -954,6 +988,31 @@
     text-overflow: ellipsis;
     letter-spacing: 0;
     color: var(--text2);
+}
+
+.header-bar .suggestions {
+    margin-top: -6px;
+    margin-bottom: -6px;
+}
+
+.header-bar .suggest-item {
+    height: 32px;
+    display: block;
+    line-height: 32px;
+    font-size: 14px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0 16px;
+    margin-bottom: 4px;
+}
+
+.header-bar .suggest-item:hover, .header-bar .suggest-item:focus {
+    outline: none;
+    background: var(--graph_bg_thick);
 }
 
 .right-entry {

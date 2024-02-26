@@ -484,7 +484,7 @@ export default {
             });
             if (!res.data) return;
             this.collectedFids = new Set(res.data.data);
-            console.log("该用户收藏了该视频的收藏夹ID集合: ", this.collectedFids);
+            // console.log("该用户收藏了该视频的收藏夹ID集合: ", this.collectedFids);
         },
 
 

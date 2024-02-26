@@ -20,6 +20,9 @@ const MessageSystem = () => import('@/views/message/children/MessageSystem.vue')
 const MessageWhisper = () => import('@/views/message/children/MessageWhisper.vue')
 const MessageConfig = () => import('@/views/message/children/MessageConfig.vue')
 const WhisperDialog = () => import('@/views/message/children/children/WhisperDialog.vue')
+const Search = () => import('@/views/search/SearchView.vue')
+const SearchVideo = () => import('@/views/search/children/SearchVideo.vue')
+const SearchUser = () => import('@/views/search/children/SearchUser.vue')
 
 
 const routes = [
@@ -67,6 +70,15 @@ const routes = [
         ]
     },
     { path: '/video/:vid', component: VideoDetail, meta: { requestAuth: false } },
+    {
+        path: '/search',
+        component: Search,
+        props: route => ({ keyword: route.query.keyword }),
+        children: [
+            { path: '/search/video', component: SearchVideo, meta: { requestAuth: false }, props: route => ({ keyword: route.query.keyword }) },
+            { path: '/search/user', component: SearchUser, meta: { requestAuth: false }, props: route => ({ keyword: route.query.keyword }) },
+        ]
+    },
     { path: '/:catchAll(.*)', component: NotFound, meta: { requestAuth: false } },
 ]
 

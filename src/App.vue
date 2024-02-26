@@ -28,6 +28,11 @@ export default {
       this.$store.commit("updateChannels", res.data.data);
     },
 
+    async getHotSearch() {
+      const res = await this.$get("/search/hot/get");
+      this.$store.commit("updateTrendings", res.data.data);
+    },
+
     // 加载蒙版的延迟渲染效果
     show() {
       this.markDisplay = "";
@@ -82,6 +87,7 @@ export default {
       this.getFavorites();
     }
     this.getChannels();
+    this.getHotSearch();
   },
   mounted() {
     window.addEventListener('beforeunload', this.closeIMWebSocket);    // beforeunload 事件监听标签页关闭
