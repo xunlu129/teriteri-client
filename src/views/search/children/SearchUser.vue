@@ -17,7 +17,7 @@
                                 </a>
                             </h2>
                             <p class="card-center">
-                                {{ handleNum(114000) }}粉丝 · {{ handleNum(514) }}个视频
+                                {{ handleNum(item.fansCount) }}粉丝 · {{ handleNum(item.videoCount) }}个视频
                                 <span style="margin-left: 3px;">{{ item.auth > 0 ? item.authMsg : item.description }}</span>
                             </p>
                             <div class="card-buttom">
@@ -175,7 +175,6 @@ export default {
     white-space: nowrap;
     text-overflow: ellipsis;
     display: inline-block;
-    vertical-align: text-top;
     color: var(--text1);
 }
 

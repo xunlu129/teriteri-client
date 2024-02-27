@@ -21,15 +21,15 @@
                 </div>
                 <p class="social">
                     <a :href="`/space/${user.uid}/fans/follow`" target="_blank">
-                        <span class="num">{{ handleNum(114) }}</span>
+                        <span class="num">{{ handleNum(user.followsCount) }}</span>
                         <span class="text">关注</span>
                     </a>
                     <a :href="`/space/${user.uid}/fans/fans`" target="_blank">
-                        <span class="num">{{ handleNum(514000) }}</span>
+                        <span class="num">{{ handleNum(user.fansCount) }}</span>
                         <span class="text">粉丝</span>
                     </a>
                     <span>
-                        <span class="num">{{ handleNum(19198100) }}</span>
+                        <span class="num">{{ handleNum(user.loveCount) }}</span>
                         <span class="text">获赞</span>
                     </span>
                 </p>
