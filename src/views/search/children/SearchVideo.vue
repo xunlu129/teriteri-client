@@ -3,18 +3,18 @@
         <div class="search-page i_wrapper">
             <div class="container">
                 <div class="video-card" v-for="(item, index) in videoList" :key="index">
-                        <!-- 骨架屏 -->
-                        <div class="video-card__skeleton hide">
-                            <div class="video-card__skeleton--cover"></div>
-                            <div class="video-card__skeleton--info">
-                                <div class="video-card__skeleton--right">
-                                    <p class="video-card__skeleton--text"></p>
-                                    <p class="video-card__skeleton--text short"></p>
-                                    <p class="video-card__skeleton--light"></p>
-                                </div>
+                    <!-- 骨架屏 -->
+                    <div class="video-card__skeleton hide">
+                        <div class="video-card__skeleton--cover"></div>
+                        <div class="video-card__skeleton--info">
+                            <div class="video-card__skeleton--right">
+                                <p class="video-card__skeleton--text"></p>
+                                <p class="video-card__skeleton--text short"></p>
+                                <p class="video-card__skeleton--light"></p>
                             </div>
                         </div>
-                        <!-- 实体内容 -->
+                    </div>
+                    <!-- 实体内容 -->
                     <div class="video-card__wrap">
                         <a :href="`/video/${item.video.vid}`" target="_blank">
                             <div class="video-card__image">
