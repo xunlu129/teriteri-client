@@ -176,13 +176,13 @@
                                 <div class="up-info__btn-panel">
                                     <div class="default-btn follow-btn not-follow" v-if="true">
                                         <i class="iconfont icon-jia"></i>
-                                        关注 {{ handleNum(514000) }}
+                                        关注 {{ handleNum(user.fansCount) }}
                                     </div>
                                     <VPopover popStyle="padding-top: 10px;">
                                         <template #reference>
                                             <div class="default-btn follow-btn following" v-if="false">
                                                 <i class="iconfont icon-caidan"></i>
-                                                已关注 {{ handleNum(514000) }}
+                                                已关注 {{ handleNum(user.fansCount) }}
                                             </div>
                                         </template>
                                         <template #content>
@@ -200,7 +200,7 @@
                                         <template #reference>
                                             <div class="default-btn follow-btn following" v-if="false">
                                                 <i class="iconfont icon-caidan"></i>
-                                                已互粉 {{ handleNum(0) }}
+                                                已互粉 {{ handleNum(user.fansCount) }}
                                             </div>
                                         </template>
                                         <template #content>
