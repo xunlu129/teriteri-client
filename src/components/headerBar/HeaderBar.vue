@@ -58,7 +58,7 @@
                             @keyup.enter="goSearch"
                             @input="handleInput"
                             @compositionstart="isComposite = true"
-                            @compositionend="isComposite = false"
+                            @compositionend="compositionend"
                         ></el-input>
                     </div>
                     <div
@@ -468,6 +468,12 @@
             handleInput() {
                 if (this.isComposite) return;   // 如果正在输入拼音 就终止触发函数
                 this.getMatchingWord();
+            },
+
+            // 完成中文输入
+            compositionend() {
+                this.isComposite = false;
+                this.handleInput();
             },
 
             // 前往搜索的回调

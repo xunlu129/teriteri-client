@@ -11,7 +11,7 @@
                     @keyup.enter="goSearch"
                     @input="handleInput"
                     @compositionstart="isComposite = true"
-                    @compositionend="isComposite = false"
+                    @compositionend="compositionend"
                 >
                 <div class="nav-search-clean" :style="input == '' ? 'display: none;' : ''" @click.stop="input = ''">
                     <el-icon size="20"><CircleCloseFilled /></el-icon>
@@ -140,6 +140,11 @@ export default {
         handleInput() {
             if (this.isComposite) return;   // 如果正在输入拼音 就终止触发函数
             this.getMatchingWord();
+        },
+
+        compositionend() {
+            this.isComposite = false;
+            this.handleInput();
         },
 
         // 前往搜索的回调

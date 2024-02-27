@@ -32,7 +32,7 @@
                 <el-pagination
                     background
                     layout="prev, pager, next"
-                    :total="this.$store.state.matchingCount[0]"
+                    :total="this.$store.state.matchingCount[1]"
                     :page-size="30"
                     :pager-count="7"
                     :current-page="page"
