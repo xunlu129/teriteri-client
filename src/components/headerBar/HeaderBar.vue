@@ -191,15 +191,15 @@
                         </div>
                         <div class="counts">
                             <a :href="`/space/${user.uid}/fans/follow`" target="_blank" class="counts-item">
-                                <div class="count-num">{{ handleNum(114) }}</div>
+                                <div class="count-num">{{ handleNum(user.followsCount) }}</div>
                                 <div class="count-text">关注</div>
                             </a>
                             <a :href="`/space/${user.uid}/fans/fans`" target="_blank" class="counts-item">
-                                <div class="count-num">{{ handleNum(514000) }}</div>
+                                <div class="count-num">{{ handleNum(user.fansCount) }}</div>
                                 <div class="count-text">粉丝</div>
                             </a>
                             <a :href="`/space/${user.uid}/dynamic`" target="_blank" class="counts-item">
-                                <div class="count-num">{{ handleNum(1919) }}</div>
+                                <div class="count-num">{{ handleNum(114) }}</div>
                                 <div class="count-text">动态</div>
                             </a>
                         </div>
