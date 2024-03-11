@@ -23,6 +23,8 @@ const WhisperDialog = () => import('@/views/message/children/children/WhisperDia
 const Search = () => import('@/views/search/SearchView.vue')
 const SearchVideo = () => import('@/views/search/children/SearchVideo.vue')
 const SearchUser = () => import('@/views/search/children/SearchUser.vue')
+const CommentVue = () => import('@/components/comment/CommentVue.vue')
+const UserSpaceVue = () => import('@/views/userSpace/UserSpaceVue.vue')
 
 
 const routes = [
@@ -80,6 +82,9 @@ const routes = [
         ]
     },
     { path: '/:catchAll(.*)', component: NotFound, meta: { requestAuth: false } },
+
+    { path: '/comment', component: CommentVue, meta: { requestAuth: false } },
+    { path: '/user-space', component: UserSpaceVue, meta: { requestAuth: false } },
 ]
 
 const router = createRouter({

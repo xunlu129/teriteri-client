@@ -29,6 +29,10 @@ export default createStore({
         ws: null,
         // 用户与当前播放视频的互动数据 {love, unlove, coin, collect}
         attitudeToVideo: {},
+        // 用户点赞的评论 id
+        likeComment: [],
+        // 用户点踩的评论 id
+        dislikeComment: [],
         // 登录用户的收藏夹列表
         favorites: [],
         // 热搜列表
@@ -79,6 +83,14 @@ export default createStore({
             state.attitudeToVideo = atv;
             // console.log("vuex中的视频互动数据: ", state.attitudeToVideo);
         },
+        // 更新用户点赞评论id列表
+        updateLikeComment(state, lc) {
+            state.likeComment = lc;
+        },
+        // 更新用户点踩评论id列表
+        updateDislikeComment(state, dlc) {
+            state.dislikeComment = dlc;
+        },
         updateFavorites(state, favorites) {
             state.favorites = favorites;
             // console.log("vuex中的收藏夹列表: ", state.favorites);
@@ -106,7 +118,7 @@ export default createStore({
         },
         handleWsMessage(state, e) {
             const data = JSON.parse(e.data);
-            switch(data.type) {
+            switch (data.type) {
                 case "error": {
                     // 系统错误
                     if (data.data === "登录已过期") {
@@ -125,7 +137,7 @@ export default createStore({
                     // 回复我的
                     let content = data.content;
                     console.log(content);
-                    switch(content.type) {
+                    switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[0] = 0; // 清除回复我的的未读数
                             break;
@@ -137,7 +149,7 @@ export default createStore({
                     // @ 我的
                     let content = data.content;
                     console.log(content);
-                    switch(content.type) {
+                    switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[1] = 0; // 清除@我的的未读数
                             break;
@@ -149,7 +161,7 @@ export default createStore({
                     // 收到的赞
                     let content = data.content;
                     console.log(content);
-                    switch(content.type) {
+                    switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[2] = 0; // 清除收到的赞的未读数
                             break;
@@ -161,7 +173,7 @@ export default createStore({
                     // 系统通知
                     let content = data.content;
                     console.log(content);
-                    switch(content.type) {
+                    switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[3] = 0; // 清除系统通知的未读数
                             break;
@@ -173,7 +185,7 @@ export default createStore({
                     // 我的消息（私聊）
                     let content = data.data;
                     // console.log(content);
-                    switch(content.type) {
+                    switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[4] = 0; // 清除我的消息的未读数
                             state.chatList.forEach(item => {
@@ -188,7 +200,7 @@ export default createStore({
                             let chat = state.chatList.find(item => item.chat.id === chatid);
                             if (chat) {
                                 chat.chat.unread = 0;   // 清除对应聊天的未读
-                            }                            
+                            }
                             break;
                         }
                         case "移除": {
@@ -210,9 +222,9 @@ export default createStore({
                             // 按时间从最近到最远排序
                             const sortByLatestTime = list => {
                                 list.sort((a, b) => {
-                                  const timeA = new Date(a.chat.latestTime).getTime();
-                                  const timeB = new Date(b.chat.latestTime).getTime();
-                                  return timeB - timeA;
+                                    const timeA = new Date(a.chat.latestTime).getTime();
+                                    const timeB = new Date(b.chat.latestTime).getTime();
+                                    return timeB - timeA;
                                 });
                             }
                             if (detail.userId === state.user.uid) {
@@ -227,7 +239,7 @@ export default createStore({
                             } else {
                                 // 如果发送方是别人 需要判断当前是否有一个页面在该聊天窗口以更新全部未读数
                                 if (!content.online) {
-                                    state.msgUnread[4] ++;
+                                    state.msgUnread[4]++;
                                 }
                                 // 不需判断当前页面是否聊天页面了 都要更新消息
                                 let chatItem = state.chatList.find(item => item.chat.userId === detail.userId);
@@ -280,7 +292,7 @@ export default createStore({
                     // 动态
                     let content = data.content;
                     console.log(content);
-                    switch(content.type) {
+                    switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[5] = 0; // 清除动态的未读数
                             break;
@@ -304,25 +316,25 @@ export default createStore({
                     Authorization: "Bearer " + localStorage.getItem("teri_token"),
                 },
             })
-            .catch(() => {
-                // 一般这里捕抓到异常就表示token失效了，所以直接清空浏览器缓存就好了，不需要调用退出函数了
-                context.commit("initData");
-                // 关闭websocket
-                if (context.state.ws) {
-                    context.state.ws.close();
-                    context.commit('setWebSocket', null);
-                }                
-                // 清除本地token缓存
-                localStorage.removeItem("teri_token");
-                ElMessage.error("请登录后查看");
-            });
+                .catch(() => {
+                    // 一般这里捕抓到异常就表示token失效了，所以直接清空浏览器缓存就好了，不需要调用退出函数了
+                    context.commit("initData");
+                    // 关闭websocket
+                    if (context.state.ws) {
+                        context.state.ws.close();
+                        context.commit('setWebSocket', null);
+                    }
+                    // 清除本地token缓存
+                    localStorage.removeItem("teri_token");
+                    ElMessage.error("请登录后查看");
+                });
             if (!result) return;
             if (result.data.code === 200) {
                 context.commit("updateUser", result.data.data);
                 context.state.isLogin = true;
             }
         },
-        
+
         // 退出登录
         logout(context) {
             // 先修改状态再发送请求，防止token过期导致退出失败
@@ -365,12 +377,12 @@ export default createStore({
                 }
                 const ws = new WebSocket('ws://localhost:7071/im');
                 commit('setWebSocket', ws);
-          
+
                 ws.addEventListener('open', () => {
-                  commit('handleWsOpen');
-                  resolve(); // 解决 Promise
+                    commit('handleWsOpen');
+                    resolve(); // 解决 Promise
                 });
-          
+
                 ws.addEventListener('close', () => commit('handleWsClose'));
                 ws.addEventListener('message', e => commit('handleWsMessage', e));
                 ws.addEventListener('error', e => commit('handleWsError', e));

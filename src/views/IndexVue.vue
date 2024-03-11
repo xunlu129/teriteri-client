@@ -18,7 +18,7 @@
                     <img src="~assets/img/bilibili/bilibili-winter-view-1.jpg" class="morning" alt="">
                     <img src="~assets/img/bilibili/bilibili-winter-view-2.jpg" class="afternoon" alt="">
                     <video autoplay loop muted class="evening">
-                    <source src="~assets/img/bilibili/bilibili-winter-view-3.webm" type="video/webm" />
+                        <source src="~assets/img/bilibili/bilibili-winter-view-3.webm" type="video/webm" />
                     </video>
                     <img src="~assets/img/bilibili/bilibili-winter-view-3-snow.png" class="window-cover" alt="">
                 </div>
@@ -38,12 +38,8 @@
         </div>
         <!-- 固钉频道栏 -->
         <div class="header-channel-fixed" :style="isFixChannel ? '' : 'display: none;'">
-            <div
-                class="header-channel-fixed-container"
-                :class="isChannelDown ? 'header-channel-fixed-down' : ''"
-                @mouseenter="isChannelDown = true;"
-                @mouseleave="isChannelDown = false;"
-            >
+            <div class="header-channel-fixed-container" :class="isChannelDown ? 'header-channel-fixed-down' : ''"
+                @mouseenter="isChannelDown = true;" @mouseleave="isChannelDown = false;">
                 <div class="header-channel-fixed-left">
                     <div class="left-fixed-channel">
                         <i class="iconfont icon-fengche"></i>
@@ -64,13 +60,15 @@
                             <a :href="`/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
                             <a :href="`/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
                             <a :href="`/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
-                            <a :href="`/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
+                            <a :href="`/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item"
+                                v-for="(item, index) in channels.slice(2)" :key="index">
                                 {{ item.mcName }}
                             </a>
                             <!-- 这里的url要在VLOG标签做出来后重新修改，目前先暂定到生活日常区 -->
                             <a :href="`/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
                             <a :href="`/v/life/funny`" target="_blank" class="header-channel-fixed-right-item">搞笑</a>
-                            <a :href="`/v/game/stand_alone`" target="_blank" class="header-channel-fixed-right-item">单机游戏</a>
+                            <a :href="`/v/game/stand_alone`" target="_blank"
+                                class="header-channel-fixed-right-item">单机游戏</a>
                             <a :href="`/love`" target="_blank" class="header-channel-fixed-right-item">公益</a>
                             <a :href="`/mooc`" target="_blank" class="header-channel-fixed-right-item">公开课</a>
                         </div>
@@ -80,8 +78,10 @@
                         <a :href="`/live`" target="_blank" class="header-channel-fixed-right-item">直播</a>
                         <a :href="`/activity`" target="_blank" class="header-channel-fixed-right-item">活动</a>
                         <a :href="`/cheese`" target="_blank" class="header-channel-fixed-right-item">课堂</a>
-                        <a :href="`/community`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">社区中心</a>
-                        <a :href="`/song`" target="_blank" class="header-channel-fixed-right-item" style="letter-spacing: 0px;">新歌热榜</a>
+                        <a :href="`/community`" target="_blank" class="header-channel-fixed-right-item"
+                            style="letter-spacing: 0px;">社区中心</a>
+                        <a :href="`/song`" target="_blank" class="header-channel-fixed-right-item"
+                            style="letter-spacing: 0px;">新歌热榜</a>
                     </div>
                     <div class="left-bottom">
                         <a :href="`/v/anime`" target="_blank" class="header-channel-fixed-right-item">番剧</a>
@@ -90,7 +90,8 @@
                         <a :href="`/tv`" target="_blank" class="header-channel-fixed-right-item">电视剧</a>
                         <a :href="`/variety`" target="_blank" class="header-channel-fixed-right-item">综艺</a>
                         <a :href="`/documentary`" target="_blank" class="header-channel-fixed-right-item">纪录片</a>
-                        <a :href="`/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item" v-for="(item, index) in channels.slice(2)" :key="index">
+                        <a :href="`/v/${item.mcId}`" target="_blank" class="header-channel-fixed-right-item"
+                            v-for="(item, index) in channels.slice(2)" :key="index">
                             {{ item.mcName }}
                         </a>
                         <a :href="`/v/life/daily`" target="_blank" class="header-channel-fixed-right-item">VLOG</a>
@@ -101,10 +102,7 @@
                     </div>
                 </div>
                 <div class="header-channel-fixed-arrow">
-                    <div
-                        class="iconfont icon-xiajiantou"
-                        :style="isChannelDown ? 'transform: rotate(180deg);' : ''"
-                    ></div>
+                    <div class="iconfont icon-xiajiantou" :style="isChannelDown ? 'transform: rotate(180deg);' : ''"></div>
                 </div>
             </div>
         </div>
@@ -160,7 +158,8 @@
                                     <div class="video-card__image">
                                         <div class="video-card__image--wrap">
                                             <picture class="video-card__cover">
-                                                <img :src="randomVideos[index - 1].video.coverUrl" :alt="randomVideos[index - 1].video.title">
+                                                <img :src="randomVideos[index - 1].video.coverUrl"
+                                                    :alt="randomVideos[index - 1].video.title">
                                             </picture>
                                         </div>
                                         <div class="video-card__mask">
@@ -195,9 +194,11 @@
                                         </h3>
                                         <div class="video-card__info--bottom">
                                             <div class="video-card__info--icon-text" :style="'display: none;'">已关注</div>
-                                            <a class="video-card__info--owner" :href="`/space/${randomVideos[index - 1].user.uid}`" target="_blank">
+                                            <a class="video-card__info--owner"
+                                                :href="`/space/${randomVideos[index - 1].user.uid}`" target="_blank">
                                                 <i class="iconfont icon-uper" :style="''"></i>
-                                                <span class="video-card__info--author">{{ randomVideos[index - 1].user.nickname }}</span>
+                                                <span class="video-card__info--author">{{ randomVideos[index -
+                                                    1].user.nickname }}</span>
                                                 <span class="video-card__info--date">
                                                     · {{ handleDate(randomVideos[index - 1].video.uploadDate) }}
                                                 </span>
@@ -262,7 +263,8 @@
                                     </h3>
                                     <div class="video-card__info--bottom">
                                         <div class="video-card__info--icon-text" :style="'display: none;'">已关注</div>
-                                        <a class="video-card__info--owner" :href="`/space/${item.user.uid}`" target="_blank">
+                                        <a class="video-card__info--owner" :href="`/space/${item.user.uid}`"
+                                            target="_blank">
                                             <i class="iconfont icon-uper" :style="''"></i>
                                             <span class="video-card__info--author">{{ item.user.nickname }}</span>
                                             <span class="video-card__info--date">
@@ -289,7 +291,7 @@
                     </div>
                 </div>
                 <div class="feed-roll-btn">
-                    <div class="roll-btn" @click="getRandomVideos(); refreshTime ++;">
+                    <div class="roll-btn" @click="getRandomVideos(); refreshTime++;">
                         <i class="iconfont icon-shuaxin" :style="`transform: rotate(${refreshTime * 360}deg);`"></i>
                         <span>换一换</span>
                     </div>
@@ -300,191 +302,191 @@
 </template>
 
 <script>
-    import HeaderBar from '@/components/headerBar/HeaderBar.vue';
-    import HeaderChannel from '@/components/headerChannel/HeaderChannel.vue';
-    import CarouselIndex from '@/components/carousel/CarouselIndex.vue';
-    import { handleTime, handleNum, handleDate } from '@/utils/utils.js';
+import HeaderBar from '@/components/headerBar/HeaderBar.vue';
+import HeaderChannel from '@/components/headerChannel/HeaderChannel.vue';
+import CarouselIndex from '@/components/carousel/CarouselIndex.vue';
+import { handleTime, handleNum, handleDate } from '@/utils/utils.js';
 
-    let headerHight, bottomDistance;
+let headerHight, bottomDistance;
 
-    export default {
-        name: "IndexVue",
-        components: {
-            HeaderBar,
-            HeaderChannel,
-            CarouselIndex,
-        },
-        data() {
-            return {
-                // 是否是固钉导航栏
-                isFixHeaderBar: false,
-                // 是否是固钉频道栏
-                isFixChannel: false,
-                // 是否显示更多频道
-                isChannelDown: false,
-                // 随机推荐视频列表
-                randomVideos: [],
-                // 累加视频列表
-                cumulativeVideos: [],
-                // 累加视频id列表
-                vids: [],
-                // 是否正在加载随机推荐
-                loadingRandom: true,
-                // 是否还有更多累加视频
-                hasMore: true,
-                // 是否正在加载更多视频中
-                loadingMore: false,
-                // 刷新次数
-                refreshTime: 0,
+export default {
+    name: "IndexVue",
+    components: {
+        HeaderBar,
+        HeaderChannel,
+        CarouselIndex,
+    },
+    data() {
+        return {
+            // 是否是固钉导航栏
+            isFixHeaderBar: false,
+            // 是否是固钉频道栏
+            isFixChannel: false,
+            // 是否显示更多频道
+            isChannelDown: false,
+            // 随机推荐视频列表
+            randomVideos: [],
+            // 累加视频列表
+            cumulativeVideos: [],
+            // 累加视频id列表
+            vids: [],
+            // 是否正在加载随机推荐
+            loadingRandom: true,
+            // 是否还有更多累加视频
+            hasMore: true,
+            // 是否正在加载更多视频中
+            loadingMore: false,
+            // 刷新次数
+            refreshTime: 0,
+        }
+    },
+    computed: {
+        // 频道列表
+        channels() {
+            return this.$store.state.channels;
+        }
+    },
+    methods: {
+        // 请求
+        // 获取游客随机推荐
+        async getRandomVideos() {
+            this.loadingRandom = true;
+            const res = await this.$get("/video/random/visitor");
+            if (res.data.data) {
+                this.loadingRandom = false;
+                this.randomVideos = res.data.data;
             }
+            // console.log(this.randomVideos);
         },
-        computed: {
-            // 频道列表
-            channels() {
-                return this.$store.state.channels;
+
+        // 获取游客累加推荐
+        async getCumulativeVideos() {
+            this.loadingMore = true;
+            let ids = this.vids.join(",");  // 用逗号连接成一个字符串
+            const res = await this.$get("/video/cumulative/visitor", {
+                params: { vids: ids }
+            });
+            if (res.data.data) {
+                this.cumulativeVideos.push(...res.data.data.videos);
+                this.vids.push(...res.data.data.vids);
+                this.hasMore = res.data.data.more;
             }
+            // console.log(this.cumulativeVideos);
+            this.loadingMore = false;
         },
-        methods: {
-            // 请求
-            // 获取游客随机推荐
-            async getRandomVideos() {
-                this.loadingRandom = true;
-                const res = await this.$get("/video/random/visitor");
-                if (res.data.data) {
-                    this.loadingRandom = false;
-                    this.randomVideos = res.data.data;
-                }
-                // console.log(this.randomVideos);
-            },
-
-            // 获取游客累加推荐
-            async getCumulativeVideos() {
-                this.loadingMore = true;
-                let ids = this.vids.join(",");  // 用逗号连接成一个字符串
-                const res = await this.$get("/video/cumulative/visitor", {
-                    params: { vids: ids }
-                });
-                if (res.data.data) {
-                    this.cumulativeVideos.push(...res.data.data.videos);
-                    this.vids.push(...res.data.data.vids);
-                    this.hasMore = res.data.data.more;
-                }
-                // console.log(this.cumulativeVideos);
-                this.loadingMore = false;
-            },
 
 
-            // 事件
-            // 初始化头图效果
-            initHeader() {
-                let startingPoint;
-                const header = document.querySelector('header');
-                let isMoving = false;
+        // 事件
+        // 初始化头图效果
+        initHeader() {
+            let startingPoint;
+            const header = document.querySelector('header');
+            let isMoving = false;
 
-                this.handleMouseMove = (e) => {
-                    const headerRect = header.getBoundingClientRect(); // 动态获取header的位置
-                    if (
-                        e.clientX >= headerRect.left && e.clientX <= headerRect.right &&
-                        e.clientY >= headerRect.top && e.clientY <= headerRect.bottom
-                    ) {
-                        // 当鼠标进入头图范围就开始动态效果
-                        if (!isMoving) {
-                            startingPoint = e.clientX;
-                            header.classList.add('moving');
-                            isMoving = true;
-                        }
-                        let percentage = (e.clientX - startingPoint) / window.outerWidth + 0.5;
-                        header.style.setProperty('--percentage', percentage);
-                    } else {
-                        // 鼠标移出头图范围，效果复原
-                        if (isMoving) {
-                            header.classList.remove('moving');
-                            header.style.setProperty('--percentage', 0.5);
-                            isMoving = false;
-                        }
+            this.handleMouseMove = (e) => {
+                const headerRect = header.getBoundingClientRect(); // 动态获取header的位置
+                if (
+                    e.clientX >= headerRect.left && e.clientX <= headerRect.right &&
+                    e.clientY >= headerRect.top && e.clientY <= headerRect.bottom
+                ) {
+                    // 当鼠标进入头图范围就开始动态效果
+                    if (!isMoving) {
+                        startingPoint = e.clientX;
+                        header.classList.add('moving');
+                        isMoving = true;
                     }
-                }
-
-                this.handleMouseOut = (e) => {
-                    if (e.relatedTarget === null) {
-                        // 鼠标离开窗口时，头图回到原位
+                    let percentage = (e.clientX - startingPoint) / window.outerWidth + 0.5;
+                    header.style.setProperty('--percentage', percentage);
+                } else {
+                    // 鼠标移出头图范围，效果复原
+                    if (isMoving) {
                         header.classList.remove('moving');
                         header.style.setProperty('--percentage', 0.5);
                         isMoving = false;
                     }
                 }
+            }
 
-                // 监听窗口鼠标移动事件，触发头图转变效果
-                document.addEventListener('mousemove', this.handleMouseMove);
-                // 检测鼠标是否离开窗口
-                document.addEventListener('mouseout', this.handleMouseOut);
-            },
-
-
-            async handleScroll() {
-                // 计算页面底部距离
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight;
-                bottomDistance = documentHeight - (window.scrollY + windowHeight);
-
-                // 导航栏
-                if (this.el.scrollTop >= 64 && !this.isFixHeaderBar) {
-                    this.isFixHeaderBar = true;
-                } else if (this.el.scrollTop < 64 && this.isFixHeaderBar) {
-                    this.isFixHeaderBar = false;
+            this.handleMouseOut = (e) => {
+                if (e.relatedTarget === null) {
+                    // 鼠标离开窗口时，头图回到原位
+                    header.classList.remove('moving');
+                    header.style.setProperty('--percentage', 0.5);
+                    isMoving = false;
                 }
+            }
 
-                // 频道栏
-                if (this.el.scrollTop >= headerHight && !this.isFixChannel) {
-                    this.isFixChannel = true;
-                } else if (this.el.scrollTop < headerHight && this.isFixChannel) {
-                    this.isFixChannel = false;
-                }
-
-                // 当距离底部小于800且有更多数据时触发加载数据的函数
-                if (bottomDistance < 800 && this.hasMore && !this.loadingMore) {
-                    await this.getCumulativeVideos();
-                }
-            },
-
-            // 处理播放时长
-            handleDuration(time) {
-                return handleTime(time);
-            },
-
-            // 处理大于一万的数字
-            handleNum(number) {
-                return handleNum(number);
-            },
-
-            // 处理投稿时间
-            handleDate(date) {
-                return handleDate(date);
-            },
+            // 监听窗口鼠标移动事件，触发头图转变效果
+            document.addEventListener('mousemove', this.handleMouseMove);
+            // 检测鼠标是否离开窗口
+            document.addEventListener('mouseout', this.handleMouseOut);
         },
-        created() {
-            this.getRandomVideos();
-        },
-        async mounted() {
-            // 初始化头图的监听器
-            this.initHeader();
-            // 窗口滚动时根据高度判断是否显示固钉导航栏和固钉频道栏
-            this.el = document.documentElement;
-            // 根据主体顶部的偏移量计算 header 的高度
-            headerHight = document.querySelector(".main__layout").offsetTop;
-            window.addEventListener('scroll', this.handleScroll);
-            // 初次挂载时执行一次，防止大屏情况下，视频数量不足以撑出滚动条
-            await this.handleScroll();
-            while (bottomDistance < 800 && this.hasMore) {
-                await this.handleScroll();
+
+
+        async handleScroll() {
+            // 计算页面底部距离
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            bottomDistance = documentHeight - (window.scrollY + windowHeight);
+
+            // 导航栏
+            if (this.el.scrollTop >= 64 && !this.isFixHeaderBar) {
+                this.isFixHeaderBar = true;
+            } else if (this.el.scrollTop < 64 && this.isFixHeaderBar) {
+                this.isFixHeaderBar = false;
+            }
+
+            // 频道栏
+            if (this.el.scrollTop >= headerHight && !this.isFixChannel) {
+                this.isFixChannel = true;
+            } else if (this.el.scrollTop < headerHight && this.isFixChannel) {
+                this.isFixChannel = false;
+            }
+
+            // 当距离底部小于800且有更多数据时触发加载数据的函数
+            if (bottomDistance < 800 && this.hasMore && !this.loadingMore) {
+                await this.getCumulativeVideos();
             }
         },
-        beforeUnmount() {
-            document.removeEventListener('mousemove', this.handleMouseMove);
-            document.removeEventListener('mouseout', this.handleMouseOut);
-            window.removeEventListener('scroll', this.handleScroll);
+
+        // 处理播放时长
+        handleDuration(time) {
+            return handleTime(time);
+        },
+
+        // 处理大于一万的数字
+        handleNum(number) {
+            return handleNum(number);
+        },
+
+        // 处理投稿时间
+        handleDate(date) {
+            return handleDate(date);
+        },
+    },
+    created() {
+        this.getRandomVideos();
+    },
+    async mounted() {
+        // 初始化头图的监听器
+        this.initHeader();
+        // 窗口滚动时根据高度判断是否显示固钉导航栏和固钉频道栏
+        this.el = document.documentElement;
+        // 根据主体顶部的偏移量计算 header 的高度
+        headerHight = document.querySelector(".main__layout").offsetTop;
+        window.addEventListener('scroll', this.handleScroll);
+        // 初次挂载时执行一次，防止大屏情况下，视频数量不足以撑出滚动条
+        await this.handleScroll();
+        while (bottomDistance < 800 && this.hasMore) {
+            await this.handleScroll();
         }
+    },
+    beforeUnmount() {
+        document.removeEventListener('mousemove', this.handleMouseMove);
+        document.removeEventListener('mouseout', this.handleMouseOut);
+        window.removeEventListener('scroll', this.handleScroll);
     }
+}
 </script>
 
 <style scoped>
@@ -606,7 +608,7 @@
     margin-left: 15px;
     width: 150px;
     height: 50px;
-    filter: drop-shadow(3px 5px 3px rgba(0,0,0,0.5));
+    filter: drop-shadow(3px 5px 3px rgba(0, 0, 0, 0.5));
 }
 
 header {
@@ -628,7 +630,8 @@ header {
     --percentage: 0.5;
 }
 
-header .view, header .tree {
+header .view,
+header .tree {
     position: absolute;
     top: 0;
     right: 0;
@@ -639,7 +642,9 @@ header .view, header .tree {
     align-items: center;
 }
 
-header .view img, header .view video, header .tree img {
+header .view img,
+header .view video,
+header .tree img {
     position: absolute;
     display: block;
     width: 120%;
@@ -691,7 +696,7 @@ header .window-cover {
     z-index: 0;
     width: 100%;
     height: 100px;
-    background: linear-gradient(rgba(0,0,0,.4),transparent);
+    background: linear-gradient(rgba(0, 0, 0, .4), transparent);
     pointer-events: none;
 }
 
@@ -706,7 +711,7 @@ header .window-cover {
     position: fixed;
     top: 63px;
     letter-spacing: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
     animation: headerSlideDown .2s linear forwards;
 }
 
@@ -714,6 +719,7 @@ header .window-cover {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -767,7 +773,8 @@ header .window-cover {
     margin-right: 5px;
 }
 
-.left-fixed-channel:hover, .left-fixed-channel:hover .iconfont{
+.left-fixed-channel:hover,
+.left-fixed-channel:hover .iconfont {
     color: var(--brand_pink);
 }
 
@@ -817,14 +824,14 @@ header .window-cover {
 
 .header-channel-fixed-right-left .left-top {
     display: inline-grid;
-    grid-template-rows: repeat(2,1fr);
+    grid-template-rows: repeat(2, 1fr);
     position: relative;
     grid-auto-flow: column;
 }
 
 .header-channel-fixed-right-right {
     display: inline-grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-auto-flow: column;
     grid-template-rows: var(--item_height) var(--item_height);
     grid-column: span 3;
@@ -832,11 +839,14 @@ header .window-cover {
 
 .header-channel-fixed-right .left-bottom {
     display: inline-grid;
-    grid-template-rows: repeat(1,1fr);
+    grid-template-rows: repeat(1, 1fr);
     position: relative;
 }
 
-.header-channel-fixed-right .left-bottom, .header-channel-fixed-right-right, .header-channel-fixed-right-left .left-top, .header-channel-fixed-right {
+.header-channel-fixed-right .left-bottom,
+.header-channel-fixed-right-right,
+.header-channel-fixed-right-left .left-top,
+.header-channel-fixed-right {
     grid-gap: 14px 10px;
 }
 
@@ -845,29 +855,39 @@ header .window-cover {
         --left_width: 128px;
         --left_width_item: 64px;
     }
+
     .header-channel-fixed-right {
         grid-column: span 12;
-        grid-template-columns: repeat(12,1fr);
+        grid-template-columns: repeat(12, 1fr);
     }
+
     .header-channel-fixed-right-left {
         grid-column: span 9;
-        grid-template-columns: repeat(9,1fr);
+        grid-template-columns: repeat(9, 1fr);
     }
+
     .header-channel-fixed-right .left-bottom {
         grid-column: span 12;
-        grid-template-columns: repeat(12,1fr);
+        grid-template-columns: repeat(12, 1fr);
     }
+
     .header-channel-fixed-right-left .left-top {
         grid-column: span 9;
-        grid-template-columns: repeat(9,1fr);
+        grid-template-columns: repeat(9, 1fr);
     }
-    .header-channel-fixed-right .left-bottom, .header-channel-fixed-right-right, .header-channel-fixed-right-left .left-top, .header-channel-fixed-right {
+
+    .header-channel-fixed-right .left-bottom,
+    .header-channel-fixed-right-right,
+    .header-channel-fixed-right-left .left-top,
+    .header-channel-fixed-right {
         font-size: 13px;
         grid-gap: 14px 8px;
     }
+
     .left-top .header-channel-fixed-right-item:nth-of-type(1n + 19) {
         display: none !important;
     }
+
     .left-bottom .header-channel-fixed-right-item:nth-of-type(-1n + 18) {
         display: none !important;
     }
@@ -876,23 +896,28 @@ header .window-cover {
 @media (min-width: 1367px) and (max-width: 1700.9px) {
     .header-channel-fixed-right {
         grid-column: span 14;
-        grid-template-columns: repeat(14,1fr);
+        grid-template-columns: repeat(14, 1fr);
     }
+
     .header-channel-fixed-right-left {
         grid-column: span 11;
-        grid-template-columns: repeat(11,1fr);
+        grid-template-columns: repeat(11, 1fr);
     }
+
     .header-channel-fixed-right .left-bottom {
         grid-column: span 14;
-        grid-template-columns: repeat(14,1fr);
+        grid-template-columns: repeat(14, 1fr);
     }
+
     .header-channel-fixed-right-left .left-top {
         grid-column: span 11;
-        grid-template-columns: repeat(11,1fr);
+        grid-template-columns: repeat(11, 1fr);
     }
+
     .left-top .header-channel-fixed-right-item:nth-of-type(1n + 23) {
         display: none !important;
     }
+
     .left-bottom .header-channel-fixed-right-item:nth-of-type(-1n + 22) {
         display: none !important;
     }
@@ -903,25 +928,31 @@ header .window-cover {
         --left_width: 160px;
         --left_width_item: 80px;
     }
+
     .header-channel-fixed-right {
         grid-column: span 15;
-        grid-template-columns: repeat(15,1fr);
+        grid-template-columns: repeat(15, 1fr);
     }
+
     .header-channel-fixed-right-left {
         grid-column: span 12;
-        grid-template-columns: repeat(12,1fr);
+        grid-template-columns: repeat(12, 1fr);
     }
+
     .header-channel-fixed-right .left-bottom {
         grid-column: span 15;
-        grid-template-columns: repeat(15,1fr);
+        grid-template-columns: repeat(15, 1fr);
     }
+
     .header-channel-fixed-right-left .left-top {
         grid-column: span 12;
-        grid-template-columns: repeat(12,1fr);
+        grid-template-columns: repeat(12, 1fr);
     }
+
     .left-top .header-channel-fixed-right-item:nth-of-type(1n + 25) {
         display: none !important;
     }
+
     .left-bottom .header-channel-fixed-right-item:nth-of-type(-1n + 24) {
         display: none !important;
     }
@@ -932,20 +963,24 @@ header .window-cover {
         --left_width: 160px;
         --left_width_item: 80px;
     }
+
     .header-channel-fixed-right {
         grid-column: span 17;
-        grid-template-columns: repeat(17,1fr);
+        grid-template-columns: repeat(17, 1fr);
     }
+
     .header-channel-fixed-right-left {
         grid-column: span 14;
-        grid-template-columns: repeat(14,1fr);
+        grid-template-columns: repeat(14, 1fr);
     }
+
     .header-channel-fixed-right .left-bottom {
         display: none;
     }
+
     .header-channel-fixed-right-left .left-top {
         grid-column: span 14;
-        grid-template-columns: repeat(14,1fr);
+        grid-template-columns: repeat(14, 1fr);
     }
 }
 
@@ -1020,7 +1055,7 @@ header .window-cover {
 @media (max-width: 1399.9px) {
     .container {
         grid-column: span 4;
-        grid-template-columns: repeat(4,1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .container>*:nth-of-type(n + 6) {
@@ -1035,7 +1070,7 @@ header .window-cover {
 @media (min-width: 1400px) {
     .container {
         grid-column: span 5;
-        grid-template-columns: repeat(5,1fr);
+        grid-template-columns: repeat(5, 1fr);
     }
 
     .container>*:nth-of-type(n + 8) {
@@ -1045,8 +1080,10 @@ header .window-cover {
 
 .recommended-swipe {
     position: relative;
-    grid-column: 1/3;   /* 跨越从第1列到第3列，占据两个网格列的宽度，等价于 grid-column: span 2; */
-    grid-row: 1/3;   /* 跨越从第1行到第3行，占据两个网格行的高度 */
+    grid-column: 1/3;
+    /* 跨越从第1列到第3列，占据两个网格列的宽度，等价于 grid-column: span 2; */
+    grid-row: 1/3;
+    /* 跨越从第1行到第3行，占据两个网格行的高度 */
 }
 
 .recommended-swipe-core {
@@ -1064,7 +1101,7 @@ header .window-cover {
     pointer-events: none;
     grid-column: span 2;
     grid-row: span 2;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
     width: 100%;
     display: grid;
@@ -1084,7 +1121,8 @@ header .window-cover {
     bottom: 0;
     display: flex;
     flex-direction: column;
-    transform: translateZ(0);   /* 没有视觉效果的平移，它可以触发 GPU 加速，以提高性能和动画平滑度 */
+    transform: translateZ(0);
+    /* 没有视觉效果的平移，它可以触发 GPU 加速，以提高性能和动画平滑度 */
     border-radius: 6px;
     overflow: hidden;
     background-color: var(--graph_bg_regular);
@@ -1141,5 +1179,4 @@ header .window-cover {
     .feed-roll-btn {
         opacity: 0.8;
     }
-}
-</style>
+}</style>
