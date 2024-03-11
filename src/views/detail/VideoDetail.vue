@@ -33,26 +33,16 @@
                     </div>
                 </div>
                 <!-- 播放器组件 -->
-                <PlayerWrap
-                    :videoUrl="video.videoUrl"
-                    :title="video.title"
-                    :duration="video.duration"
-                    :user="user"
-                    :population="population"
-                    v-model:jumpTimePoint="jumpTimePoint"
-                    v-model:autonext="autonext"
-                    @resize="updatePlayerSize"
-                    @sendDm="sendDanmu"
-                    @next="next"
-                ></PlayerWrap>
+                <PlayerWrap :videoUrl="video.videoUrl" :title="video.title" :duration="video.duration" :user="user"
+                    :population="population" v-model:jumpTimePoint="jumpTimePoint" v-model:autonext="autonext"
+                    @resize="updatePlayerSize" @sendDm="sendDanmu" @next="next"></PlayerWrap>
                 <!-- 三连转发 -->
                 <div class="video-toolbar-container">
                     <div class="video-toolbar-left">
                         <div class="toolbar-left-item-wrap">
                             <div class="video-toolbar-left-item"
-                                :class="{'on': this.$store.state.attitudeToVideo.love}"
-                                @click="loveOrNot(true, !this.$store.state.attitudeToVideo.love)"
-                            >
+                                :class="{ 'on': this.$store.state.attitudeToVideo.love }"
+                                @click="loveOrNot(true, !this.$store.state.attitudeToVideo.love)">
                                 <i class="iconfont icon-dianzan"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(good) }}</span>
                                 <div class="dianzan-gif" :class="isGifShow ? 'gif-show' : 'gif-hide'">
@@ -62,27 +52,22 @@
                         </div>
                         <div class="toolbar-left-item-wrap">
                             <div class="video-toolbar-left-item"
-                                :class="{'on': this.$store.state.attitudeToVideo.unlove}"
-                                @click="loveOrNot(false, !this.$store.state.attitudeToVideo.unlove)"
-                            >
+                                :class="{ 'on': this.$store.state.attitudeToVideo.unlove }"
+                                @click="loveOrNot(false, !this.$store.state.attitudeToVideo.unlove)">
                                 <i class="iconfont icon-diancai"></i>
                                 <span class="video-toolbar-item-text">不喜欢</span>
                             </div>
                         </div>
                         <div class="toolbar-left-item-wrap">
                             <div class="video-toolbar-left-item"
-                                :class="{'on': this.$store.state.attitudeToVideo.coin > 0}"
-                                @click="noPage"
-                            >
+                                :class="{ 'on': this.$store.state.attitudeToVideo.coin > 0 }" @click="noPage">
                                 <i class="iconfont icon-toubi"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(coin) }}</span>
                             </div>
                         </div>
                         <div class="toolbar-left-item-wrap">
                             <div class="video-toolbar-left-item"
-                                :class="{'on': this.$store.state.attitudeToVideo.collect}"
-                                @click="openCollectDialog"
-                            >
+                                :class="{ 'on': this.$store.state.attitudeToVideo.collect }" @click="openCollectDialog">
                                 <i class="iconfont icon-shoucang1"></i>
                                 <span class="video-toolbar-item-text">{{ handleNum(collect) }}</span>
                             </div>
@@ -100,8 +85,9 @@
                                 <template #reference>
                                     <div class="video-tool-more">
                                         <i class="iconfont icon-gengduo"></i>
-                                    </div>                                    
+                                    </div>
                                 </template>
+
                                 <template #content>
                                     <div class="video-tool-more-dropdown">
                                         <div class="dropdown-item">
@@ -110,19 +96,22 @@
                                         </div>
                                     </div>
                                 </template>
-                            </VPopover>                            
+                            </VPopover>
                         </div>
                     </div>
                 </div>
                 <!-- 简介评论区 -->
                 <div class="left-container-under-player">
                     <!-- 简介 -->
-                    <div class="video-desc-container" :style="(!video.descr || video.descr === '') ? 'display: none;' : ''">
+                    <div class="video-desc-container"
+                        :style="(!video.descr || video.descr === '') ? 'display: none;' : ''">
                         <div class="basic-desc-info" :style="showAllDesc ? 'height: auto;' : 'height: 84px;'">
                             <span class="desc-info-text" v-html="handleLinkify(video.descr)"></span>
                         </div>
                         <div class="toggle-btn" v-if="descTooLong">
-                            <span class="toggle-btn-text" @click="showAllDesc = !showAllDesc">{{ showAllDesc ? '收起' : '展开更多' }}</span>
+                            <span class="toggle-btn-text" @click="showAllDesc = !showAllDesc">
+                                {{ showAllDesc ? '收起' : '展开更多' }}
+                            </span>
                         </div>
                     </div>
                     <!-- 标签 -->
@@ -131,13 +120,15 @@
                             <a :href="`/v/${category.mcId}`" target="_blank" class="tag-link">{{ category.mcName }}</a>
                         </div>
                         <div class="tag-container">
-                            <a :href="`/v/${category.mcId}/${category.scId}`" target="_blank" class="tag-link">{{ category.scName }}</a>
+                            <a :href="`/v/${category.mcId}/${category.scId}`" target="_blank" class="tag-link">
+                                {{ category.scName }}</a>
                         </div>
                         <div class="tag-container" v-for="(item, index) in tags" :key="index">
                             <a :href="`/search/all?keyword=${item}`" target="_blank" class="tag-link">{{ item }}</a>
                         </div>
                     </div>
                     <!-- 评论 -->
+                    <CommentVue :uid="user.uid" :count="comment"></CommentVue>
 
                 </div>
             </div>
@@ -149,23 +140,24 @@
                             <div class="up-info--left">
                                 <div class="up-avatar-wrap">
                                     <VPopover popStyle="z-index: 2000; cursor: default; padding-top: 30px;">
+
                                         <template #reference>
                                             <a :href="`/space/${user.uid}`" target="_blank" class="up-avatar">
                                                 <VAvatar :img="user.avatar_url" :size="48" :auth="user.auth"></VAvatar>
                                             </a>
                                         </template>
+
                                         <template #content>
                                             <UserCard :user="user"></UserCard>
                                         </template>
-                                    </VPopover>                                    
+                                    </VPopover>
                                 </div>
                             </div>
                             <div class="up-info--right">
                                 <div class="up-info__detail">
                                     <div class="up-detail-top">
-                                        <a :href="`/space/${user.uid}`" target="_blank"
-                                            class="up-name" :class="user.vip !== 0 ? 'vip-name' : ''"
-                                        >{{ user.nickname }}</a>
+                                        <a :href="`/space/${user.uid}`" target="_blank" class="up-name"
+                                            :class="user.vip !== 0 ? 'vip-name' : ''">{{ user.nickname }}</a>
                                         <a class="send-msg" @click="createChat">
                                             <i class="iconfont icon-xinfeng1"></i>
                                             发消息
@@ -179,12 +171,14 @@
                                         关注 {{ handleNum(user.fansCount) }}
                                     </div>
                                     <VPopover popStyle="padding-top: 10px;">
+
                                         <template #reference>
                                             <div class="default-btn follow-btn following" v-if="false">
                                                 <i class="iconfont icon-caidan"></i>
                                                 已关注 {{ handleNum(user.fansCount) }}
                                             </div>
                                         </template>
+
                                         <template #content>
                                             <div class="following-dropdown">
                                                 <div class="dropdown-item">
@@ -197,12 +191,14 @@
                                         </template>
                                     </VPopover>
                                     <VPopover popStyle="padding-top: 10px;">
+
                                         <template #reference>
                                             <div class="default-btn follow-btn following" v-if="false">
                                                 <i class="iconfont icon-caidan"></i>
                                                 已互粉 {{ handleNum(user.fansCount) }}
                                             </div>
                                         </template>
+
                                         <template #content>
                                             <div class="following-dropdown">
                                                 <div class="dropdown-item">
@@ -219,7 +215,9 @@
                         </div>
                     </div>
                     <!-- 弹幕组件 -->
-                    <DanmuBox :boxHeight="playerSize.height" :authorId="user.uid" @jump="(time) => jumpTimePoint = time"></DanmuBox>
+                    <DanmuBox :boxHeight="playerSize.height" :authorId="user.uid"
+                        @jump="(time) => jumpTimePoint = time">
+                    </DanmuBox>
                     <!-- 相关视频列表 -->
                     <div class="recommend-list">
                         <div class="next-play">
@@ -227,7 +225,7 @@
                                 接下来播放
                                 <span class="next-button" @click="autonext = !autonext">
                                     <span class="txt">自动连播</span>
-                                    <span class="switch-button" :class="{'on': autonext}"></span>
+                                    <span class="switch-button" :class="{ 'on': autonext }"></span>
                                 </span>
                             </p>
                             <!-- 视频卡片 -->
@@ -236,19 +234,50 @@
                                     <div class="pic-box">
                                         <div class="pic" @click="changeVideo(recommendVideos[0].video.vid)">
                                             <img :src="recommendVideos[0].video.coverUrl" alt="">
-                                            <span class="duration">{{ handleDuration(recommendVideos[0].video.duration) }}</span>
+                                            <span class="duration">
+                                                {{ handleDuration(recommendVideos[0].video.duration) }}
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="info">
-                                        <p class="title"  @click="changeVideo(recommendVideos[0].video.vid)">{{ recommendVideos[0].video.title }}</p>
-                                        <a :href="`/space/${recommendVideos[0].user.uid}`" target="_blank" class="upname">
-                                            <svg t="1703614018039" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4221" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4222"></path><path d="M419.2 544c0 51.2-3.2 108.8-83.2 108.8S252.8 595.2 252.8 544v-217.6H192v243.2c0 96 51.2 140.8 140.8 140.8 89.6 0 147.2-48 147.2-144v-240h-60.8V544zM710.4 326.4h-156.8V704h60.8v-147.2h96c102.4 0 121.6-67.2 121.6-115.2 0-44.8-19.2-115.2-121.6-115.2z m-3.2 179.2h-92.8V384h92.8c32 0 60.8 12.8 60.8 60.8 0 44.8-32 60.8-60.8 60.8z" p-id="4223"></path></svg>
+                                        <p class="title" @click="changeVideo(recommendVideos[0].video.vid)">
+                                            {{ recommendVideos[0].video.title }}
+                                        </p>
+                                        <a :href="`/space/${recommendVideos[0].user.uid}`" target="_blank"
+                                            class="upname">
+                                            <svg t="1703614018039" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                                xmlns="http://www.w3.org/2000/svg" p-id="4221" width="18" height="18">
+                                                <path
+                                                    d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z"
+                                                    p-id="4222"></path>
+                                                <path
+                                                    d="M419.2 544c0 51.2-3.2 108.8-83.2 108.8S252.8 595.2 252.8 544v-217.6H192v243.2c0 96 51.2 140.8 140.8 140.8 89.6 0 147.2-48 147.2-144v-240h-60.8V544zM710.4 326.4h-156.8V704h60.8v-147.2h96c102.4 0 121.6-67.2 121.6-115.2 0-44.8-19.2-115.2-121.6-115.2z m-3.2 179.2h-92.8V384h92.8c32 0 60.8 12.8 60.8 60.8 0 44.8-32 60.8-60.8 60.8z"
+                                                    p-id="4223"></path>
+                                            </svg>
                                             <span class="name">{{ recommendVideos[0].user.nickname }}</span>
                                         </a>
                                         <div class="playinfo">
-                                            <svg t="1703614610134" class="playinfo-play" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4864" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4865" fill="#aaaaaa"></path><path d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z" p-id="4866"></path></svg>
+                                            <svg t="1703614610134" class="playinfo-play" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4864" width="18"
+                                                height="18">
+                                                <path
+                                                    d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z"
+                                                    p-id="4865" fill="#aaaaaa"></path>
+                                                <path
+                                                    d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z"
+                                                    p-id="4866"></path>
+                                            </svg>
                                             {{ handleNum(recommendVideos[0].stats.play) }}
-                                            <svg t="1703614725224" class="playinfo-dm" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5601" id="mx_n_1703614725225" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="5602"></path><path d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z" p-id="5603"></path></svg>
+                                            <svg t="1703614725224" class="playinfo-dm" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5601"
+                                                id="mx_n_1703614725225" width="18" height="18">
+                                                <path
+                                                    d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z"
+                                                    p-id="5602"></path>
+                                                <path
+                                                    d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z"
+                                                    p-id="5603"></path>
+                                            </svg>
                                             {{ handleNum(recommendVideos[0].stats.danmu) }}
                                         </div>
                                     </div>
@@ -259,7 +288,8 @@
                         </div>
                         <div class="rec-list" v-if="recommendVideos.length > 1">
                             <!-- 视频卡片 -->
-                            <div class="video-page-card-small" v-for="(item, index) in recommendVideos.slice(1,)" :key="index">
+                            <div class="video-page-card-small" v-for="(item, index) in recommendVideos.slice(1,)"
+                                :key="index">
                                 <div class="card-box">
                                     <div class="pic-box">
                                         <div class="pic" @click="changeVideo(item.video.vid)">
@@ -270,13 +300,39 @@
                                     <div class="info">
                                         <p class="title" @click="changeVideo(item.video.vid)">{{ item.video.title }}</p>
                                         <a :href="`/space/${item.user.uid}`" target="_blank" class="upname">
-                                            <svg t="1703614018039" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4221" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4222"></path><path d="M419.2 544c0 51.2-3.2 108.8-83.2 108.8S252.8 595.2 252.8 544v-217.6H192v243.2c0 96 51.2 140.8 140.8 140.8 89.6 0 147.2-48 147.2-144v-240h-60.8V544zM710.4 326.4h-156.8V704h60.8v-147.2h96c102.4 0 121.6-67.2 121.6-115.2 0-44.8-19.2-115.2-121.6-115.2z m-3.2 179.2h-92.8V384h92.8c32 0 60.8 12.8 60.8 60.8 0 44.8-32 60.8-60.8 60.8z" p-id="4223"></path></svg>
+                                            <svg t="1703614018039" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                                xmlns="http://www.w3.org/2000/svg" p-id="4221" width="18" height="18">
+                                                <path
+                                                    d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z"
+                                                    p-id="4222"></path>
+                                                <path
+                                                    d="M419.2 544c0 51.2-3.2 108.8-83.2 108.8S252.8 595.2 252.8 544v-217.6H192v243.2c0 96 51.2 140.8 140.8 140.8 89.6 0 147.2-48 147.2-144v-240h-60.8V544zM710.4 326.4h-156.8V704h60.8v-147.2h96c102.4 0 121.6-67.2 121.6-115.2 0-44.8-19.2-115.2-121.6-115.2z m-3.2 179.2h-92.8V384h92.8c32 0 60.8 12.8 60.8 60.8 0 44.8-32 60.8-60.8 60.8z"
+                                                    p-id="4223"></path>
+                                            </svg>
                                             <span class="name">{{ item.user.nickname }}</span>
                                         </a>
                                         <div class="playinfo">
-                                            <svg t="1703614610134" class="playinfo-play" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4864" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4865" fill="#aaaaaa"></path><path d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z" p-id="4866"></path></svg>
+                                            <svg t="1703614610134" class="playinfo-play" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4864" width="18"
+                                                height="18">
+                                                <path
+                                                    d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z"
+                                                    p-id="4865" fill="#aaaaaa"></path>
+                                                <path
+                                                    d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z"
+                                                    p-id="4866"></path>
+                                            </svg>
                                             {{ handleNum(item.stats.play) }}
-                                            <svg t="1703614725224" class="playinfo-dm" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5601" id="mx_n_1703614725225" width="18" height="18"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="5602"></path><path d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z" p-id="5603"></path></svg>
+                                            <svg t="1703614725224" class="playinfo-dm" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5601"
+                                                id="mx_n_1703614725225" width="18" height="18">
+                                                <path
+                                                    d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z"
+                                                    p-id="5602"></path>
+                                                <path
+                                                    d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z"
+                                                    p-id="5603"></path>
+                                            </svg>
                                             {{ handleNum(item.stats.danmu) }}
                                         </div>
                                     </div>
@@ -289,15 +345,14 @@
         </div>
         <!-- 收藏框 -->
         <el-dialog v-model="collectVisible" :close-on-click-modal="false" destroy-on-close align-center>
-            <AddToFavorite :lastSelected="collectedFids"
-                :vid="video.vid ? video.vid : 0"
-                @collected="updateCollect"
-            ></AddToFavorite>
+            <AddToFavorite :lastSelected="collectedFids" :vid="video.vid ? video.vid : 0" @collected="updateCollect">
+            </AddToFavorite>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import CommentVue from '@/components/comment/CommentVue.vue';
 import HeaderBar from '@/components/headerBar/HeaderBar.vue';
 import PlayerWrap from '@/components/player/PlayerWrapper.vue';
 import VPopover from '@/components/popover/VPopover.vue';
@@ -311,6 +366,7 @@ import { ElMessage } from 'element-plus';
 export default {
     name: "VideoDetail",
     components: {
+        CommentVue,
         HeaderBar,
         PlayerWrap,
         VPopover,
@@ -333,6 +389,7 @@ export default {
             coin: 0,    // 投币数
             collect: 0, // 收藏数
             share: 0,   // 分享数
+            comment: 0, // 评论数
             population: 0,  // 当前观看人数
             user: {
                 uid: 0,
@@ -376,6 +433,7 @@ export default {
                 this.coin = res.data.data.stats.coin;
                 this.collect = res.data.data.stats.collect;
                 this.share = res.data.data.stats.share;
+                this.comment = res.data.data.stats.comment;
             }
             this.isDescTooLong();
             if (localStorage.getItem("teri_token")) {
@@ -466,7 +524,7 @@ export default {
             };
             this.$store.commit("updateAttitudeToVideo", atv);
             if (isLove && isSet) {
-                this.good ++;   // 点赞 点赞数加一
+                this.good++;   // 点赞 点赞数加一
                 this.gifShow();
                 setTimeout(() => {
                     this.gifHide();
@@ -563,7 +621,7 @@ export default {
             // console.log("弹幕websocket信道关闭,请刷新页面重试");
             setTimeout(() => {
                 if (!this.socket) {
-                   this.initWebsocket();    // 如果两秒后还未重连就手动重连
+                    this.initWebsocket();    // 如果两秒后还未重连就手动重连
                 }
             }, 2000);
         },
@@ -758,7 +816,9 @@ export default {
     margin-right: 0;
 }
 
-.view, .danmu, .copyright {
+.view,
+.danmu,
+.copyright {
     display: inline-flex;
     align-items: center;
 }
@@ -845,7 +905,8 @@ export default {
     cursor: pointer;
 }
 
-.video-toolbar-left-item.on, .video-toolbar-left-item:hover {
+.video-toolbar-left-item.on,
+.video-toolbar-left-item:hover {
     color: var(--brand_pink);
 }
 
@@ -892,6 +953,7 @@ export default {
         opacity: 0;
         transform: translateY(5px) scale(0);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -903,6 +965,7 @@ export default {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
     100% {
         opacity: 0;
         transform: translateY(5px) scale(0);
@@ -1211,7 +1274,7 @@ export default {
     border-radius: 10px;
     box-sizing: border-box;
     cursor: pointer;
-    transition: border-color .2s,background-color .2s;
+    transition: border-color .2s, background-color .2s;
     vertical-align: middle;
     background: var(--text3);
     border: 1px solid var(--text3);
