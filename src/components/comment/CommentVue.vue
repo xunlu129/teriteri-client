@@ -13,9 +13,9 @@
                                     <span class="total-reply">{{ count }}</span>
                                 </li>
                                 <li class="nav-sort hot">
-                                    <div class="hot-sort">最热</div>
+                                    <div class="hot-sort" @click="hotComment">最热</div>
                                     <div class="part-symbol"></div>
-                                    <div class="time-sort">最新</div>
+                                    <div class="time-sort" @click="timeComment">最新</div>
                                 </li>
                             </ul>
                         </div>
@@ -85,6 +85,14 @@ export default {
 
         deleteComment(index) {
             this.commentList.splice(index, 1);
+        },
+
+        hotComment() {
+            this.$refs.CommentTree.getCommentTree2(1);
+        },
+
+        timeComment() {
+            this.$refs.CommentTree.getCommentTree2(2);
         },
 
 

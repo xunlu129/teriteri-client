@@ -154,7 +154,18 @@ export default {
             if (!response.data) return;
 
             this.commentList.push(...response.data);
+        },
+        async getCommentTree2(type) {
+            const response = await this.$get("/comment/get", {
+                params: {
+                    vid: this.$route.params.vid,
+                    offset: this.commentList.length,
+                    type: type,
+                }
+            });
+            if (!response.data) return;
 
+            this.commentList = response.data;
         },
 
         async getMoreComment(id) {
