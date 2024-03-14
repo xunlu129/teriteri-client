@@ -35,18 +35,18 @@ export function emojiText(text) {
         const replacedText = text.replace(regex, (match, p1) => {
             // 查找匹配的表情名称在 EmojiList 中的索引
             const emojiIndex = EmojiList.findIndex(emoji => emoji.name === `[${p1}]`);
-    
+
             // 如果找到了对应的表情
             if (emojiIndex !== -1) {
-            const { name, url } = EmojiList[emojiIndex];
-            // 构建替换的 HTML
-            return ` <a class="emotion-items" title="${name}"><div class="img-emoji" style="background-image:url('${url}'); height:20px; width:20px;"></div></a>`;
+                const { name, url } = EmojiList[emojiIndex];
+                // 构建替换的 HTML
+                return `<a class="emotion-items" title="${name}"><div class="img-emoji" style="background-image:url('${url}'); height:20px; width:20px;"></div></a>`;
             } else {
-            // 如果未找到对应的表情，返回原始字符串
-            return match;
+                // 如果未找到对应的表情，返回原始字符串
+                return match;
             }
         });
-    
+
         return replacedText;
     } else {
         return text;
@@ -202,6 +202,42 @@ export function handleDateTime2(dateTime) {
     return `${month}-${day} ${hours}:${minutes}`;
 }
 
+/**
+ * 处理时间，格式化为 年-月-日 时:分 或者 n小时前 或者 n分钟前
+ * @param {Number|String|Date} dateTime 传入的日期时间，可以是数字、字符串或日期对象
+ * @returns {String} YYYY-MM-DD HH:mm / n小时前 / n分钟前 / 刚刚
+ */
+export function handleDateTime3(dateTime) {
+    const inputDate = new Date(dateTime);
+    if (isNaN(inputDate.getTime())) {
+        return "未知时间";
+    }
+
+    var currentTime = new Date();
+    var timeDiff = currentTime.getTime() - inputDate.getTime();
+
+
+    if (timeDiff < 30 * 1000) { // 30s 前
+        return "刚刚";
+    } else if (timeDiff < 60 * 1000) { // 60s 前
+        return "1分钟前";
+    } else if (timeDiff < 60 * 60 * 1000) { // 一小时内，n分钟前
+        const minutes = Math.floor(timeDiff / 1000 / 60);
+        return `${minutes}分钟前`;
+    } else if (timeDiff < 24 * 60 * 60 * 1000) { // 一天内，n小时前
+        const hours = Math.floor(timeDiff / 1000 / 60 / 60);
+        return `${hours}小时前`;
+    }
+
+    const year = String(inputDate.getFullYear());
+    const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+    const day = String(inputDate.getDate()).padStart(2, '0');
+    const hours = String(inputDate.getHours()).padStart(2, '0');
+    const minutes = String(inputDate.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
 
 /**
  * 计算昵称长度，中日文字符占2长度，其他1长度，用于判断昵称长度是否超出24的限制
@@ -209,7 +245,7 @@ export function handleDateTime2(dateTime) {
  * @returns {Number} 昵称的官方长度
  */
 export function getNicknameLength(nickname) {
-    let length = 0;  
+    let length = 0;
     for (let i = 0; i < nickname.length; i++) {
         // 使用正则表达式检测字符是否为中文或日文
         if (/[\u4e00-\u9fa5\u0800-\u4e00]/.test(nickname[i])) {
@@ -251,7 +287,7 @@ export function handleLevel(exp) {
  * @returns {String} 随机的uuid 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
  */
 export function generateUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = (Math.random() * 16) | 0,
             v = c === 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
