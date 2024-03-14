@@ -1,26 +1,50 @@
 <template>
     <div class="reply-list">
-        <div class="reply-item" v-for="(rootComment, index) in commentList" :key="index">
-            <div class="root-reply-container" @mouseover="operationId = rootComment.id" @mouseout="operationId = -1"
-                @mouseleave="showOption = false">
-                <div class="root-reply-avatar">
-                    <VAvatar :size="40" :img="rootComment.user.avatar_url" :auth="rootComment.user.auth"></VAvatar>
+        <div class="reply-item" v-for="(rootComment, index) in (this.$store.state.isLogin ? commentList : commentList.slice(0,2))" :key="index">
+            <!-- 第二楼特有的未登录蒙版 -->
+            <div class="login-limit-mask" v-if="index === 1" :style="this.$store.state.isLogin ? '' : 'display: block;'">
+                <div class="mask-top"></div>
+                <div class="mask-bottom"></div>
+            </div>
+            <div class="root-reply-container" @mouseleave="showOption = false">
+                <div class="root-reply-avatar-wrap">
+                    <VPopover popStyle="z-index: 2000; cursor: default; padding-top: 20px; left: 0; transform: translate3d(0,0,0);">
+                        <template #reference>
+                            <a :href="`/space/${rootComment.user.uid}`" target="_blank" class="root-reply-avatar">
+                                <VAvatar :size="isWideWindow ? 48 : 40" :img="rootComment.user.avatar_url" :auth="rootComment.user.auth"></VAvatar>
+                            </a>
+                        </template>
+                        <template #content>
+                            <UserCard :user="rootComment.user"></UserCard>
+                        </template>
+                    </VPopover>
                 </div>
                 <div class="content-wrap">
                     <div class="user-info">
-                        <div class="user-name">{{ rootComment.user.nickname }}</div>
+                        <VPopover popStyle="z-index: 2000; cursor: default; padding-top: 20px; left: 0; transform: translate3d(0,0,0);">
+                            <template #reference>
+                                <a :href="`/space/${rootComment.user.uid}`" target="_blank" class="user-name"
+                                    :class="rootComment.user.vip !== 0 ? 'vip-name' : ''"
+                                >{{ rootComment.user.nickname }}</a>
+                            </template>
+                            <template #content>
+                                <UserCard :user="rootComment.user"></UserCard>
+                            </template>
+                        </VPopover>
                         <!-- 等级组件 -->
                         <a class="level">
                             <i :class="`iconfont icon-lv${handleLevel(rootComment.user.exp)}`"></i>
                         </a>
+                        <!-- UP主标识 -->
+                        <svg v-if="rootComment.user.uid === upUid" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="6" width="18" height="11.5" rx="2" fill="#FF6699"></rect><path d="M5.7 8.36V12.79C5.7 13.72 5.96 14.43 6.49 14.93C6.99 15.4 7.72 15.64 8.67 15.64C9.61 15.64 10.34 15.4 10.86 14.92C11.38 14.43 11.64 13.72 11.64 12.79V8.36H10.47V12.81C10.47 13.43 10.32 13.88 10.04 14.18C9.75 14.47 9.29 14.62 8.67 14.62C8.04 14.62 7.58 14.47 7.3 14.18C7.01 13.88 6.87 13.43 6.87 12.81V8.36H5.7ZM13.0438 8.36V15.5H14.2138V12.76H15.9838C17.7238 12.76 18.5938 12.02 18.5938 10.55C18.5938 9.09 17.7238 8.36 16.0038 8.36H13.0438ZM14.2138 9.36H15.9138C16.4238 9.36 16.8038 9.45 17.0438 9.64C17.2838 9.82 17.4138 10.12 17.4138 10.55C17.4138 10.98 17.2938 11.29 17.0538 11.48C16.8138 11.66 16.4338 11.76 15.9138 11.76H14.2138V9.36Z" fill="white"></path></svg>
                     </div>
                     <div class="root-reply">
                         <span class="reply-content-container root-reply">
                             <span class="reply-content" v-html="emojiText(rootComment.content)"></span>
                         </span>
-                        <!-- 点赞 -->
                         <div class="reply-info">
                             <span class="reply-time">{{ handleDateTime3(rootComment.createTime) }}</span>
+                            <!-- 点赞 -->
                             <span class="reply-like">
                                 <i class="svg-icon like-icon" style="width: 16px; height: 16px;">
                                     <svg t="1709473674965" class="icon"
@@ -62,10 +86,9 @@
                                 </i>
                             </span>
                             <span class="reply-btn" @click="handleReply(rootComment)">回复</span>
-                            <div class="reply-operation-wrap"
-                                :style="{ opacity: operationId === rootComment.id ? 1 : 0 }">
-                                <div class="reply-operation" @click="showOption = !showOption">
-                                    <i class="svg-icon operation-icon" style="width:16px;height:16px">
+                            <div class="reply-operation-wrap">
+                                <div class="reply-operation">
+                                    <i class="svg-icon operation-icon" style="width:16px;height:16px" @click="showOption = !showOption">
                                         <svg t="1709522739467" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                             xmlns="http://www.w3.org/2000/svg" p-id="4290" width="100%" height="100%">
                                             <path
@@ -76,8 +99,8 @@
                                     </i>
                                     <ul class="operation-list" :style="{ display: showOption ? '' : 'none' }">
                                         <li class="operation-option"
-                                            v-if="this.$store.state.user.uid === rootComment.user.uid"
-                                            @click="deleteComment(rootComment.id)">
+                                            v-if="this.$store.state.user.uid === rootComment.user.uid || this.$store.state.user.uid === upUid"
+                                            @click="beforeDelete(rootComment.id)">
                                             <span class="option-title">
                                                 删除
                                             </span>
@@ -91,30 +114,43 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="reply-tag-list">
+                            <div class="reply-tag-item" v-if="hotCommentIdx === rootComment.id && rootComment.love - rootComment.bad + rootComment.count >= 5"
+                                style="background-color: rgb(255, 236, 241); color: rgb(255, 102, 153);">
+                                热评
+                            </div>
+                            <div class="reply-tag-item" v-if="upLike.findIndex(i => i === rootComment.id) !== -1"
+                                style="background-color: rgb(244, 244, 244); color: rgb(117, 117, 117);">
+                                UP主觉得很赞
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- 子评论 -->
-            <SubComment :replies="rootComment.replies" :count="rootComment.count" @sub-reply="handleReply"
-                :fatherUserId="rootComment.user.uid" @get-more-comment="getMoreComment(rootComment.id)"
-                ref="rootReply" />
+            <SubComment :replies="rootComment.replies" :count="rootComment.count" :isWideWindow="isWideWindow" :upUid="upUid"
+                :rootId="rootComment.id" @sub-reply="handleReply" @get-more-comment="updateComment" @delSubComment="delSubComment"/>
             <div class="reply-box-container" :class="[commentInfo.root_id === rootComment.id ? '' : 'hide']">
                 <div class="reply-box box-active">
-                    <ReplyTextarea :placeholder="replyPlaceHolder" :commentInfo="commentInfo" ref="ReplyTextarea"
-                        @get-comment="getCommentTree">
-                    </ReplyTextarea>
+                    <ReplyTextarea ref="ReplyTextarea" :placeholder="replyPlaceHolder" :commentInfo="commentInfo" :isWideWindow="isWideWindow" @addComment="addComment"></ReplyTextarea>
                 </div>
             </div>
             <div class="bottom-line"></div>
         </div>
+        <div class="reply-loading" v-show="!isMounted || loading">正在加载...</div>
+        <div class="no-any" v-show="!hasMore && commentList.length === 0">视频还没有任何评论哦，快来抢占沙发位吧~</div>
+        <div class="no-more" v-show="(this.$store.state.isLogin && !hasMore && commentList.length !== 0) || (!this.$store.state.isLogin && commentList.length === 1)">已经到底啦~</div>
+        <div class="login-prompt" v-show="!this.$store.state.isLogin && commentList.length >= 2">登录后查看更多评论</div>
     </div>
 </template>
 
 <script>
 import VAvatar from '../avatar/VAvatar.vue';
+import VPopover from '@/components/popover/VPopover.vue';
+import UserCard from '@/components/UserCard/UserCard.vue';
 import SubComment from './SubComment.vue';
 import ReplyTextarea from './ReplyTextarea.vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 import { handleNum, handleLevel, handleDateTime3, emojiText } from '@/utils/utils.js';
 
@@ -123,16 +159,20 @@ export default {
     name: "CommentTree",
     components: {
         VAvatar,
+        VPopover,
+        UserCard,
         SubComment,
         ReplyTextarea,
     },
     data() {
         return {
             commentList: [], // 当前视频的所有回复
+            hasMore: true,  // 是否还有更多评论树
+            loading: false, // 是否正在加载评论
+            upLike: [],     // UP主觉得很赞
             replyPlaceHolder: "", // 控制 回复@用户名：
             operationId: -1, // 当前鼠标悬停在哪条评论上
             showOption: false, // 点前点击的哪条评论的展开操作栏按钮
-
             // 回复评论的基础信息
             commentInfo: {
                 root_id: -1, // 回复评论的楼层 id
@@ -140,47 +180,71 @@ export default {
                 to_user_id: -1, // 回复的评论的所属者的 id
                 vid: -1 // 当前视频的id
             },
+            isMounted: false,
+            hotCommentIdx: 0,   // 热评id
         }
     },
-    methods: {
-        async getCommentTree(offset) {
-            const response = await this.$get("/comment/get", {
-                params: {
-                    vid: this.$route.params.vid,
-                    offset: offset,
-                    type: 1,
-                }
-            });
-            if (!response.data) return;
-
-            this.commentList.push(...response.data);
+    props: {
+        // 评论排序方式 1最热 2最新
+        type: {
+            type: Number,
+            default: 1
         },
-        async getCommentTree2(type) {
-            const response = await this.$get("/comment/get", {
+        // 视频UP主uid
+        upUid: {
+            type: Number,
+            default: 0
+        },
+        // 是否是宽屏
+        isWideWindow: {
+            type: Boolean,
+            default() {
+                return false;
+            }
+        },
+    },
+    methods: {
+        // 获取评论树
+        async getCommentTree() {
+            if (!this.hasMore || this.loading || (!this.$store.state.isLogin && this.commentList.length > 0)) return;
+            this.loading = true;
+            const res = await this.$get("/comment/get", {
                 params: {
                     vid: this.$route.params.vid,
                     offset: this.commentList.length,
-                    type: type,
+                    type: this.type,
                 }
             });
-            if (!response.data) return;
-
-            this.commentList = response.data;
-        },
-
-        async getMoreComment(id) {
-            const response = await this.$get("/comment/reply/get-more", {
-                params: {
-                    id: id
-                }
-            });
-
-            let index = this.commentList.findIndex(comment => comment.id === id)
-            if (index != -1) {
-                this.commentList[index] = response.data
+            if (!res.data) {
+                this.loading = false;
+                return;
             }
+            this.hasMore = res.data.data.more;
+            this.commentList.push(...res.data.data.comments);
+            if (this.type === 1 && this.commentList.length > 0) {
+                this.hotCommentIdx = this.commentList[0].id;
+            }
+            // console.log("评论列表: ", this.commentList);
+            this.loading = false;
         },
 
+        // 删除评论前的最后通牒
+        beforeDelete(id) {
+            ElMessageBox.confirm(
+                '删除评论后，评论下所有回复都会被删除是否继续?',
+                {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                this.deleteComment(id);
+            })
+            .catch(() => {})
+        },
+
+        // 删除评论
         async deleteComment(cid) {
             const formData = new FormData();
             formData.append("id", cid);
@@ -194,28 +258,45 @@ export default {
             ElMessage.info("删除成功");
         },
 
-        async getLikeAndDislike() {
-            if (!this.$store.state.user.uid) {
-                ElMessage.error("当前用户未登入");
-                return;
-            }
-
-            const res = await this.$get("/comment/get-like-and-dislike", {
-                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
-            });
-
-            if (!res.data) return;
-            this.$store.commit("updateLikeComment", res.data.data.userLike);
-            this.$store.commit("updateDislikeComment", res.data.data.userDislike);
+        // 删除子评论
+        delSubComment(comment) {
+            const rootComment = this.commentList.find(item => item.id === comment.rootId);
+            rootComment.replies = rootComment.replies.filter(cmt => cmt.id !== comment.id);
         },
 
+        // 获取UP主觉得很赞
+        async getUpLike() {
+            const res = await this.$get("/comment/get-up-like", {
+                params: {
+                    uid: this.upUid
+                }
+            });
+            if (!res.data) return;
+            this.upLike = res.data.data;
+        },
+
+        // 清空评论列表
+        clearCommentList() {
+            this.commentList = [];
+            this.hasMore = true;
+        },
+
+        // 新插入评论的回调
+        addComment(comment) {
+            if (comment.rootId === 0) {
+                // 根评论头插
+                this.commentList.unshift(comment);
+            } else {
+                // 回复评论尾插
+                let root = this.commentList.find(item => item.id === comment.rootId);
+                if (root) root.replies.push(comment);
+            }
+        },
+
+        // 点赞或点踩某条评论
         async likeOrDislike(id, isLike, isSet) {
             if (!this.$store.state.user.uid) {
                 ElMessage.error("请登入");
-                return;
-            }
-            if (!id) {
-                ElMessage.error("该评论不存在");
                 return;
             }
 
@@ -224,20 +305,15 @@ export default {
             formData.append("isLike", isLike);
             formData.append("isSet", isSet);
 
-            await this.$post("/comment/love-or-not", formData, {
+            const res = await this.$post("/comment/love-or-not", formData, {
                 headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
             });
-
+            if (!res.data) return;
 
             // 更新store中的列表
             let likeExist = this.isLike(id);
             let dislikeExist = this.isDislike(id);
-            let index = this.commentList.findIndex(comment => comment.id === id)
-            if (index === -1) {
-                ElMessage.error("该评论不存在");
-                return;
-            }
-            let comment = this.commentList[index]
+            let comment = this.commentList.find(comment => comment.id === id)
 
             // 点赞
             if (isLike && isSet) {
@@ -320,6 +396,14 @@ export default {
             this.$store.state.dislikeComment.push(id);
         },
 
+        // 更新获取到的全部子评论
+        updateComment(comment) {
+            const i = this.commentList.findIndex(item => item.id === comment.id);
+            if (i !== -1) {
+                this.commentList[i].replies = comment.replies;
+            }
+        },
+
 
         // 计算用户等级
         handleLevel(exp) {
@@ -339,18 +423,18 @@ export default {
         },
 
         // 控制回复框的聚焦；事件
-        handleFocus(value) {
+        cancelFocus() {
             if (!this.$refs.ReplyTextarea) return;
             this.$refs.ReplyTextarea.forEach(el => {
-                el.handleFocus(value);
+                el.cancelFocus();
             })
         },
 
+        // 触底加载
         async handleScroll() {
-            const replyList = document.querySelector(".reply-list");
-            const divHeight = replyList.clientHeight;
-            const page = window.pageYOffset;
-            if (page > divHeight + 200) await this.getCommentTree(this.commentList.length + 1)
+            const commentBottom = document.querySelector(".reply-list").getBoundingClientRect().bottom;
+            const windowHeight = window.innerHeight;
+            if (commentBottom - windowHeight <= 300) await this.getCommentTree();
         },
 
         // 处理评论的commentInfo
@@ -385,7 +469,10 @@ export default {
         },
     },
     mounted() {
-        this.getCommentTree(0);
+        setTimeout(() => {
+            this.isMounted = true
+            this.getCommentTree();
+        }, 2000);
         window.addEventListener("scroll", this.handleScroll);
     },
     beforemounted() {
@@ -394,10 +481,13 @@ export default {
     watch: {
         "$route.params.vid"(curr) {
             this.commentInfo.vid = curr
+            this.clearCommentList();
+            this.getCommentTree();
         },
+        "upUid"() {
+            this.getUpLike();
+        }
     },
-    computed: {
-    }
 }
 </script>
 
@@ -415,12 +505,37 @@ export default {
     padding: 22px 0 0 80px;
 }
 
-.root-reply-avatar {
+.login-limit-mask {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.mask-top {
+    height: 80%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--bg1) 100%);
+}
+
+.mask-bottom {
+    height: 20%;
+    background: var(--bg1);
+    pointer-events: initial;
+}
+
+.root-reply-avatar-wrap {
     display: flex;
     justify-content: center;
     position: absolute;
     left: 0;
     width: 80px;
+}
+
+.root-reply-avatar {
     cursor: pointer;
 }
 
@@ -443,11 +558,14 @@ export default {
 
 
 .user-name {
-    font-family: PingFang SC, HarmonyOS_Medium, Helvetica Neue, Microsoft YaHei, sans-serif;
     font-weight: 500;
-    margin-right: 5px;
-    color: var(--v_text2);
+    margin-right: 7px;
+    color: var(--text2);
     cursor: pointer;
+}
+
+.level {
+    margin-right: 8px;
 }
 
 .level .iconfont {
@@ -467,17 +585,17 @@ export default {
     }
 }
 
+@media screen and (min-width: 1681px) {
+    .root-reply {
+        font-size: 16px;
+        line-height: 26px;
+    }
+}
+
 .reply-content-container {
     display: block;
     overflow: hidden;
     width: 100%;
-}
-
-@media screen and (max-width: 1681px) {
-    .root-reply {
-        font-size: 15px;
-        line-height: 24px;
-    }
 }
 
 .root-reply {
@@ -571,7 +689,7 @@ export default {
     opacity: 0;
 }
 
-.reply-operation-wrap:hover {
+.root-reply-container:hover .reply-operation-wrap {
     opacity: 1;
 }
 
@@ -629,7 +747,19 @@ export default {
     color: var(--brand_pink)
 }
 
+.reply-tag-list {
+    display: flex;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 17px;
+}
 
+.reply-tag-item {
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-right: 10px;
+}
 
 .reply-item .reply-box-container {
     padding: 25px 0 10px 80px
@@ -648,5 +778,27 @@ export default {
     margin-left: 80px;
     border-bottom: 1px solid var(--v_graph_bg_thick);
     margin-top: 14px;
+}
+
+.reply-loading, .no-any, .no-more {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text3);
+    text-align: center;
+}
+
+.login-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 80px);
+    height: 50px;
+    margin: 16px 0 0 auto;
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--brand_pink);
+    background-color: var(--brand_pink_thin);
+    transition: .2s;
+    cursor: default;
 }
 </style>

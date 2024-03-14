@@ -1,23 +1,52 @@
 <template>
     <div class="sub-reply-container">
         <div class="sub-reply-list">
-            <div class="sub-reply-item" v-for="(subComment, index) in replies" :key="index"
+            <div class="sub-reply-item" v-for="(subComment, index) in replies.slice((currPage - 1) * 10, currPage * 10)" :key="index"
                 @mouseover="operationId = subComment.id" @mouseout="operationId = -1" @mouseleave="showOption = false">
                 <div class="sub-user-info">
-                    <div class="sub-reply-avatar">
-                        <VAvatar :size="24" :img="subComment.user.avatar_url" :auth="subComment.user.auth"></VAvatar>
+                    <div class="sub-reply-avatar-wrap">
+                        <VPopover popStyle="z-index: 2000; cursor: default; padding-top: 20px; left: 0; transform: translate3d(0,0,0);">
+                            <template #reference>
+                                <a :href="`/space/${subComment.user.uid}`" target="_blank" class="sub-reply-avatar">
+                                    <VAvatar :size="isWideWindow ? 30 : 24" :img="subComment.user.avatar_url" :auth="subComment.user.auth"></VAvatar>
+                                </a>
+                            </template>
+                            <template #content>
+                                <UserCard :user="subComment.user"></UserCard>
+                            </template>
+                        </VPopover>
                     </div>
-                    <div class="sub-user-name"> {{ subComment.user.nickname }} </div>
+                    <VPopover popStyle="z-index: 2000; cursor: default; padding-top: 20px; left: 0; transform: translate3d(0,0,0);">
+                        <template #reference>
+                            <a :href="`/space/${subComment.user.uid}`" target="_blank" class="sub-user-name"
+                                :class="subComment.user.vip !== 0 ? 'vip-name' : ''"
+                            >{{ subComment.user.nickname }}</a>
+                        </template>
+                        <template #content>
+                            <UserCard :user="subComment.user"></UserCard>
+                        </template>
+                    </VPopover>
                     <!-- 等级组件 -->
                     <a class="level">
                         <i :class="`iconfont icon-lv${handleLevel(subComment.user.exp)}`"></i>
                     </a>
+                    <!-- UP主标识 -->
+                    <svg v-if="subComment.user.uid === upUid" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="6" width="18" height="11.5" rx="2" fill="#FF6699"></rect><path d="M5.7 8.36V12.79C5.7 13.72 5.96 14.43 6.49 14.93C6.99 15.4 7.72 15.64 8.67 15.64C9.61 15.64 10.34 15.4 10.86 14.92C11.38 14.43 11.64 13.72 11.64 12.79V8.36H10.47V12.81C10.47 13.43 10.32 13.88 10.04 14.18C9.75 14.47 9.29 14.62 8.67 14.62C8.04 14.62 7.58 14.47 7.3 14.18C7.01 13.88 6.87 13.43 6.87 12.81V8.36H5.7ZM13.0438 8.36V15.5H14.2138V12.76H15.9838C17.7238 12.76 18.5938 12.02 18.5938 10.55C18.5938 9.09 17.7238 8.36 16.0038 8.36H13.0438ZM14.2138 9.36H15.9138C16.4238 9.36 16.8038 9.45 17.0438 9.64C17.2838 9.82 17.4138 10.12 17.4138 10.55C17.4138 10.98 17.2938 11.29 17.0538 11.48C16.8138 11.66 16.4338 11.76 15.9138 11.76H14.2138V9.36Z" fill="white"></path></svg>
                 </div>
                 <span class="reply-content-container sub-reply-content">
                     <span class="reply-content">
-                        <a class="jump-like user" v-if="this.fatherUserId != subComment.toUser.uid">
-                            @{{ subComment.toUser.nickname }}:</a>
-                        <span class="reply-content" v-html="emojiText(subComment.content)"></span>
+                        <span v-if="rootId != subComment.parentId">回复
+                            <VPopover style="display: inline-block;" popStyle="z-index: 2000; cursor: default; padding-top: 20px; left: 0; transform: translate3d(0,0,0);">
+                                <template #reference>
+                                    <a class="jump-link" :href="`/space/${subComment.toUser.uid}`" target="_blank">@{{ subComment.toUser.nickname }}</a>
+                                </template>
+                                <template #content>
+                                    <UserCard :user="subComment.toUser"></UserCard>
+                                </template>
+                            </VPopover>
+                            :
+                        </span>
+                        <span v-html="emojiText(subComment.content)"></span>
                     </span>
                 </span>
                 <div class="sub-reply-info">
@@ -63,8 +92,8 @@
                     </span>
                     <span class="sub-reply-btn" @click="handleReply(subComment)">回复</span>
                     <div class="sub-reply-operation-wrap" :style="{ opacity: operationId === subComment.id ? 1 : 0 }">
-                        <div class="reply-operation" @click="showOption = !showOption">
-                            <i class="svg-icon operation-icon" style="width: 16px;height: 16px;">
+                        <div class="reply-operation">
+                            <i class="svg-icon operation-icon" style="width: 16px;height: 16px;" @click="showOption = !showOption">
                                 <svg t="1709531772895" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg" p-id="4844" width="100%" height="100%">
                                     <path
@@ -73,8 +102,9 @@
                                 </svg>
                             </i>
                             <ul class="operation-list" :style="{ display: showOption ? '' : 'none' }">
-                                <li class="operation-option" v-if="this.$store.state.user.uid === subComment.user.uid">
-                                    <span class="option-title" @click="deleteComment(subComment.id)">删除</span>
+                                <li class="operation-option" v-if="this.$store.state.user.uid === subComment.user.uid || this.$store.state.user.uid === upUid"
+                                    @click="beforeDelete(subComment)">
+                                    <span class="option-title">删除</span>
                                 </li>
                                 <li class="operation-option">
                                     <span class="option-title">举报</span>
@@ -85,12 +115,21 @@
                 </div>
             </div>
             <!-- 展开剩余评论 -->
-            <div class="view-more" v-show="!showMoreComment && count > 3">
-                <div class="view-more-default">
+            <div class="view-more" v-show="count > 3">
+                <div class="view-more-default" v-if="!showMoreComment">
                     <span>共</span>
                     <span>{{ count }}</span>
                     <span>条回复, </span>
-                    <span class="view-more-btn" @click="getMoreComment">点击查看</span>
+                    <span class="view-more-btn" @click="moreComment">点击查看</span>
+                </div>
+                <div class="view-more-pagination" v-else>
+                    <span class="pagination-page-count">共{{ totalPage }}页</span>
+                    <span class="pagination-btn" v-show="currPage > 1" @click="changePage(currPage - 1)">上一页</span>
+                    <span class="pagination-page-number" :class="{'current-page': currPage === index}"
+                        v-for="index in totalPage" :key="index" @click="changePage(index)">
+                        {{ index }}
+                    </span>
+                    <span class="pagination-btn" v-show="currPage < totalPage" @click="changePage(currPage + 1)">下一页</span>
                 </div>
             </div>
         </div>
@@ -99,7 +138,9 @@
 
 <script>
 import VAvatar from '../avatar/VAvatar.vue';
-import { ElMessage } from 'element-plus';
+import VPopover from '@/components/popover/VPopover.vue';
+import UserCard from '@/components/UserCard/UserCard.vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { emojiText } from '@/utils/utils.js';
 import { handleNum, handleLevel, handleDateTime3 } from '@/utils/utils.js';
 
@@ -107,13 +148,21 @@ export default {
     name: "SubComment",
     components: {
         VAvatar,
+        VPopover,
+        UserCard
     },
     props: {
-        replies: {
-            type: Object,
+        replies: Object,    // 回复评论列表
+        count: Number,      // 回复评论数量
+        rootId: Number,     // 楼层id 用于判断回复的是否是根评论
+        upUid: Number,      // 视频UP主uid
+        // 是否是宽屏
+        isWideWindow: {
+            type: Boolean,
+            default() {
+                return false;
+            }
         },
-        count: Number,
-        fatherUserId: Number,
     },
     data() {
         return {
@@ -122,6 +171,8 @@ export default {
             operationId: -1, // 当前鼠标悬停在哪条评论上
             showOption: false, // 点前点击的哪条评论的展开操作栏按钮
             showMoreComment: false,
+            currPage: 1,    // 当前页码
+            totalPage: 1,   // 总共页数
         }
     },
     methods: {
@@ -145,21 +196,50 @@ export default {
             return emojiText(text);
         },
 
-        getMoreComment() {
+        async moreComment() {
+            const comment = await this.getMoreComment();
+            this.$emit("get-more-comment", comment);
             this.showMoreComment = true;
-            this.$emit("get-more-comment");
         },
-        async deleteComment(cid) {
+
+        // 展开更多子评论
+        async getMoreComment() {
+            const res = await this.$get("/comment/reply/get-more", {
+                params: {
+                    id: this.replies[0].rootId
+                }
+            });
+
+            return res.data;
+        },
+
+        // 删除评论前的最后通牒
+        beforeDelete(comment) {
+            ElMessageBox.confirm(
+                '删除评论后，评论下所有回复都会被删除是否继续?',
+                {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                this.deleteComment(comment);
+            })
+            .catch(() => {})
+        },
+
+        async deleteComment(comment) {
             const formData = new FormData();
-            formData.append("id", cid);
+            formData.append("id", comment.id);
 
             const res = await this.$post("/comment/delete", formData,
                 { headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") } })
 
             if (!res.data) return;
 
-            this.commentList = this.commentList.filter(id => id !== cid)
-            ElMessage.info("删除成功");
+            this.$emit("delSubComment", comment)
+            ElMessage.info("评论删除成功");
         },
 
         async likeOrDislike(id, isLike, isSet) {
@@ -272,6 +352,16 @@ export default {
             this.$store.state.dislikeComment.push(id);
         },
 
+        // 换页
+        changePage(index) {
+            this.currPage = index;
+        }
+
+    },
+    watch: {
+        "replies"(curr) {
+            this.totalPage = Math.ceil(curr.length / 10);
+        }
     }
 }
 </script>
@@ -294,6 +384,13 @@ export default {
     }
 }
 
+@media screen and (min-width: 1681px) {
+    .sub-reply-item {
+        font-size: 16px;
+        line-height: 26px;
+    }
+}
+
 .sub-reply-item .sub-user-info {
     display: inline-flex;
     align-items: center;
@@ -303,18 +400,26 @@ export default {
     white-space: nowrap;
 }
 
-.sub-reply-item .sub-user-info .sub-reply-avatar {
+.sub-reply-avatar-wrap {
     position: absolute;
     left: 8px;
+}
+
+.sub-reply-avatar {
     cursor: pointer;
 }
 
 .sub-user-name {
-    font-family: PingFang SC, HarmonyOS_Medium, Helvetica Neue, Microsoft YaHei, sans-serif;
+    font-size: 13px;
+    line-height: 24px;
     font-weight: 500;
-    margin-right: 5px;
-    color: #61666d;
+    margin-right: 7px;
+    color: var(--text2);
     cursor: pointer;
+}
+
+.level {
+    margin-right: 8px;
 }
 
 .level .iconfont {
@@ -330,6 +435,15 @@ export default {
     white-space: pre-wrap;
     line-height: 24px;
     vertical-align: baseline;
+}
+
+.jump-link {
+    color: var(--text_link);
+    cursor: pointer;
+}
+
+.jump-link:hover {
+    color: var(--brand_blue);
 }
 
 .sub-reply-item .sub-reply-info {
@@ -450,5 +564,26 @@ export default {
 
 .view-more-btn:hover {
     color: var(--brand_pink)
+}
+
+.view-more-pagination {
+    color: var(--text1);
+}
+
+.pagination-page-count {
+    margin-right: 10px;
+}
+
+.pagination-btn {
+    cursor: pointer;
+}
+
+.pagination-page-number {
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.pagination-btn:hover, .pagination-page-number:hover, .current-page {
+    color: var(--brand_pink);
 }
 </style>

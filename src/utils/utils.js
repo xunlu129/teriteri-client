@@ -203,9 +203,9 @@ export function handleDateTime2(dateTime) {
 }
 
 /**
- * 处理时间，格式化为 年-月-日 时:分
- * @param {Number|String|Date} dateTime 
- * @returns {String} YYYY-MM-DD HH:mm
+ * 处理时间，格式化为 年-月-日 时:分 或者 n小时前 或者 n分钟前
+ * @param {Number|String|Date} dateTime 传入的日期时间，可以是数字、字符串或日期对象
+ * @returns {String} YYYY-MM-DD HH:mm / n小时前 / n分钟前 / 刚刚
  */
 export function handleDateTime3(dateTime) {
     const inputDate = new Date(dateTime);
@@ -217,15 +217,16 @@ export function handleDateTime3(dateTime) {
     var timeDiff = currentTime.getTime() - inputDate.getTime();
 
 
-    if (timeDiff < 30000) { // 30s 前
+    if (timeDiff < 30 * 1000) { // 30s 前
         return "刚刚";
-    } else if (timeDiff < 60000) { // 60s 前
-        return "1 分钟前";
-    } else if (timeDiff < 300000) { // 5 分钟前
-        return "5 分钟前";
-    } else if (timeDiff < 600000) {
-        // 10 分钟前
-        return "10 分钟前"
+    } else if (timeDiff < 60 * 1000) { // 60s 前
+        return "1分钟前";
+    } else if (timeDiff < 60 * 60 * 1000) { // 一小时内，n分钟前
+        const minutes = Math.floor(timeDiff / 1000 / 60);
+        return `${minutes}分钟前`;
+    } else if (timeDiff < 24 * 60 * 60 * 1000) { // 一天内，n小时前
+        const hours = Math.floor(timeDiff / 1000 / 60 / 60);
+        return `${hours}小时前`;
     }
 
     const year = String(inputDate.getFullYear());

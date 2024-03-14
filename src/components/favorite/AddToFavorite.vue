@@ -86,7 +86,8 @@ export default {
                 ElMessage.error("特丽丽被玩坏了QAQ");
                 return;
             }
-            this.$store.state.favorites.splice(1, 0, res.data.data);
+            this.currSelected = new Set([...this.lastSelected]);    // 初始化已选的，防止出现收藏数量偏差
+            this.$store.state.favorites.splice(1, 0, res.data.data);    // 在第二个位置插入新收藏夹，即默认收藏夹后面
             this.input = "";
             this.isCreating = false;
         },

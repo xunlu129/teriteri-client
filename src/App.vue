@@ -74,13 +74,13 @@ export default {
             this.$store.commit("updateFavorites", list);
         },
 
+        // 获取用户赞踩的评论集合
         async getLikeAndDisLikeComment() {
             const res = await this.$get("/comment/get-like-and-dislike", {
                 params: { uid: this.$store.state.user.uid },
                 headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
             });
             if (!res.data) return;
-            console.log(res.data.data)
             this.$store.commit("updateLikeComment", res.data.data.userLike);
             this.$store.commit("updateDislikeComment", res.data.data.userDislike);
         }
@@ -94,9 +94,9 @@ export default {
         // 有可能上面获取信息时token过期就清掉了 所以这里再做个存在判断
         if (localStorage.getItem("teri_token")) {
             this.$store.dispatch("getMsgUnread");
-            this.initIMServer();
-            this.getFavorites();
-            this.getLikeAndDisLikeComment();
+            await this.initIMServer();
+            await this.getFavorites();
+            await this.getLikeAndDisLikeComment();
         }
         this.getChannels();
         this.getHotSearch();

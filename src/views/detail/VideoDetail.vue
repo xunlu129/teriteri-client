@@ -124,7 +124,7 @@
                                 {{ category.scName }}</a>
                         </div>
                         <div class="tag-container" v-for="(item, index) in tags" :key="index">
-                            <a :href="`/search/all?keyword=${item}`" target="_blank" class="tag-link">{{ item }}</a>
+                            <a :href="`/search/video?keyword=${item}`" target="_blank" class="tag-link">{{ item }}</a>
                         </div>
                     </div>
                     <!-- 评论 -->
@@ -407,6 +407,7 @@ export default {
             collectVisible: false,  // 收藏框的显隐
             collectedFids: new Set(),   // 收藏了该视频的收藏夹ID集合
             isMounted: false,
+            loveLoading: false, // 点赞防抖
         }
     },
     methods: {
@@ -498,6 +499,7 @@ export default {
 
         // 点赞或取消点赞
         async loveOrNot(isLove, isSet) {
+            if (this.loveLoading) return;
             if (!this.$store.state.user.uid) {
                 ElMessage.error("请登录后操作");
                 return;
@@ -506,6 +508,7 @@ export default {
                 ElMessage.error("视频不存在");
                 return;
             }
+            this.loveLoading = true;
             const originalLove = this.$store.state.attitudeToVideo.love;
             const formData = new FormData();
             formData.append("vid", Number(this.video.vid));
@@ -514,7 +517,10 @@ export default {
             const res = await this.$post("/video/love-or-not", formData, {
                 headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
             });
-            if (!res.data.data) return;
+            if (!res.data.data) {
+                this.loveLoading = false;
+                return;
+            }
             const data = res.data.data;
             const atv = {
                 love: data.love === 1 ? true : false,
@@ -532,6 +538,7 @@ export default {
             } else if (isLove || (!isLove && isSet && originalLove)) {
                 this.good = this.good - 1 < 0 ? 0 : this.good - 1;   // 取消点赞或者原来是赞但是点踩了 点赞数减一
             }
+            this.loveLoading = false;
         },
 
         // 获取收藏了该视频的收藏夹ID列表

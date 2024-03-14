@@ -3,14 +3,15 @@
         <div class="box-normal">
             <div class="reply-box-avatar">
                 <div class="teriteri-avatar">
-                    <VAvatar :img="this.$store.state.user.avatar_url" :size="40" :auth="this.$store.state.user.auth" />
+                    <VAvatar :img="this.$store.state.user.avatar_url" :size="isWideWindow ? 48 : 40" :auth="this.$store.state.user.auth" />
                 </div>
             </div>
             <div class="reply-box-wrap">
                 <div class="textarea-wrap" :class="{ 'active': isFocus }"
                     :style="this.$store.state.isLogin ? '' : 'display:none;'">
                     <textarea class="reply-box-textarea" :placeholder="placeholder" @focus="isFocus = true"
-                        @blur="handleBlur" ref="textarea" v-model="content" />
+                        @blur="handleBlur" ref="textarea" v-model="content" maxlength="2000"
+                        :style="{height: content === '' ? '32px': '64px', lineHeight: content === '' ? '32px' : '1.25'}" />
                 </div>
                 <div class="disable-mask" :style="!this.$store.state.isLogin ? '' : 'display:none;'">
                     <span>请先登入后发表评论 (・ω・) </span>
@@ -33,7 +34,7 @@
                             </svg>
                         </div>
                     </div>
-                    <EmojiBox v-model:show="emojiBoxShow" @insertEmoji="insertEmoji"></EmojiBox>
+                    <EmojiBox :style="{top: content === '' ? '-320px': '-352px', left: '0'}" v-model:show="emojiBoxShow" @insertEmoji="insertEmoji"></EmojiBox>
                 </div>
                 <div class="at-btn">@</div>
             </div>
@@ -70,10 +71,18 @@ export default {
             type: Object,
             default() {
                 return {
+                    root_id: -1,
                     parent_id: -1,
                     to_user_id: -1,
                     vid: -1,
                 }
+            }
+        },
+        // 是否是宽屏
+        isWideWindow: {
+            type: Boolean,
+            default() {
+                return false;
             }
         },
     },
@@ -88,9 +97,9 @@ export default {
     },
     methods: {
         // 点击空白处隐藏发布栏
-        handleFocus(value) {
-            this.isFocus = value;
-            if (!value) this.emojiBoxShow = false;
+        cancelFocus() {
+            this.isFocus = false;
+            this.emojiBoxShow = false;
         },
         handleBlur() {
             this.cursorStart = this.$refs.textarea.selectionStart;
@@ -117,6 +126,11 @@ export default {
                 return;
             }
 
+            if (this.commentInfo.vid === -1) {
+                ElMessage.error("发送评论失败，请刷新页面后重试");
+                return;
+            }
+
             const formData = new FormData();
             formData.append("vid", this.commentInfo.vid);
             formData.append("root_id", this.commentInfo.root_id);
@@ -129,13 +143,12 @@ export default {
                     Authorization: "Bearer " + localStorage.getItem("teri_token"),
                 }
             });
-
             if (!response.data) return;
 
             this.isFocus = false
             this.content = "";
 
-            this.$emit("get-comment");
+            this.$emit("addComment", response.data.data);
 
         },
 
@@ -148,8 +161,6 @@ export default {
         cleanInput() {
             this.content = "";
         }
-    },
-    watch: {
     },
 }
 </script>
@@ -236,6 +247,16 @@ export default {
     outline: none;
 }
 
+.reply-box-textarea::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.reply-box-textarea::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #ccc;
+}
+
 .box-expand {
     display: flex;
     justify-content: space-between;
@@ -286,10 +307,10 @@ export default {
     height: 60%;
 }
 
-.reply-box-emoji /deep/ .emoji-box {
+/* .reply-box-emoji /deep/ .emoji-box {
     top: -320px;
     left: 0px;
-}
+} */
 
 .at-btn {
     display: flex;

@@ -739,9 +739,9 @@ export default {
             else if (event.keyCode === 38 && !isInputField) {
                 // 阻止默认的↑键行为（滚动页面）
                 event.preventDefault();
-                console.log("this.volume的值: ", this.volume);
+                // console.log("this.volume的值: ", this.volume);
                 let volume = (this.volume + 10) / 100;
-                console.log("volume的值: ", volume);
+                // console.log("volume的值: ", volume);
                 volume = Math.min(1, volume);
                 volume = Math.max(0, volume);
                 this.changeVolume(volume);

@@ -97,6 +97,7 @@ export default {
     -webkit-background-size: cover;
     background-size: cover;
     image-rendering: -webkit-optimize-contrast;
+    display: flex;
 }
 
 .avatar-size-24,
@@ -105,7 +106,8 @@ export default {
     height: 12px;
 }
 
-.avatar-size-34 .avatar-size-36,
+.avatar-size-34,
+.avatar-size-36,
 .avatar-size-40 {
     width: 14px;
     height: 14px;

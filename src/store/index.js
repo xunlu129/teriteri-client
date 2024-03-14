@@ -48,6 +48,8 @@ export default createStore({
             state.msgUnread = [0, 0, 0, 0, 0, 0];
             state.attitudeToVideo = {};
             state.favorites = [];
+            state.likeComment = [];
+            state.dislikeComment = [];
         },
         // 更新登录状态
         updateIsLogin(state, isLogin) {
@@ -118,6 +120,7 @@ export default createStore({
         },
         handleWsMessage(state, e) {
             const data = JSON.parse(e.data);
+            // console.log(data);
             switch (data.type) {
                 case "error": {
                     // 系统错误
@@ -125,8 +128,11 @@ export default createStore({
                         // 由于 App.vue 那先做获取用户资料在前，所以基本上这里不会出现登录过期的情况
                         state.isLogin = false;
                         state.user = {};
+                        state.msgUnread = [0, 0, 0, 0, 0, 0];
                         state.attitudeToVideo = {};
                         state.favorites = [];
+                        state.likeComment = [];
+                        state.dislikeComment = [];
                         // 清除本地token缓存
                         localStorage.removeItem("teri_token");
                     }
@@ -135,11 +141,15 @@ export default createStore({
                 }
                 case "reply": {
                     // 回复我的
-                    let content = data.content;
-                    console.log(content);
+                    let content = data.data;
+                    // console.log(content);
                     switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[0] = 0; // 清除回复我的的未读数
+                            break;
+                        }
+                        case "接收": {
+                            state.msgUnread[0] ++;
                             break;
                         }
                     }
@@ -147,11 +157,15 @@ export default createStore({
                 }
                 case "at": {
                     // @ 我的
-                    let content = data.content;
-                    console.log(content);
+                    let content = data.data;
+                    // console.log(content);
                     switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[1] = 0; // 清除@我的的未读数
+                            break;
+                        }
+                        case "接收": {
+                            state.msgUnread[1] ++;
                             break;
                         }
                     }
@@ -159,11 +173,15 @@ export default createStore({
                 }
                 case "love": {
                     // 收到的赞
-                    let content = data.content;
-                    console.log(content);
+                    let content = data.data;
+                    // console.log(content);
                     switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[2] = 0; // 清除收到的赞的未读数
+                            break;
+                        }
+                        case "接收": {
+                            state.msgUnread[2] ++;
                             break;
                         }
                     }
@@ -171,11 +189,15 @@ export default createStore({
                 }
                 case "system": {
                     // 系统通知
-                    let content = data.content;
-                    console.log(content);
+                    let content = data.data;
+                    // console.log(content);
                     switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[3] = 0; // 清除系统通知的未读数
+                            break;
+                        }
+                        case "接收": {
+                            state.msgUnread[3] ++;
                             break;
                         }
                     }
@@ -291,10 +313,14 @@ export default createStore({
                 case "dynamic": {
                     // 动态
                     let content = data.content;
-                    console.log(content);
+                    // console.log(content);
                     switch (content.type) {
                         case "全部已读": {
                             state.msgUnread[5] = 0; // 清除动态的未读数
+                            break;
+                        }
+                        case "接收": {
+                            state.msgUnread[5] ++;
                             break;
                         }
                     }

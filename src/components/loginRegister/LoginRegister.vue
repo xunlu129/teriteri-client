@@ -146,6 +146,7 @@ export default {
                 await this.$store.dispatch("getMsgUnread");
                 await this.initIMServer();  // 开启即时通信websocket
                 await this.getFavorites();
+                await this.getLikeAndDisLikeComment();
                 ElMessage.success(result.data.message);
                 this.$store.commit("updateIsLogin", true);  // 修改在线状态
                 this.$emit("loginSuccess"); // 触发父组件关闭登录框的回调
@@ -205,6 +206,17 @@ export default {
             const list = res.data.data.filter(item => item.type !== 1);
             list.unshift(defaultFav);
             this.$store.commit("updateFavorites", list);
+        },
+
+        // 获取用户赞踩的评论集合
+        async getLikeAndDisLikeComment() {
+            const res = await this.$get("/comment/get-like-and-dislike", {
+                params: { uid: this.$store.state.user.uid },
+                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+            });
+            if (!res.data) return;
+            this.$store.commit("updateLikeComment", res.data.data.userLike);
+            this.$store.commit("updateDislikeComment", res.data.data.userDislike);
         }
     }
 }
