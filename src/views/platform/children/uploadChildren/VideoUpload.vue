@@ -27,6 +27,42 @@
                     </div>
                 </div>
             </div>
+            <div class="footer-item">
+                <span class="i-list i-1">
+                    <a target="_blank" class="title">禁止发布的视频内容</a>
+                </span>
+                <span class="i-list i-1">
+                    <span class="title">视频大小</span>
+                    <span class="title-block">
+                        <span>网页端上传的文件大小上限为300M</span><br>
+                        <span>视频内容时长最大10小时</span><br>
+                    </span>
+                </span>
+                <span class="i-list i-1">
+                    <span class="title">视频格式</span>
+                    <span class="title-block">
+                        <span>网页端、桌面客户端推荐上传的格式为：mp4</span><br>
+                        <span>暂不允许上传其他格式</span><br>
+                    </span>
+                </span>
+                <span class="i-list i-1">
+                    <span class="title">视频码率</span>
+                    <span class="title-block">
+                        <span>推荐视频分辨率：1280*720 或者 1920*1080</span><br>
+                        <span>网站不提供转码、压制服务</span><br>
+                    </span>
+                </span>
+            </div>
+            <div class="footer-item">
+                <span>上传视频，即表示您已同意 <a target="_blank">特丽特丽使用协议</a> 与 <a target="_blank">特丽特丽社区公约</a> ，请勿上传色情，反动等违法视频。</span>
+            </div>
+            <div class="footer-item">
+                <span class="i-list">第三方工具</span>
+                <span class="i-list i-2">
+                    <svg style="transform: translateY(3px); margin-right: 3px;" t="1710534411941" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4206" width="16" height="16"><path d="M777.4816 903.6H246.51733333c-59.3312 0-107.61066667-48.272-107.61066666-107.61066667V368.9056c0-59.3312 44.86613333-107.61066667 100.0256-107.61066667h68.26666666v63.50933334h-68.26666666c-19.78986667 0-36.50773333 20.192-36.50773334 44.09386666V795.98933333c0 24.3104 19.7824 44.0928 44.0928 44.0928H777.48266667c24.3104 0 44.0928-19.7824 44.0928-44.0928V368.9056c0-23.9008-16.71786667-44.0928-36.50773334-44.0928h-68.26666666v-63.5104h68.26666666c55.152 0 100.0256 48.272 100.0256 107.61066667v427.0912c0 59.32373333-48.27946667 107.59573333-107.61066666 107.59573333z" fill="#99a2aa" p-id="4207"></path><path d="M692.23893333 454.95146667c-11.3248-12.3488-30.52266667-13.17546667-42.864-1.8432l-107.03466666 98.19733333V112.33813333c0-16.75626667-13.58506667-30.34133333-30.34026667-30.34133333s-30.34026667 13.58506667-30.34026667 30.34133333v437.4368l-101.64906666-96.33066666c-12.16-11.53066667-31.3728-11.00693333-42.88746667 1.152-11.5296 12.1664-11.00586667 31.36533333 1.15306667 42.8864L491.1328 642.336c0.144 0.13653333 0.31146667 0.21973333 0.45546667 0.35626667 1.25866667 1.15306667 2.60266667 2.2304 4.0576 3.16373333 0.06826667 0.0448 0.12906667 0.10666667 0.19733333 0.144 1.25226667 0.78933333 2.57173333 1.48693333 3.94453333 2.09386667 0.17493333 0.07466667 0.35626667 0.09813333 0.52266667 0.1664 1.32053333 0.55466667 2.67093333 0.9408 4.04373333 1.29706666 0.58453333 0.15146667 1.1456 0.37973333 1.72906667 0.4928a30.31466667 30.31466667 0 0 0 5.90186667 0.608c1.93386667 0 3.86133333-0.20586667 5.76426666-0.5696 0.6752-0.12906667 1.328-0.3872 1.99466667-0.56106666 1.2064-0.32 2.40533333-0.62933333 3.56586667-1.09226667 0.76586667-0.304 1.4784-0.72853333 2.2144-1.1008 1.024-0.5152 2.04053333-1.01546667 3.0112-1.64586667 0.70613333-0.46186667 1.35786667-1.01653333 2.03306666-1.5392 0.6368-0.50133333 1.33546667-0.91093333 1.94133334-1.46453333l157.8784-144.85333333c12.3488-11.33333333 13.184-30.5312 1.85066666-42.88z" p-id="4208"></path></svg>
+                    <a class="zip" href="//dl.hdslb.com/video-press/xiaowantoolsrev194.zip">小丸压制工具</a>
+                </span>
+            </div>
         </div>
         <!-- 填写投稿信息界面 -->
         <div class="info-content" :style="selectedVideo ? '' : 'display: none;'">
@@ -1041,6 +1077,86 @@ export default {
     text-align: center;
     line-height: 44px;
     white-space: nowrap;
+}
+
+.footer-item {
+    margin-top: 18px;
+    text-align: center;
+    color: #99a2aa;
+    fill: #99a2aa;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.footer-item a:not(.title):not(.zip) {
+    color: var(--brand_pink);
+    cursor: pointer;
+}
+
+.footer-item a:not(.title):not(.zip):hover {
+    color: var(--Pi4);
+}
+
+.footer-item .i-list {
+    margin: 0 10px;
+}
+
+.footer-item .i-1 {
+    cursor: pointer;
+    position: relative;
+}
+
+.footer-item .i-1 a {
+    color: #99a2aa;
+}
+
+.footer-item .i-1 .title:hover {
+    color: var(--brand_pink);
+}
+
+.footer-item .i-2 .zip {
+    color: #99a2aa;
+}
+
+.footer-item .i-2 .zip:hover {
+    color: var(--brand_pink);
+    text-decoration: underline;
+}
+
+.footer-item .i-1 .title-block {
+    position: absolute;
+    font-size: 12px;
+    border: 1px solid #f9d199;
+    color: #666;
+    text-align: left;
+    padding: 20px;
+    background-color: #fcfae0;
+    white-space: nowrap;
+    z-index: 10;
+    bottom: 28px;
+    right: -5px;
+    display: none;
+}
+
+.footer-item .i-1:hover .title-block {
+    display: block;
+}
+
+.footer-item .i-1 .title-block:after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    transform: rotate(45deg);
+    border: 1px solid;
+    border-color: transparent #f9d199 #f9d199 transparent;
+    background-color: #fcfae0;
+    right: 10px;
+    bottom: -8px;
+}
+
+.icon-xiazai {
+    margin-right: 2px;
 }
 
 .info-content {

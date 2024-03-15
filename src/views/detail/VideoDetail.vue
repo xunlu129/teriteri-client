@@ -414,6 +414,7 @@ export default {
         ////// 请求 //////
         // 获取视频详细信息
         async getVideoDetail() {
+            console.log("正在获取视频")
             const res = await this.$get('/video/getone', {
                 params: {
                     vid: this.$route.params.vid,
@@ -440,6 +441,7 @@ export default {
             if (localStorage.getItem("teri_token")) {
                 this.getCollectedFids();
             }
+            console.log("视频获取完成")
         },
 
         // 获取推荐视频
@@ -478,6 +480,7 @@ export default {
 
         // 初始化实时弹幕的websocket
         async initWebsocket() {
+            console.log("正在初始化ws")
             const socketUrl = `ws://localhost:7070/ws/danmu/${this.$route.params.vid}`;
             if (this.socket != null) {
                 await this.socket.close();
@@ -488,6 +491,7 @@ export default {
             this.socket.addEventListener('close', this.handleWsClose);
             this.socket.addEventListener('message', this.handleWsMessage);
             this.socket.addEventListener('error', this.handleWsError);
+            console.log("ws初始化完成")
         },
 
         async closeWebSocket() {
@@ -732,7 +736,9 @@ export default {
     mounted() {
         window.addEventListener('scroll', this.handleScroll);
         this.handleScroll();
+        console.log("正在挂载监听器")
         window.addEventListener('beforeunload', this.closeWebSocket);    // beforeunload 事件监听标签页关闭
+        console.log("监听器挂载完成")
         setTimeout(() => {
             this.isMounted = true;
         }, 3000);

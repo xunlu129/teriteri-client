@@ -137,7 +137,7 @@
             </div>
             <div class="bottom-line"></div>
         </div>
-        <div class="reply-loading" v-show="!isMounted || loading">正在加载...</div>
+        <div class="reply-loading" v-show="loading">正在加载...</div>
         <div class="no-any" v-show="!hasMore && commentList.length === 0">视频还没有任何评论哦，快来抢占沙发位吧~</div>
         <div class="no-more" v-show="(this.$store.state.isLogin && !hasMore && commentList.length !== 0) || (!this.$store.state.isLogin && commentList.length === 1)">已经到底啦~</div>
         <div class="login-prompt" v-show="!this.$store.state.isLogin && commentList.length >= 2">登录后查看更多评论</div>
@@ -180,7 +180,6 @@ export default {
                 to_user_id: -1, // 回复的评论的所属者的 id
                 vid: -1 // 当前视频的id
             },
-            isMounted: false,
             hotCommentIdx: 0,   // 热评id
         }
     },
@@ -469,10 +468,7 @@ export default {
         },
     },
     mounted() {
-        setTimeout(() => {
-            this.isMounted = true
-            this.getCommentTree();
-        }, 2000);
+        this.getCommentTree();
         window.addEventListener("scroll", this.handleScroll);
     },
     beforemounted() {
