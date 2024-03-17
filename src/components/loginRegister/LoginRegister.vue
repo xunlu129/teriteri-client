@@ -23,7 +23,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="注册" lazy>
                     <div class="register-box">
-                        <el-input type="text" class="input" v-model="usernameRegister" placeholder="请输入账号" />
+                        <el-input type="text" class="input" v-model="usernameRegister" placeholder="请输入账号" maxlength="50" />
                         <el-input type="password" show-password class="input" v-model="passwordRegister" placeholder="请输入密码" />
                         <el-input type="password" show-password class="input" v-model="confirmedPassword" placeholder="再次确认密码" />
                         <div class="submit" @click="submitRegister">注&nbsp;册</div>
@@ -129,7 +129,7 @@ export default {
                 username: this.usernameLogin.toString(),
                 password: this.passwordLogin.toString(),
             }).catch(() => {
-                ElMessage.error("用户名或密码错误");
+                ElMessage.error("特丽丽被玩坏了");
                 this.$store.state.isLoading = false;
             });
             if (!result) {

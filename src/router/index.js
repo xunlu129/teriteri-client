@@ -23,8 +23,19 @@ const WhisperDialog = () => import('@/views/message/children/children/WhisperDia
 const Search = () => import('@/views/search/SearchView.vue')
 const SearchVideo = () => import('@/views/search/children/SearchVideo.vue')
 const SearchUser = () => import('@/views/search/children/SearchUser.vue')
-const CommentVue = () => import('@/components/comment/CommentVue.vue')
-const UserSpaceVue = () => import('@/views/userSpace/UserSpaceVue.vue')
+const Space = () => import('@/views/space/SpaceView.vue')
+const SpaceVideo = () => import('@/views/space/children/SpaceVideo.vue')
+const SpaceArticle = () => import('@/views/space/children/SpaceArticle.vue')
+const SpaceDynamic = () => import('@/views/space/children/SpaceDynamic.vue')
+const SpaceFavlist = () => import('@/views/space/children/SpaceFavlist.vue')
+const SpaceSetting = () => import('@/views/space/children/SpaceSetting.vue')
+const SpaceFollow = () => import('@/views/space/children/SpaceFollow.vue')
+const SpaceFans = () => import('@/views/space/children/SpaceFans.vue')
+const Account = () => import('@/views/account/AccountView.vue')
+const AccountHome = () => import('@/views/account/children/AccountHome.vue')
+const AccountInfo = () => import('@/views/account/children/AccountInfo.vue')
+const AccountAvatar = () => import('@/views/account/children/AccountAvatar.vue')
+const AccountSecurity = () => import('@/views/account/children/AccountSecurity.vue')
 
 
 const routes = [
@@ -75,16 +86,41 @@ const routes = [
     {
         path: '/search',
         component: Search,
+        meta: { requestAuth: false },
         props: route => ({ keyword: route.query.keyword }),
         children: [
             { path: '/search/video', component: SearchVideo, meta: { requestAuth: false }, props: route => ({ keyword: route.query.keyword }) },
             { path: '/search/user', component: SearchUser, meta: { requestAuth: false }, props: route => ({ keyword: route.query.keyword }) },
         ]
     },
+    {
+        path: '/space/:uid',
+        component: Space,
+        meta: { requestAuth: false },
+        children: [
+            { path: '/space/:uid/video', component: SpaceVideo, meta: { requestAuth: false } },
+            { path: '/space/:uid/article', component: SpaceArticle, meta: { requestAuth: false } },
+            { path: '/space/:uid/dynamic', component: SpaceDynamic, meta: { requestAuth: false } },
+            { path: '/space/:uid/favlist', component: SpaceFavlist, meta: { requestAuth: false } },
+            { path: '/space/:uid/setting', component: SpaceSetting, meta: { requestAuth: true } },
+            { path: '/space/:uid/fans/follow', component: SpaceFollow, meta: { requestAuth: false } },
+            { path: '/space/:uid/fans/fans', component: SpaceFans, meta: { requestAuth: false } },
+        ]
+    },
+    {
+        path: '/account',
+        redirect: '/account/home',
+        component: Account,
+        meta: { requestAuth: true },
+        children: [
+            { path: '/account/home', component: AccountHome, meta: { requestAuth: true } },
+            { path: '/account/info', component: AccountInfo, meta: { requestAuth: true } },
+            { path: '/account/avatar', component: AccountAvatar, meta: { requestAuth: true } },
+            { path: '/account/security', component: AccountSecurity, meta: { requestAuth: true } },
+        ]
+    },
     { path: '/:catchAll(.*)', component: NotFound, meta: { requestAuth: false } },
 
-    { path: '/comment', component: CommentVue, meta: { requestAuth: false } },
-    { path: '/user-space', component: UserSpaceVue, meta: { requestAuth: false } },
 ]
 
 const router = createRouter({

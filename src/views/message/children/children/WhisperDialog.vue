@@ -291,7 +291,7 @@ export default {
                 const pastedText = await navigator.clipboard.readText();
                 this.insertTextAtCursor(pastedText);
             } catch (error) {
-                console.error('Failed to read clipboard data:', error);
+                // console.error('Failed to read clipboard data:', error);
             }
         },
 

@@ -112,9 +112,11 @@
                                     v-for="(item, index) in this.$store.state.trendings.filter((itm, idx) => idx % 2 === 0)"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap"  @click.stop="clickItemToSearch(item.content)">
                                         <div class="trendings-rank" :class="index < 2 ? 'topThree' : ''">{{ index * 2 + 1 }}</div>
-                                        <div class="trendings-text">{{ item }}</div>
+                                        <div class="trendings-text">{{ item.content }}</div>
+                                        <img src="~assets/img/icon_new.png" alt="" class="trending-mark" v-if="item.type === 1">
+                                        <img src="~assets/img/icon_hot.png" alt="" class="trending-mark" v-if="item.type === 2">
                                     </div>
                                 </div>
                             </div>
@@ -124,9 +126,11 @@
                                     v-for="(item, index) in this.$store.state.trendings.filter((itm, idx) => idx % 2 !== 0)"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item.content)">
                                         <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
-                                        <div class="trendings-text">{{ item }}</div>
+                                        <div class="trendings-text">{{ item.content }}</div>
+                                        <img src="~assets/img/icon_new.png" alt="" class="trending-mark" v-if="item.type === 1">
+                                        <img src="~assets/img/icon_hot.png" alt="" class="trending-mark" v-if="item.type === 2">
                                     </div>
                                 </div>
                             </div>
@@ -138,9 +142,11 @@
                                     v-for="(item, index) in this.$store.state.trendings"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item.content)">
                                         <div class="trendings-rank" :class="index < 3 ? 'topThree' : ''">{{ index + 1 }}</div>
-                                        <div class="trendings-text">{{ item }}</div>
+                                        <div class="trendings-text">{{ item.content }}</div>
+                                        <img src="~assets/img/icon_new.png" alt="" class="trending-mark" v-if="item.type === 1">
+                                        <img src="~assets/img/icon_hot.png" alt="" class="trending-mark" v-if="item.type === 2">
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +193,7 @@
                         </div>
                         <div class="coins">
                             <span class="coins-text">硬币: </span>
-                            <span class="coins-num">0</span>
+                            <span class="coins-num">{{ user.coin }}</span>
                         </div>
                         <div class="counts">
                             <a :href="`/space/${user.uid}/fans/follow`" target="_blank" class="counts-item">
@@ -203,7 +209,7 @@
                                 <div class="count-text">动态</div>
                             </a>
                         </div>
-                        <div class="single-item middle" @click="noPage">
+                        <div class="single-item middle" @click="openNewPage('/account')">
                             <div class="single-item-left">
                                 <el-icon size="16"><User /></el-icon>
                                 <span>个人中心</span>
@@ -994,6 +1000,11 @@
     text-overflow: ellipsis;
     letter-spacing: 0;
     color: var(--text2);
+}
+
+.header-bar .trending-item .trending-mark {
+    height: 14px;
+    margin-right: 16px;
 }
 
 .header-bar .suggestions {
