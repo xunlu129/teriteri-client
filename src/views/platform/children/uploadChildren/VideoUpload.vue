@@ -297,7 +297,7 @@
                                     <div class="upload-btn">选择图片</div>
                                     <input
                                         type="file"
-                                        accept="image/png, image/jpeg"
+                                        accept="image/png, image/jpg, image/jpeg"
                                         ref="picInput"
                                         @change="handlePicChange"
                                         style="display: none;"

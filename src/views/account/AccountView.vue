@@ -180,7 +180,7 @@ export default {
     cursor: pointer;
 }
 
-.account-item:hover {
+.account-item:hover, .account-item-jump:hover {
     background: #e1e4ea;
 }
 
