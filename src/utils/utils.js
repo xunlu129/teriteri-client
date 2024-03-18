@@ -240,7 +240,7 @@ export function handleDateTime3(dateTime) {
 
 
 /**
- * 计算昵称长度，中日文字符占2长度，其他1长度，用于判断昵称长度是否超出24的限制
+ * 计算昵称长度，中日文字符占2长度，其他1长度，用于判断昵称长度是否超出32的限制
  * @param {String} nickname 用户输入的昵称名
  * @returns {Number} 昵称的官方长度
  */

@@ -486,7 +486,7 @@ export default {
 
 .content-body {
     width: inherit;
-    height: 100%;
+    min-height: calc(100vh - 126px);
     background: #fff;
     margin: 16px 72px 0;
     padding-bottom: 20px;

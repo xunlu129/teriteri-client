@@ -56,9 +56,11 @@
                                     v-for="(item, index) in this.$store.state.trendings.filter((itm, idx) => idx % 2 === 0)"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item.content)">
                                         <div class="trendings-rank" :class="index < 2 ? 'topThree' : ''">{{ index * 2 + 1 }}</div>
-                                        <div class="trending-text">{{ item }}</div>
+                                        <div class="trending-text">{{ item.content }}</div>
+                                        <img src="~assets/img/icon_new.png" alt="" class="trending-mark" v-if="item.type === 1">
+                                        <img src="~assets/img/icon_hot.png" alt="" class="trending-mark" v-if="item.type === 2">
                                     </div>
                                 </div>
                             </div>
@@ -68,9 +70,11 @@
                                     v-for="(item, index) in this.$store.state.trendings.filter((itm, idx) => idx % 2 !== 0)"
                                     :key="index"
                                 >
-                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item)">
+                                    <div class="trending-wrap" @click.stop="clickItemToSearch(item.content)">
                                         <div class="trendings-rank" :class="index < 1 ? 'topThree' : ''">{{ index * 2 + 2 }}</div>
-                                        <div class="trending-text">{{ item }}</div>
+                                        <div class="trending-text">{{ item.content }}</div>
+                                        <img src="~assets/img/icon_new.png" alt="" class="trending-mark" v-if="item.type === 1">
+                                        <img src="~assets/img/icon_hot.png" alt="" class="trending-mark" v-if="item.type === 2">
                                     </div>
                                 </div>
                             </div>

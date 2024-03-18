@@ -499,7 +499,7 @@
     }
 }
 
-.index *, .notfound *, .videoDetail *, .search * {
+.index *, .notfound *, .videoDetail *, .message-view *, .search *, .space *, .account * {
     margin: 0;
     padding: 0;
 }

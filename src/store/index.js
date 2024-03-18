@@ -114,9 +114,16 @@ export default createStore({
         handleWsOpen() {
             // console.log("实时通信websocket已建立");
         },
-        handleWsClose() {
+        handleWsClose(state) {
             // ElMessage.error("实时通信websocket关闭,请刷新页面重试");
             console.log("实时通信websocket关闭,请登录并刷新页面重试");
+            state.isLogin = false;
+            state.user = {};
+            state.msgUnread = [0, 0, 0, 0, 0, 0];
+            state.attitudeToVideo = {};
+            state.favorites = [];
+            state.likeComment = [];
+            state.dislikeComment = [];
         },
         handleWsMessage(state, e) {
             const data = JSON.parse(e.data);
@@ -375,7 +382,8 @@ export default createStore({
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("teri_token"),
                 },
-            });
+            })
+            .catch(() => {});
             // 清除本地token缓存
             localStorage.removeItem("teri_token");
         },
