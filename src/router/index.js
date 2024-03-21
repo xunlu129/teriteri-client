@@ -24,6 +24,7 @@ const Search = () => import('@/views/search/SearchView.vue')
 const SearchVideo = () => import('@/views/search/children/SearchVideo.vue')
 const SearchUser = () => import('@/views/search/children/SearchUser.vue')
 const Space = () => import('@/views/space/SpaceView.vue')
+const SpaceHome = () => import('@/views/space/children/SpaceHome.vue')
 const SpaceVideo = () => import('@/views/space/children/SpaceVideo.vue')
 const SpaceArticle = () => import('@/views/space/children/SpaceArticle.vue')
 const SpaceDynamic = () => import('@/views/space/children/SpaceDynamic.vue')
@@ -94,10 +95,11 @@ const routes = [
         ]
     },
     {
-        path: '/space/:uid',
+        path: '/space',
         component: Space,
         meta: { requestAuth: false },
         children: [
+            { path: '/space/:uid', component: SpaceHome, meta: { requestAuth: false } },
             { path: '/space/:uid/video', component: SpaceVideo, meta: { requestAuth: false } },
             { path: '/space/:uid/article', component: SpaceArticle, meta: { requestAuth: false } },
             { path: '/space/:uid/dynamic', component: SpaceDynamic, meta: { requestAuth: false } },
@@ -119,7 +121,7 @@ const routes = [
             { path: '/account/security', component: AccountSecurity, meta: { requestAuth: true } },
         ]
     },
-    { path: '/:catchAll(.*)', component: NotFound, meta: { requestAuth: false } },
+    { path: '/:catchAll(.*)', name: "notfound", component: NotFound, meta: { requestAuth: false } },
 
 ]
 

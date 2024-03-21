@@ -509,6 +509,11 @@
     box-sizing: border-box;
 }
 
+*::selection {
+    background: #1890ff;
+    color: #fff;
+}
+
 h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, code, del, dfn, em, img, q, s, samp, small, strike, strong, sub, sup, tt, var, dd, dl, dt, li, ol, ul, fieldset, form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
     margin: 0;
     padding: 0;
@@ -537,30 +542,6 @@ a:hover {
 input[type=checkbox], input[type=radio] {
     box-sizing: border-box;
     padding: 0;
-}
-
-.icon-lv0, .icon-lv1 {
-    color: var(--Ga3);
-}
-
-.icon-lv2 {
-    color: var(--Gr3);
-}
-
-.icon-lv3 {
-    color: var(--Lb3);
-}
-
-.icon-lv4 {
-    color: var(--Or3);
-}
-
-.icon-lv5 {
-    color: var(--Re5);
-}
-
-.icon-lv6 {
-    color: #ff0000;
 }
 
 .vip-name {

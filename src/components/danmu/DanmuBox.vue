@@ -37,12 +37,12 @@
                                 <span class="dm-info-date">{{ handleDateTime(item.createDate) }}</span>
                                 <span class="dm-info-report-btn"
                                     @click.stop="noOption"
-                                    @dblclick.stop="noOption"
+                                    @dblclick.stop="stopOption"
                                 >举报</span>
                                 <span class="dm-info-delete-btn"
-                                    v-if="this.$store.state.user.uid && authorId === this.$store.state.user.uid"
-                                    @click.stop="noOption"
-                                    @dblclick.stop="noOption"
+                                    v-if="this.$store.state.user.uid && (authorId === this.$store.state.user.uid || item.uid === this.$store.state.user.uid)"
+                                    @click.stop="beforeDelete(item.id)"
+                                    @dblclick.stop="stopOption"
                                 >删除</span>
                             </div>
                         </li>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { handleTime, handleDateTime2 } from '@/utils/utils.js';
 
 export default {
@@ -170,9 +170,40 @@ export default {
             this.$emit("jump", time > 0.5 ? time - 0.5 : 0);
         },
 
+        // 删除弹幕前的最后通牒
+        beforeDelete(id) {
+            ElMessageBox.confirm(
+                '是否确定删除该条弹幕?',
+                {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                this.deleteDanmu(id);
+            })
+            .catch(() => {})
+        },
+
+        async deleteDanmu(id) {
+            const formData = new FormData();
+            formData.append("id", id);
+            const res = await this.$post("/danmu/delete", formData, {
+                headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
+            });
+            if (!res.data) return;
+            this.$store.state.danmuList = this.$store.state.danmuList.filter(item => item.id !== id);
+            ElMessage.info("删除成功");
+        },
+
         noOption() {
             ElMessage.warning("该功能暂未开放");
-        }
+        },
+
+        stopOption() {
+            return;
+        },
     },
     watch: {
         // 深度监听vuex中弹幕列表的变化，因为对于数组的push操作并不是总能监听到

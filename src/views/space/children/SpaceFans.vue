@@ -7,7 +7,9 @@
 <script>
 export default {
     name: "SpaceFans",
-    
+    mounted() {
+        this.$emit("updateNavIdx", 6);
+    }
 }
 </script>
 

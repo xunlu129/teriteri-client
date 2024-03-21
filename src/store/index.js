@@ -9,6 +9,8 @@ export default createStore({
         isLoading: false,
         // 是否登录
         isLogin: false,
+        // 是否外部触发打开登录框
+        openLogin: false,
         // 当前用户
         user: {},
         // 分区列表

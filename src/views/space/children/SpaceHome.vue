@@ -1,14 +1,14 @@
 <template>
-    <div class="space-dynamic">
-        我的动态
+    <div class="space-home">
+        主页
     </div>
 </template>
 
 <script>
 export default {
-    name: "SpaceDynamic",
+    name: "SpaceHome",
     mounted() {
-        this.$emit("updateNavIdx", 1);
+        this.$emit("updateNavIdx", 0);
     }
 }
 </script>

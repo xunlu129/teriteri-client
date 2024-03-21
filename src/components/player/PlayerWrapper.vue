@@ -1202,7 +1202,10 @@ export default {
         // 发送弹幕
         sendDm() {
             if (!localStorage.getItem('teri_token')) {
-                ElMessage.error("请登录后发送");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             if (this.input.trim().length === 0) {

@@ -7,7 +7,9 @@
 <script>
 export default {
     name: "SpaceArticle",
-    
+    mounted() {
+        this.$emit("updateNavIdx", 2);
+    }
 }
 </script>
 

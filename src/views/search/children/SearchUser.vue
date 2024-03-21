@@ -12,9 +12,7 @@
                                 <a :href="`/space/${item.uid}`" target="_blank" class="user-name" :title="item.nickname">
                                     {{ item.nickname }}
                                 </a>
-                                <a class="level">
-                                    <i :class="`iconfont icon-lv${handleLevel(item.exp)}`"></i>
-                                </a>
+                                <VLevel class="level" :level="handleLevel(item.exp)" :size="16"></VLevel>
                             </h2>
                             <p class="card-center">
                                 {{ handleNum(item.fansCount) }}粉丝 · {{ handleNum(item.videoCount) }}个视频
@@ -45,12 +43,14 @@
 
 <script>
 import VAvatar from '@/components/avatar/VAvatar.vue';
+import VLevel from '@/components/UserCard/VLevel.vue';
 import { handleNum, handleLevel } from '@/utils/utils.js';
 
 export default {
     name: "SearchUser",
     components: {
         VAvatar,
+        VLevel,
     },
     data() {
         return {
@@ -182,9 +182,7 @@ export default {
     color: var(--brand_pink);
 }
 
-.level .iconfont {
-    font-size: 12px;
-    line-height: 24px;
+.level {
     margin-left: 10px;
 }
 

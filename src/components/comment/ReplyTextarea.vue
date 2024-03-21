@@ -14,7 +14,7 @@
                         :style="{height: content === '' ? '32px': '64px', lineHeight: content === '' ? '32px' : '1.25'}" />
                 </div>
                 <div class="disable-mask" :style="!this.$store.state.isLogin ? '' : 'display:none;'">
-                    <span>请先登入后发表评论 (・ω・) </span>
+                    <span>请先<span class="to-login-btn" @click="toLogin">登录</span>后发表评论 (・ω・) </span>
                 </div>
             </div>
         </div>
@@ -160,6 +160,14 @@ export default {
         // 清空输入框
         cleanInput() {
             this.content = "";
+        },
+
+        // 触发登录
+        toLogin() {
+            this.$store.state.openLogin = true;
+            this.$nextTick(() => {
+                this.$store.state.openLogin = false;
+            })
         }
     },
 }
@@ -230,6 +238,15 @@ export default {
     font-size: 12px;
     color: var(--text3);
     background-color: var(--bg3);
+}
+
+.to-login-btn {
+    padding: 3px 5px;
+    border-radius: 4px;
+    background-color: var(--brand_pink);
+    color: #fff;
+    margin: 0 3px;
+    cursor: pointer;
 }
 
 .reply-box-textarea {

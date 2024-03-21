@@ -166,7 +166,7 @@
                                     <div class="up-description" :title="user.description">{{ user.description }}</div>
                                 </div>
                                 <div class="up-info__btn-panel">
-                                    <div class="default-btn follow-btn not-follow" v-if="true">
+                                    <div class="default-btn follow-btn not-follow" v-if="true" @click="noPage">
                                         <i class="iconfont icon-jia"></i>
                                         关注 {{ handleNum(user.fansCount) }}
                                     </div>
@@ -501,7 +501,10 @@ export default {
         async loveOrNot(isLove, isSet) {
             if (this.loveLoading) return;
             if (!this.$store.state.user.uid) {
-                ElMessage.error("请登录后操作");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             if (!this.video.vid) {
@@ -593,7 +596,10 @@ export default {
         // 创建聊天
         createChat() {
             if (!this.$store.state.user.uid) {
-                ElMessage.error("登录后才能发消息哦");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             this.openNewPage(`/message/whisper/${this.user.uid}`);
@@ -655,7 +661,10 @@ export default {
         // 发送弹幕
         sendDanmu(dm) {
             if (!localStorage.getItem('teri_token')) {
-                ElMessage.error("请登录后发送");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             const dmJson = JSON.stringify({
@@ -697,7 +706,10 @@ export default {
         // 打开收藏对话框
         openCollectDialog() {
             if (!this.$store.state.user.uid) {
-                ElMessage.error("请登录后操作");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             if (!this.video.vid) {
