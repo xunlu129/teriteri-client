@@ -420,7 +420,8 @@ export default {
                 },
             });
             if (res.data.code === 404) {
-                return;
+                this.$router.push("/notfound");
+                return false;
             }
             if (res.data.data) {
                 // console.log("视频详情: ", res.data.data);
@@ -440,6 +441,7 @@ export default {
             if (localStorage.getItem("teri_token")) {
                 this.getCollectedFids();
             }
+            return true;
         },
 
         // 获取推荐视频
@@ -678,9 +680,10 @@ export default {
         async changeVideo(vid) {
             await this.$router.push(`/video/${vid}`);
             await this.initWebsocket();
-            await this.getVideoDetail();
-            await this.getDanmuList();
-            await this.getRecommendVideos();
+            if (await this.getVideoDetail()) {
+                await this.getDanmuList();
+                await this.getRecommendVideos();
+            }
         },
 
         // 视频播放结束自动连播
@@ -737,9 +740,10 @@ export default {
             this.autonext = setting.autonext;
         }
         await this.initWebsocket();
-        await this.getVideoDetail();
-        await this.getDanmuList();
-        await this.getRecommendVideos();
+        if (await this.getVideoDetail()) {
+            await this.getDanmuList();
+            await this.getRecommendVideos();
+        }
     },
     mounted() {
         window.addEventListener('scroll', this.handleScroll);

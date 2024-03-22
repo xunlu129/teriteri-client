@@ -479,8 +479,8 @@ export default {
         this.getCommentTree();
         window.addEventListener("scroll", this.handleScroll);
     },
-    beforemounted() {
-        window.removeEventListener("scorll", this.handleScroll);
+    beforeUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
     },
     watch: {
         "$route.params.vid"(curr) {

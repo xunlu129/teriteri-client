@@ -53,7 +53,6 @@
 import VAvatar from '@/components/avatar/VAvatar.vue';
 import { handleNum, handleLevel } from '@/utils/utils.js';
 import VLevel from '@/components/UserCard/VLevel.vue';
-import { ElMessage } from 'element-plus';
 
 export default {
     name: "UserCard",
