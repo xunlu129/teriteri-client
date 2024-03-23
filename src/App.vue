@@ -66,7 +66,7 @@ export default {
                 params: { uid: this.$store.state.user.uid },
                 headers: { Authorization: "Bearer " + localStorage.getItem("teri_token") }
             });
-            if (!res.data.data) return;
+            if (!res.data) return;
             // 将默认置顶
             const defaultFav = res.data.data.find(item => item.type === 1);
             const list = res.data.data.filter(item => item.type !== 1);

@@ -112,15 +112,16 @@ export function handleNum(num) {
 
 
 /**
- * 处理日期，截取月日或者24小时内或者60分钟内
+ * 处理日期，截取(年)月日或者24小时内或者60分钟内
  * @param {Number|String|Date} dateTime 传入的日期时间，可以是数字、字符串或日期对象
- * @returns {String} 处理后的日期字符串 11-11 / 8小时前 / 30分钟前
+ * @returns {String} 处理后的日期字符串 2023-11-11 / 3-24 / 8小时前 / 30分钟前
  */
 export function handleDate(dateTime) {
     const currentDate = new Date();
     const inputDate = new Date(dateTime);
     // 计算时间差（以毫秒为单位）
     const timeDifference = currentDate - inputDate;
+    
     if (timeDifference < 60 * 60 * 1000) {
         const minutes = Math.floor(timeDifference / 1000 / 60);
         return `${minutes}分钟前`;
@@ -128,9 +129,18 @@ export function handleDate(dateTime) {
         const hours = Math.floor(timeDifference / 1000 / 60 / 60);
         return `${hours}小时前`;
     } else {
-        const month = inputDate.getMonth() + 1; // 月份是从0开始的
-        const day = inputDate.getDate();
-        return `${month}-${day}`;
+        const currentYear = currentDate.getFullYear();
+        const inputYear = inputDate.getFullYear();
+        // 判断是否今年
+        if (inputYear < currentYear) {
+            const month = inputDate.getMonth() + 1; // 月份是从0开始的
+            const day = inputDate.getDate();
+            return `${inputYear}-${month}-${day}`;
+        } else {
+            const month = inputDate.getMonth() + 1; // 月份是从0开始的
+            const day = inputDate.getDate();
+            return `${month}-${day}`;
+        }
     }
 }
 

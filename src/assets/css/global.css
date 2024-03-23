@@ -526,12 +526,13 @@ h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, cod
 }
 
 a {
-    color: var(--brand_pink);
+    color: var(--text1);
     text-decoration: none;
+    transition: color .2s ease, background-color .2s ease;
 }
 
 a:hover {
-    color: var(--Pi6);
+    color: var(--brand_pink);
 }
 
 [role=button], a, area, button, input:not([type=range]), label, select, summary, textarea {

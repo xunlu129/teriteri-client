@@ -103,7 +103,7 @@ const routes = [
             { path: '/space/:uid/video', component: SpaceVideo, meta: { requestAuth: false } },
             { path: '/space/:uid/article', component: SpaceArticle, meta: { requestAuth: false } },
             { path: '/space/:uid/dynamic', component: SpaceDynamic, meta: { requestAuth: false } },
-            { path: '/space/:uid/favlist', component: SpaceFavlist, meta: { requestAuth: false } },
+            { path: '/space/:uid/favlist', component: SpaceFavlist, meta: { requestAuth: false }, props: route => ({ fid: route.query.fid }) },
             { path: '/space/:uid/setting', component: SpaceSetting, meta: { requestAuth: true } },
             { path: '/space/:uid/fans/follow', component: SpaceFollow, meta: { requestAuth: false } },
             { path: '/space/:uid/fans/fans', component: SpaceFans, meta: { requestAuth: false } },

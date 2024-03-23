@@ -118,7 +118,7 @@
                     <div class="n-cursor" :style="`width: ${barWidth}px; left: ${barLeft}px;`"></div>
                 </div>
             </div>
-            <div class="s-space">
+            <div class="s-space" v-if="user.uid">
                 <div class="wrapper">
                     <router-view @updateNavIdx="updateNavIdx"></router-view>
                 </div>
