@@ -7,9 +7,6 @@
 <script>
 export default {
     name: "SpaceSetting",
-    mounted() {
-        this.$emit("updateNavIdx", 4);
-    }
 }
 </script>
 

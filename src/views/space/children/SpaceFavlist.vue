@@ -7,9 +7,6 @@
 <script>
 export default {
     name: "SpaceFavlist",
-    mounted() {
-        this.$emit("updateNavIdx", 3);
-    }
 }
 </script>
 

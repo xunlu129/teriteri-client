@@ -183,7 +183,7 @@ export default {
             const list = res.data.data.filter(item => item.type !== 1);
             list.unshift(defaultFav);
             this.favList = list;
-            console.log(this.favList)
+            // console.log(this.favList)
         },
 
         // 获取用户最近点赞的视频
@@ -197,7 +197,7 @@ export default {
             });
             if (!res.data) return;
             this.loveVideos = res.data.data;
-            console.log(this.loveVideos)
+            // console.log(this.loveVideos)
         },
 
 
@@ -217,7 +217,6 @@ export default {
         },
     },
     mounted() {
-        this.$emit("updateNavIdx", 0);
         this.getVideoList();
         this.getFavList();
         this.getLoveVideos();
@@ -260,7 +259,7 @@ ol, ul {
 }
 
 .section-title {
-    color: #000;
+    color: var(--text1);
     font-size: 20px;
     font-weight: 400;
     line-height: 33px;

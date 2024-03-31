@@ -7,9 +7,6 @@
 <script>
 export default {
     name: "SpaceDynamic",
-    mounted() {
-        this.$emit("updateNavIdx", 1);
-    }
 }
 </script>
 

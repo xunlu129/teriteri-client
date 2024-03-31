@@ -7,9 +7,6 @@
 <script>
 export default {
     name: "SpaceFollow",
-    mounted() {
-        this.$emit("updateNavIdx", 5);
-    }
 }
 </script>
 

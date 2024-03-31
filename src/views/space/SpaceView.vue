@@ -72,7 +72,7 @@
                     <div class="n-inner">
                         <!-- 左边 -->
                         <div class="n-tab-links" @mouseleave="hoverIdx = -1">
-                            <div class="n-btn n-index" :class="{'active': navIdx === 0 || navIdx === 5 || navIdx === 6}" @click="clickNavItem('')" @mouseenter="hoverIdx = 0">
+                            <div class="n-btn n-index" :class="{'active': navIdx === 0 || navIdx === 6 || navIdx === 7}" @click="clickNavItem('')" @mouseenter="hoverIdx = 0">
                                 <svg t="1711032641627" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4449" id="mx_n_1711032641627" width="20" height="20"><path d="M737.84 961.23h-82.29a42.11 42.11 0 0 1-42.07-42.07V723.7c0-38.92-23.8-65.08-59.23-65.08h-69.16c-35.43 0-59.23 26.15-59.23 65.08v195.47a42.11 42.11 0 0 1-42.07 42.07H301.5c-79.27 0-143.77-64.49-143.77-143.77V488.28H48.23a29.85 29.85 0 0 1-19.11-52.78L443.51 90.28l0.34-0.26A113.33 113.33 0 0 1 582 90l0.67 0.54L996.74 435.5a29.85 29.85 0 0 1-19.11 52.79h-96v329.17c-0.02 79.28-64.52 143.77-143.79 143.77z" fill="#00c091" p-id="4450"></path></svg>
                                 <span class="n-text">主页</span>
                             </div>
@@ -80,28 +80,28 @@
                                 <svg t="1711032716486" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5055" id="mx_n_1711032716487" width="20" height="20"><path d="M968.96 414.56l-129.12-163.2c-7.68-12-20.64-16.8-35.04-16.8h-223.68c-23.04 0.48-37.92 19.2-37.92 42.72v165.12c0.48 23.04 17.76 41.28 40.8 41.28h350.4c33.12-0.48 52.32-41.28 34.56-69.12zM750.56 538.88h-166.08c-23.04 0.48-41.76 19.68-41.28 43.2v351.36c0.48 33.12 44.64 53.28 72 35.04l162.24-130.56c12-9.12 14.88-21.6 14.88-36v-221.76c-0.48-23.04-18.24-41.76-41.76-41.28zM440.48 538.88H90.56c-33.12 0-53.28 36-35.52 63.84l127.2 164.64c7.68 12.48 21.12 19.2 35.52 19.2h222.72c23.04 0 41.76-18.24 41.76-41.76v-165.12c0-22.56-18.72-40.8-41.76-40.8zM416.96 55.04L250.88 187.52c-16.8 12.96-16.8 21.6-16.8 36.48v217.92c0 23.04 19.2 42.24 42.24 41.76h165.6c23.04 0 39.84-20.16 39.84-43.2v-350.4c0.48-33.12-36.48-52.8-64.8-35.04z" p-id="5056" fill="#fb7299"></path></svg>
                                 <span class="n-text">动态</span>
                             </div>
-                            <div class="n-btn n-video" :class="{'active': navIdx === 2}" @click="clickNavItem('/video')" @mouseenter="hoverIdx = 2">
+                            <div class="n-btn n-video" :class="{'active': navIdx === 2 || navIdx === 3}" @click="clickNavItem('/video')" @mouseenter="hoverIdx = 2">
                                 <svg t="1711032896288" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4273" width="20" height="20"><path d="M672.42666667 81.23733334c16.29866667-13.344 40.32-10.95466667 53.67466666 5.344 12.448 15.2 11.31733333 37.38666667-2.63466666 51.232l-57.952 57.89866666h154.98666666c72.62933333-0.032 132.32 57.29066667 135.232 129.856v448.36266667c0 74.72-60.56533333 135.28533333-135.28533333 135.28533333H205.68533333C130.976 909.20533334 70.4 848.64 70.4 773.93066667V331.09333334c0-74.72 60.56533333-135.28533333 135.28533333-135.28533334h130.58133334l-57.89866667-57.89866666c-14.944-14.83733333-15.04-38.98666667-0.20266667-53.93066667 13.84533333-13.952 36.032-15.09333333 51.232-2.63466667l2.88 2.656 111.81866667 111.81866667h113.52533333L669.44 84l2.98666667-2.76266666zM414.76266667 429.46133334v245.93066666c0.04266667 20.39466667 16.59733333 36.88533333 36.992 36.85333334 7.65866667-0.01066667 15.11466667-2.41066667 21.35466666-6.848l172.20266667-122.944c16.56533333-11.82933333 20.40533333-34.85866667 8.576-51.424a36.97813333 36.97813333 0 0 0-8.576-8.576L473.09866667 399.52c-16.608-11.82933333-39.65866667-7.95733333-51.488 8.65066667a36.9088 36.9088 0 0 0-6.848 21.23733333v0.05333334z" fill="#02b5da" p-id="4274"></path></svg>
                                 <span class="n-text">投稿</span>
                                 <span class="n-num">{{ worksCount }}</span>
                             </div>
-                            <div class="n-btn n-favlist" :class="{'active': navIdx === 3}" @click="clickNavItem('/favlist')" @mouseenter="hoverIdx = 3">
+                            <div class="n-btn n-favlist" :class="{'active': navIdx === 4}" @click="clickNavItem('/favlist')" @mouseenter="hoverIdx = 4">
                                 <svg t="1711032962919" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4526" width="20" height="20"><path d="M958.0302582 397.55763037c-7.9058083-22.83900117-28.10954004-40.40746348-51.82696406-43.92115576l-234.53897256-36.01534746L570.64566377 99.77219404C560.10458604 76.93319287 537.26558487 62 511.79131513 62c-25.4742706 0-48.31327177 14.93319287-58.85434862 37.77219404L351.03988408 317.62112715 117.37933526 353.63647461c-23.71742402 3.51369229-43.92115576 20.20373174-51.82696407 43.92115576-7.9058083 22.83900117-1.75684658 49.19169463 14.93319287 65.88173408l171.29250792 176.56304678-39.52904063 245.08004942c-4.39211602 24.59584687 6.14896172 49.19169463 26.35269345 64.1248875 11.41950058 7.9058083 24.59584687 12.29792344 37.77219405 12.29792343 10.54107773 0 21.96057832-2.63526943 31.62323232-7.9058083L511.79131513 843.79657432l203.7941631 109.80288984c9.66265401 5.27053887 21.08215459 7.9058083 31.62323232 7.9058083 13.17634717 0 26.35269346-4.39211602 37.77219404-12.29792344 20.20373174-14.93319287 30.74480948-39.52904063 26.35269346-64.1248875l-39.52904063-245.08004941 172.17093076-176.56304678C959.78710479 445.87090214 965.93606651 420.39663154 958.0302582 397.55763037z" fill="#f3a034" p-id="4527"></path></svg>
                                 <span class="n-text">收藏</span>
                                 <span class="n-num">{{ favList.length }}</span>
                             </div>
-                            <div class="n-btn n-setting" v-if="this.$store.state.user.uid === user.uid" :class="{'active': navIdx === 4}" @click="clickNavItem('/setting')" @mouseenter="hoverIdx = 4">
+                            <div class="n-btn n-setting" v-if="this.$store.state.user.uid === user.uid" :class="{'active': navIdx === 5}" @click="clickNavItem('/setting')" @mouseenter="hoverIdx = 5">
                                 <svg t="1711033098114" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5289" width="20" height="20"><path d="M882.34150875 504.54345955c0-49.57218555 27.61681646-93.75909188 71.66563872-110.19109768-22.09345317-77.18900202-66.14227541-148.85464074-121.23782427-203.95018957-38.52545897 27.61681646-93.62100781 33.00209567-137.80791415 11.0467266-44.04882225-27.61681646-66.14227541-71.66563872-60.61891213-121.23782427-38.52545897-11.04672658-82.7123653-16.57008987-121.23782427-16.57008988-44.04882225 0-82.7123653 5.5233633-121.23782426 16.57008988 5.5233633 44.04882225-16.57008987 93.62100781-60.61891212 121.23782427s-99.14437109 22.09345317-137.80791414-11.0467266c-55.09554883 55.09554883-99.14437109 126.76118755-121.23782426 203.95018957 44.04882225 16.57008987 71.66563872 60.61891214 71.66563872 110.19109768s-27.61681646 93.62100781-71.66563872 110.19109769c22.09345317 77.18900202 66.14227541 148.85464074 121.23782426 203.95018957 38.52545897-27.61681646 93.62100781-33.00209567 137.80791414-11.0467266 44.04882225 27.61681646 66.14227541 71.66563872 60.61891212 121.23782426 38.52545897 11.04672658 82.7123653 16.57008987 121.23782426 16.5700899 44.04882225 0 82.7123653-5.5233633 121.23782427-16.5700899-5.5233633-44.04882225 16.57008987-93.62100781 60.61891213-121.23782426s99.14437109-22.09345317 137.80791415 11.0467266c55.09554883-55.09554883 99.14437109-126.76118755 121.23782427-203.95018957-44.18690634-16.43200579-71.66563872-60.61891214-71.66563872-110.19109769zM513.10467265 686.40019595c-104.66773438 0-187.3800997-82.7123653-187.38009967-181.8567364 0-99.14437109 82.7123653-181.85673639 187.38009967-181.85673638 104.66773438 0 187.3800997 82.7123653 187.3800997 181.85673638-0.13808409 99.28245518-82.7123653 181.85673639-187.3800997 181.8567364z m0-71.66563871c60.8950803 0 110.19109769-49.29601739 110.19109769-110.19109769 0-60.8950803-49.29601739-110.19109769-110.19109769-110.19109768-60.8950803 0-110.19109769 49.29601739-110.19109768 110.19109768-0.13808409 60.8950803 49.29601739 110.19109769 110.19109768 110.19109769z m0 0" fill="#FF8CB0" p-id="5290"></path></svg>
                                 <span class="n-text">设置</span>
                             </div>
                         </div>
                         <!-- 右边 -->
                         <div class="n-statistics">
-                            <div class="n-data n-follow" :class="{'active': navIdx === 5}" @click="clickNavItem('/fans/follow')" :title="user.followsCount">
+                            <div class="n-data n-follow" :class="{'active': navIdx === 6}" @click="clickNavItem('/fans/follow')" :title="user.followsCount">
                                 <p class="n-data-k">关注</p>
                                 <p class="n-data-v">{{ handleNum(user.followsCount) }}</p>
                             </div>
-                            <div class="n-data n-fans" :class="{'active': navIdx === 6}" @click="clickNavItem('/fans/fans')" :title="user.fansCount">
+                            <div class="n-data n-fans" :class="{'active': navIdx === 7}" @click="clickNavItem('/fans/fans')" :title="user.fansCount">
                                 <p class="n-data-k">粉丝</p>
                                 <p class="n-data-v">{{ handleNum(user.fansCount) }}</p>
                             </div>
@@ -120,7 +120,28 @@
             </div>
             <div class="s-space" v-if="user.uid">
                 <div class="wrapper">
-                    <router-view @updateNavIdx="updateNavIdx"></router-view>
+                    <div class="col-full" v-if="navIdx === 2 || navIdx === 3">
+                        <div class="contribution-sidenav">
+                            <div class="nav-container playlist-container">
+                                <div class="contribution-list-container">
+                                    <ul class="contribution-list">
+                                        <li class="contribution-item" :class="{'cur': navIdx === 2}" @click="clickNavItem('/video')">
+                                            <a class="text">视频</a>
+                                            <span class="num">{{ worksCount }}</span>
+                                        </li>
+                                        <li class="contribution-item" :class="{'cur': navIdx === 3}" @click="clickNavItem('/article')">
+                                            <a class="text">图文</a>
+                                            <span class="num">{{ 0 }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main-content">
+                            <router-view></router-view>
+                        </div>
+                    </div>
+                    <router-view v-else></router-view>
                 </div>
             </div>
         </div>
@@ -149,18 +170,17 @@ export default {
             themePosX: 0,   // 右上角的样式动画效果
             timer: null,
             themeShow: false,   // 是否展开更换头图的抽屉
-            navIdx: 0,  // 当前导航栏
             hoverIdx: -1,   // 悬停导航栏
             mounted: false,
         }
     },
     computed: {
         barWidth() {
-            const list = ['.n-index', '.n-dynamic', '.n-video', '.n-favlist', '.n-setting'];
+            const list = ['.n-index', '.n-dynamic', '.n-video', '.n-video', '.n-favlist', '.n-setting'];
             let target = '.n-index';
             if (this.hoverIdx >= 0) {
                 target = list[this.hoverIdx];
-            } else if (this.navIdx < 5) {
+            } else if (this.navIdx < 6) {
                 target = list[this.navIdx];
             }
             if (!this.mounted) return 0;
@@ -168,16 +188,29 @@ export default {
         },
 
         barLeft() {
-            const list = ['.n-index', '.n-dynamic', '.n-video', '.n-favlist', '.n-setting'];
+            const list = ['.n-index', '.n-dynamic', '.n-video', '.n-video', '.n-favlist', '.n-setting'];
             let target = '.n-index';
             if (this.hoverIdx >= 0) {
                 target = list[this.hoverIdx];
-            } else if (this.navIdx < 5) {
+            } else if (this.navIdx < 6) {
                 target = list[this.navIdx];
             }
             if (!this.mounted) return 0;
             return document.querySelector(target).getBoundingClientRect().left - document.querySelector(".n-wrapper").getBoundingClientRect().left;
         },
+
+        // 当前导航栏
+        navIdx() {
+            const part = this.$route.path.split('/');
+            return !part[3] ? 0 :
+                    part[3] === '' ? 0 :
+                    part[3] === 'dynamic' ? 1 :
+                    part[3] === 'video' ? 2 :
+                    part[3] === 'article' ? 3 :
+                    part[3] === 'favlist' ? 4 :
+                    part[3] === 'setting' ? 5 :
+                    part[3] === 'fans' ? part[4] === 'follow' ? 6 : 7 : 0
+        }
     },
     methods: {
         // 获取用户信息
@@ -266,11 +299,6 @@ export default {
             const absPath = `/space/${this.$route.params.uid}${path}`;
             if (this.$route.path === absPath) return;
             this.$router.push(absPath);
-        },
-
-        // 更新navIdx
-        updateNavIdx(index) {
-            this.navIdx = index;
         },
 
         // 处理大于一万的数字
@@ -772,5 +800,100 @@ export default {
     position: absolute;
     bottom: -1px;
     left: 0;
+}
+
+.col-full {
+    background: #fff;
+    box-shadow: 0 0 0 1px #eee;
+    border-radius: 4px;
+    position: absolute;
+}
+
+.contribution-sidenav {
+    position: relative;
+    float: left;
+    width: 180px;
+    margin-right: -1px;
+    font-size: 14px;
+    color: #222;
+    border-right: 1px solid #eee;
+    box-sizing: border-box;
+}
+
+.contribution-list-container {
+    position: relative;
+    max-height: 420px;
+    margin: 10px 0 20px;
+    overflow: hidden;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+.contribution-item {
+    position: relative;
+    padding-left: 30px;
+    transition: background-color .3s ease;
+    white-space: nowrap;
+    font-size: 0;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.contribution-item:hover {
+    background-color: #f4f5f7;
+}
+
+.contribution-item.cur {
+    background-color: #FF7DA1;
+}
+
+.contribution-sidenav .text {
+    display: inline-block;
+    line-height: 44px;
+    width: 100px;
+    margin-right: 5px;
+    font-size: 14px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.contribution-sidenav .num {
+    display: inline-block;
+    width: 32px;
+    font-size: 12px;
+    color: #99a2aa;
+    vertical-align: middle;
+    text-align: center;
+    font-family: Arial;
+}
+
+.contribution-item.cur .num, .contribution-item.cur .text {
+    color: #fff;
+}
+
+.main-content {
+    float: left;
+    width: 921px;
+    padding: 20px;
+    box-sizing: border-box;
+    border-left: 1px solid #eee;
+}
+
+@media (min-width: 1420px) {
+    .contribution-sidenav {
+        width: 210px;
+    }
+
+    .contribution-item .text {
+        width: 130px;
+    }
+
+    .main-content {
+        width: 1071px;
+    }
 }
 </style>
