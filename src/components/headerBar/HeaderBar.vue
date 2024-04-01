@@ -187,7 +187,7 @@
                             <div class="vip-tag" v-if="user.vip !== 0">
                                 {{ user.vip === 1 ? '月度' : user.vip === 2 ? '季度' : '年度' }}大会员
                             </div>
-                            <i :class="`iconfont icon-lv${handleLevel(user.exp)}`"></i>
+                            <VLevel class="level" :level="handleLevel(user.exp)" :size="12"></VLevel>
                             <div class="gender female" v-if="user.gender == 0"><el-icon size="12"><Female /></el-icon></div>
                             <div class="gender male" v-if="user.gender == 1"><el-icon size="12"><Male /></el-icon></div>
                         </div>
@@ -205,7 +205,7 @@
                                 <div class="count-text">粉丝</div>
                             </a>
                             <a :href="`/space/${user.uid}/dynamic`" target="_blank" class="counts-item">
-                                <div class="count-num">{{ handleNum(114) }}</div>
+                                <div class="count-num">{{ handleNum(0) }}</div>
                                 <div class="count-text">动态</div>
                             </a>
                         </div>
@@ -391,6 +391,7 @@
     let outTimer;
     import VPopover from '../popover/VPopover.vue';
     import LoginRegister from '../loginRegister/LoginRegister.vue';
+    import VLevel from '@/components/UserCard/VLevel.vue';
     import { ElMessage } from 'element-plus';
     import { handleNum, handleLevel, highlightKeyword } from '@/utils/utils.js';
 
@@ -399,6 +400,7 @@
         components: {
             VPopover,
             LoginRegister,
+            VLevel,
         },
         data() {
             return {
@@ -629,6 +631,13 @@
             window.removeEventListener("click", this.handleOutsideClick);
             window.removeEventListener('resize', this.updateScreenWidth);
         },
+        watch: {
+            "$store.state.openLogin"(curr) {
+                if (curr) {
+                    this.dialogVisible = true;
+                }
+            }
+        }
     }
 </script>
 
@@ -1233,6 +1242,10 @@
     font-size: 12px;
     margin-right: 10px;
     line-height: 14px;
+}
+
+.level {
+    margin-right: 10px;
 }
 
 .coins {

@@ -152,7 +152,7 @@ export default {
         window.addEventListener('resize', this.resize);
         window.addEventListener("scroll", this.handleScroll);
     },
-    beforeMount() {
+    beforeUnmount() {
         window.removeEventListener("click", this.handleOutSideClick);
         window.removeEventListener('resize', this.resize);
         window.removeEventListener("scroll", this.handleScroll);

@@ -32,9 +32,7 @@
                             </template>
                         </VPopover>
                         <!-- 等级组件 -->
-                        <a class="level">
-                            <i :class="`iconfont icon-lv${handleLevel(rootComment.user.exp)}`"></i>
-                        </a>
+                        <VLevel class="level" :level="handleLevel(rootComment.user.exp)" :size="12"></VLevel>
                         <!-- UP主标识 -->
                         <svg v-if="rootComment.user.uid === upUid" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="6" width="18" height="11.5" rx="2" fill="#FF6699"></rect><path d="M5.7 8.36V12.79C5.7 13.72 5.96 14.43 6.49 14.93C6.99 15.4 7.72 15.64 8.67 15.64C9.61 15.64 10.34 15.4 10.86 14.92C11.38 14.43 11.64 13.72 11.64 12.79V8.36H10.47V12.81C10.47 13.43 10.32 13.88 10.04 14.18C9.75 14.47 9.29 14.62 8.67 14.62C8.04 14.62 7.58 14.47 7.3 14.18C7.01 13.88 6.87 13.43 6.87 12.81V8.36H5.7ZM13.0438 8.36V15.5H14.2138V12.76H15.9838C17.7238 12.76 18.5938 12.02 18.5938 10.55C18.5938 9.09 17.7238 8.36 16.0038 8.36H13.0438ZM14.2138 9.36H15.9138C16.4238 9.36 16.8038 9.45 17.0438 9.64C17.2838 9.82 17.4138 10.12 17.4138 10.55C17.4138 10.98 17.2938 11.29 17.0538 11.48C16.8138 11.66 16.4338 11.76 15.9138 11.76H14.2138V9.36Z" fill="white"></path></svg>
                     </div>
@@ -140,7 +138,7 @@
         <div class="reply-loading" v-show="loading">正在加载...</div>
         <div class="no-any" v-show="!hasMore && commentList.length === 0">视频还没有任何评论哦，快来抢占沙发位吧~</div>
         <div class="no-more" v-show="(this.$store.state.isLogin && !hasMore && commentList.length !== 0) || (!this.$store.state.isLogin && commentList.length === 1)">已经到底啦~</div>
-        <div class="login-prompt" v-show="!this.$store.state.isLogin && commentList.length >= 2">登录后查看更多评论</div>
+        <div class="login-prompt" v-show="!this.$store.state.isLogin && commentList.length >= 2" @click="toLogin">登录后查看更多评论</div>
     </div>
 </template>
 
@@ -150,6 +148,7 @@ import VPopover from '@/components/popover/VPopover.vue';
 import UserCard from '@/components/UserCard/UserCard.vue';
 import SubComment from './SubComment.vue';
 import ReplyTextarea from './ReplyTextarea.vue';
+import VLevel from '@/components/UserCard/VLevel.vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 import { handleNum, handleLevel, handleDateTime3, emojiText } from '@/utils/utils.js';
@@ -163,6 +162,7 @@ export default {
         UserCard,
         SubComment,
         ReplyTextarea,
+        VLevel,
     },
     data() {
         return {
@@ -466,13 +466,21 @@ export default {
                 })
             });
         },
+
+        // 触发登录
+        toLogin() {
+            this.$store.state.openLogin = true;
+            this.$nextTick(() => {
+                this.$store.state.openLogin = false;
+            })
+        }
     },
     mounted() {
         this.getCommentTree();
         window.addEventListener("scroll", this.handleScroll);
     },
-    beforemounted() {
-        window.removeEventListener("scorll", this.handleScroll);
+    beforeUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
     },
     watch: {
         "$route.params.vid"(curr) {
@@ -562,11 +570,6 @@ export default {
 
 .level {
     margin-right: 8px;
-}
-
-.level .iconfont {
-    font-size: 12px;
-    line-height: 20px;
 }
 
 .root-reply {
@@ -795,6 +798,6 @@ export default {
     color: var(--brand_pink);
     background-color: var(--brand_pink_thin);
     transition: .2s;
-    cursor: default;
+    cursor: pointer;
 }
 </style>

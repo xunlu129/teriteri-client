@@ -490,6 +490,11 @@ export default {
     letter-spacing: 0;
 }
 
+.trending-mark {
+    height: 14px;
+    margin-right: 16px;
+}
+
 .search-input-wrap .suggestions {
     margin-top: -6px;
     margin-bottom: -6px;

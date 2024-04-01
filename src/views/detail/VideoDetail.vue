@@ -166,7 +166,7 @@
                                     <div class="up-description" :title="user.description">{{ user.description }}</div>
                                 </div>
                                 <div class="up-info__btn-panel">
-                                    <div class="default-btn follow-btn not-follow" v-if="true">
+                                    <div class="default-btn follow-btn not-follow" v-if="true" @click="noPage">
                                         <i class="iconfont icon-jia"></i>
                                         关注 {{ handleNum(user.fansCount) }}
                                     </div>
@@ -420,7 +420,8 @@ export default {
                 },
             });
             if (res.data.code === 404) {
-                return;
+                this.$router.push("/notfound");
+                return false;
             }
             if (res.data.data) {
                 // console.log("视频详情: ", res.data.data);
@@ -440,6 +441,7 @@ export default {
             if (localStorage.getItem("teri_token")) {
                 this.getCollectedFids();
             }
+            return true;
         },
 
         // 获取推荐视频
@@ -501,7 +503,10 @@ export default {
         async loveOrNot(isLove, isSet) {
             if (this.loveLoading) return;
             if (!this.$store.state.user.uid) {
-                ElMessage.error("请登录后操作");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             if (!this.video.vid) {
@@ -593,7 +598,10 @@ export default {
         // 创建聊天
         createChat() {
             if (!this.$store.state.user.uid) {
-                ElMessage.error("登录后才能发消息哦");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             this.openNewPage(`/message/whisper/${this.user.uid}`);
@@ -655,7 +663,10 @@ export default {
         // 发送弹幕
         sendDanmu(dm) {
             if (!localStorage.getItem('teri_token')) {
-                ElMessage.error("请登录后发送");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             const dmJson = JSON.stringify({
@@ -669,9 +680,10 @@ export default {
         async changeVideo(vid) {
             await this.$router.push(`/video/${vid}`);
             await this.initWebsocket();
-            await this.getVideoDetail();
-            await this.getDanmuList();
-            await this.getRecommendVideos();
+            if (await this.getVideoDetail()) {
+                await this.getDanmuList();
+                await this.getRecommendVideos();
+            }
         },
 
         // 视频播放结束自动连播
@@ -697,7 +709,10 @@ export default {
         // 打开收藏对话框
         openCollectDialog() {
             if (!this.$store.state.user.uid) {
-                ElMessage.error("请登录后操作");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             if (!this.video.vid) {
@@ -725,9 +740,10 @@ export default {
             this.autonext = setting.autonext;
         }
         await this.initWebsocket();
-        await this.getVideoDetail();
-        await this.getDanmuList();
-        await this.getRecommendVideos();
+        if (await this.getVideoDetail()) {
+            await this.getDanmuList();
+            await this.getRecommendVideos();
+        }
     },
     mounted() {
         window.addEventListener('scroll', this.handleScroll);

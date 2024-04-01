@@ -12,9 +12,7 @@
                     >{{ user.nickname }}</a>
                     <div class="gender female" v-if="user.gender === 0"><el-icon size="12"><Female /></el-icon></div>
                     <div class="gender male" v-if="user.gender === 1"><el-icon size="12"><Male /></el-icon></div>
-                    <a class="level">
-                        <i :class="`iconfont icon-lv${handleLevel(user.exp)}`"></i>
-                    </a>
+                    <VLevel :level="handleLevel(user.exp)" :size="12"></VLevel>
                     <span class="vip" v-if="user.vip !== 0">
                         {{ user.vip === 1 ? '月度' : user.vip === 2 ? '季度' : '年度' }}大会员
                     </span>
@@ -54,12 +52,13 @@
 <script>
 import VAvatar from '@/components/avatar/VAvatar.vue';
 import { handleNum, handleLevel } from '@/utils/utils.js';
-import { ElMessage } from 'element-plus';
+import VLevel from '@/components/UserCard/VLevel.vue';
 
 export default {
     name: "UserCard",
     components: {
         VAvatar,
+        VLevel,
     },
     data() {
         return {
@@ -89,7 +88,10 @@ export default {
         // 创建聊天
         createChat() {
             if (!this.$store.state.user.uid) {
-                ElMessage.error("登录后才能发消息哦");
+                this.$store.state.openLogin = true;
+                this.$nextTick(() => {
+                    this.$store.state.openLogin = false;
+                });
                 return;
             }
             this.openNewPage(`/message/whisper/${this.user.uid}`);
@@ -177,11 +179,6 @@ export default {
 .male {
     background-color: var(--Lb2);
     color: var(--Lb5_u);
-}
-
-.level .iconfont {
-    font-size: 12px;
-    line-height: 20px;
 }
 
 .vip {

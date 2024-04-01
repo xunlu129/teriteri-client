@@ -1,13 +1,12 @@
 <template>
     <div class="space-article">
-        图文投稿
+        图文
     </div>
 </template>
 
 <script>
 export default {
     name: "SpaceArticle",
-    
 }
 </script>
 
