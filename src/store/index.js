@@ -37,6 +37,8 @@ export default createStore({
         dislikeComment: [],
         // 登录用户的收藏夹列表
         favorites: [],
+        // 访问用户的收藏夹列表
+        userFavList: [],
         // 热搜列表
         trendings: [],
         // 搜索到的相关数据数量 [视频, 用户]

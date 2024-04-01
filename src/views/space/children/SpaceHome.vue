@@ -78,17 +78,22 @@
                 </h3>
                 <div class="love-content">
                     <div class="small-item" v-for="(item, index) in loveVideos" :key="index">
-                        <a :href="`/video/${item.video.vid}`" target="_blank" class="cover">
+                        <a :href="`/video/${item.video.vid}`" target="_blank" class="cover" v-if="item.video.status === 1">
                             <img :src="item.video.coverUrl" alt="">
                             <span class="length">{{ handleDuration(item.video.duration) }}</span>
                         </a>
-                        <a :href="`/video/${item.video.vid}`" target="_blank" class="title" :title="item.video.title">{{ item.video.title }}</a>
+                        <div class="disable-cover" v-else>
+                            <p>视频已失效</p>
+                            <div class="delete-from">{{ item.video.status === 3 ? '已被UP主删除' : '视频审核中' }}</div>
+                        </div>
+                        <a :href="`/video/${item.video.vid}`" target="_blank" class="title" :title="item.video.title" v-if="item.video.status === 1">{{ item.video.title }}</a>
+                        <p class="title" v-else>已失效视频</p>
                         <div class="meta">
-                            <span class="play">
+                            <span class="play" v-if="item.video.status === 1">
                                 <svg t="1711216187515" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4408" id="mx_n_1711216187515" width="14" height="14"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4409"></path><path d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z" p-id="4410"></path></svg>
                                 <span class="num">{{ handleNum(item.stats.play) }}</span>
                             </span>
-                            <span class="danmu">
+                            <span class="danmu" v-if="item.video.status === 1">
                                 <svg t="1711224902593" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4273" width="14" height="14"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="4274"></path><path d="M240 384h64v64h-64zM368 384h384v64h-384zM432 576h352v64h-352zM304 576h64v64h-64z" p-id="4275"></path></svg>
                                 <span class="num">{{ handleNum(item.stats.danmu) }}</span>
                             </span>
@@ -459,9 +464,13 @@ ol, ul {
     line-height: 20px;
     height: 38px;
     margin-top: 6px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-word;
+    line-break: anywhere;
     font-size: 12px;
 }
 

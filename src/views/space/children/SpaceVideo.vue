@@ -342,9 +342,13 @@ ol, ul {
     line-height: 20px;
     height: 38px;
     margin-top: 6px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-word;
+    line-break: anywhere;
     font-size: 12px;
 }
 
