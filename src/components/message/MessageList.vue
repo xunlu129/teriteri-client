@@ -232,18 +232,21 @@ export default {
             // 复制一份，防止指向同一个地址
             this.chat = JSON.parse(JSON.stringify(chat));
             // console.log("当前聊天：",this.chat);
+            this.goBottom("auto");
         },
         // 深度监听vuex中聊天列表的变化
         "$store.state.chatList": {
             handler(curr) {
-                const currChat = curr.find(item => item.user.uid === this.mid);
-                // console.log("深度监听到聊天有新消息：", currChat);
-                // 复制粘贴新的chat
-                this.chat = JSON.parse(JSON.stringify(currChat));
-                if (this.isAtBottom) {
-                    // 如果原本在底部的话还要滚到底部 等元素渲染完再滚
-                    this.goBottom("smooth");
-                }
+                this.$nextTick(() => {
+                    const currChat = curr.find(item => item.user.uid === this.mid);
+                    // console.log("深度监听到聊天有新消息：", currChat);
+                    // 复制粘贴新的chat
+                    this.chat = JSON.parse(JSON.stringify(currChat));
+                    if (this.isAtBottom) {
+                        // 如果原本在底部的话还要滚到底部 等元素渲染完再滚
+                        this.goBottom("smooth");
+                    }
+                })
             },
             deep: true
         }
