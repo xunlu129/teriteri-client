@@ -139,7 +139,7 @@
                         </div>
                     </div>
                     <!-- 随机推荐 -->
-                    <div class="feed-card" v-for="index in 11" :key="index">
+                    <div class="feed-card" v-for="index in loadingRandom ? 11 : randomVideos.length" :key="index">
                         <div class="video-card">
                             <!-- 骨架屏 -->
                             <div class="video-card__skeleton" :class="loadingRandom ? 'loading_animation' : 'hide'">
@@ -353,8 +353,8 @@ export default {
             this.loadingRandom = true;
             const res = await this.$get("/video/random/visitor");
             if (res.data.data) {
-                this.loadingRandom = false;
                 this.randomVideos = res.data.data;
+                this.loadingRandom = false;
             }
             // console.log(this.randomVideos);
         },
