@@ -413,7 +413,8 @@ export default createStore({
                     state.ws.close();
                     commit('setWebSocket', null); // 关闭后清空 WebSocket 实例
                 }
-                const ws = new WebSocket('ws://localhost:7071/im');
+                const wsBaseUrl = process.env.VUE_APP_WS_IM_URL;
+                const ws = new WebSocket(`${wsBaseUrl}/im`);
                 commit('setWebSocket', ws);
 
                 ws.addEventListener('open', () => {
